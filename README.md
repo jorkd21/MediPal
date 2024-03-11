@@ -2,12 +2,8 @@
 Medical Tracking App for rural communities
 
 # Member checkin
-Kai McKenzie
+Kai McKenzie  
 Andrew Solbjor
-
-# gui_flutter
-
-A new Flutter project.
 
 ## Getting Started
 
