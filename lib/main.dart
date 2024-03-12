@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
+// firebase core
+import 'package:firebase_core/firebase_core.dart';
+// firebase api keys
+import 'firebase_options.dart';
+// firebase database
+import 'package:firebase_database/firebase_database.dart';
 
-void main() {
+void main() async {
+  // run app
   runApp(const MyApp());
+  // initialize firebase (testing)
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  //
+  final ref = FirebaseDatabase.instance.ref();
+  final snapshot = await ref.child('test/num').get();
+  print(snapshot.value as int);
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -57,14 +72,35 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() {
+  void _incrementCounter() async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref('test');
+    final snapshot = await ref.child("num").get();
+    
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
+      if (snapshot.value as int != _counter) {
+        _counter = snapshot.value as int;
+      }
       _counter++;
+    });
+
+    await ref.update({
+      "num": _counter,
+    });
+  }
+
+  void _decrementCounter() async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref('test');
+    final snapshot = await ref.child("num").get();
+    
+    setState(() {
+      if (snapshot.value as int != _counter) {
+        _counter = snapshot.value as int;
+      }
+      _counter--;
+    });
+
+    await ref.update({
+      "num": _counter,
     });
   }
 
@@ -115,10 +151,22 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: _incrementCounter,
+            tooltip: 'Increment',
+            child: const Icon(Icons.add),
+          ),
+          const SizedBox(height: 8),
+          FloatingActionButton(
+            onPressed: _decrementCounter,
+            tooltip: 'Decrement',
+            child: const Icon(Icons.remove),
+          ),
+        ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
