@@ -1,6 +1,6 @@
 {
-    "name": "gui_flutter",
-    "short_name": "gui_flutter",
+    "name": "medipal",
+    "short_name": "medipal",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
