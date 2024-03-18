@@ -9,18 +9,21 @@ class Count extends StatefulWidget {
 }
 
 class _CountState extends State<Count> {
-  int count = 0;
+  late int count;
+  late DatabaseReference ref;
 
   @override
   void initState() {
-    //initData();
     super.initState();
+    _initData();
   }
 
-  void initData() async {
-    // set count to database
-    DatabaseReference ref = FirebaseDatabase.instance.ref();
-    DataSnapshot snapshot = await ref.child('test/num').get();
+  void _initData() async {
+    // initialize database
+    ref = FirebaseDatabase.instance.ref('test');
+    // get snapshot
+    DataSnapshot snapshot = await ref.child('num').get();
+    // set state
     setState(() {
       count = snapshot.value as int;
     });
@@ -49,25 +52,19 @@ class _CountState extends State<Count> {
               FloatingActionButton(
                 child: const Icon(Icons.add),
                 onPressed: () {
-                  setState(() {
-                    count++;
-                  });
+                  incrementCount();
                 },
               ),
               FloatingActionButton(
                 child: const Icon(Icons.remove),
                 onPressed: () {
-                  setState(() {
-                    count--;
-                  });
+                  decrementCount();
                 },
               ),
               FloatingActionButton(
                 child: const Icon(Icons.numbers),
                 onPressed: () {
-                  setState(() {
-                    count = 0;
-                  });
+                  setData( 0 );
                 },
               ),
               Text(
@@ -78,5 +75,32 @@ class _CountState extends State<Count> {
         ),
       ),
     );
+  }
+  
+  void updateData() async {
+    await ref.update({
+      "num": count,
+    });
+  }
+
+  void incrementCount() {
+    setState(() {
+      count++;
+    });
+    updateData();
+  }
+
+  void decrementCount() {
+    setState(() {
+      count--;
+    });
+    updateData();
+  }
+
+  void setData(key) {
+    setState(() {
+      count = key;
+    });
+    updateData();
   }
 }

@@ -13,8 +13,8 @@ import 'package:medipal/page2.dart';
 import 'package:medipal/page3.dart';
 
 void main() async {
-  runApp(const MyApp());
-  // initialize firebase (testing)
+  // initialize firebase
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -22,6 +22,9 @@ void main() async {
   final ref = FirebaseDatabase.instance.ref();
   final snapshot = await ref.child('test/num').get();
   print(snapshot.value as int);
+
+  // main app
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
