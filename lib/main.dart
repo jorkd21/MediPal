@@ -8,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart'; // authentication
 import 'package:firebase_analytics/firebase_analytics.dart'; // analytics
 // pages
 import 'package:medipal/count.dart';
-import 'package:medipal/page1.dart';
+import 'package:medipal/auth_gate.dart';
 import 'package:medipal/page2.dart';
 import 'package:medipal/page3.dart';
 
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => HomePage(),
         '/Count': (context) => Count(),
-        '/Page1': (context) => Page1(),
+        '/AuthGate': (context) => AuthGate(),
         '/Page2': (context) => Page2(),
         '/Page3': (context) => Page3(),
         //'/Page4': (context) => BlankPage(),
@@ -59,7 +59,7 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ButtonWidget('Count', '/Count'),
-            ButtonWidget('Page 1', '/Page1'),
+            ButtonWidget('AuthGate', '/AuthGate'),
             ButtonWidget('Page 2', '/Page2'),
             ButtonWidget('Page 3', '/Page3'),
             //ButtonWidget('Page 4', '/Page4'),
