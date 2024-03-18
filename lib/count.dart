@@ -9,7 +9,7 @@ class Count extends StatefulWidget {
 }
 
 class _CountState extends State<Count> {
-  late int count;
+  int count = 0;
   late DatabaseReference ref;
 
   @override
@@ -24,10 +24,11 @@ class _CountState extends State<Count> {
     // get snapshot
     DataSnapshot snapshot = await ref.child('num').get();
     // set state
-    setState(() {
-      count = snapshot.value as int;
-    });
-    //print(snapshot.value as int);
+    if (snapshot.exists) {
+      setState(() {
+        count = snapshot.value as int;
+      });
+    }
   }
 
   @override
@@ -38,45 +39,43 @@ class _CountState extends State<Count> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.green,
-          title: const Text("Count Page"),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              FloatingActionButton(
-                child: const Icon(Icons.add),
-                onPressed: () {
-                  incrementCount();
-                },
-              ),
-              FloatingActionButton(
-                child: const Icon(Icons.remove),
-                onPressed: () {
-                  decrementCount();
-                },
-              ),
-              FloatingActionButton(
-                child: const Icon(Icons.numbers),
-                onPressed: () {
-                  setData( 0 );
-                },
-              ),
-              Text(
-                '$count',
-              ),
-            ],
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        title: const Text("Count Page"),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            FloatingActionButton(
+              child: const Icon(Icons.add),
+              onPressed: () {
+                incrementCount();
+              },
+            ),
+            FloatingActionButton(
+              child: const Icon(Icons.remove),
+              onPressed: () {
+                decrementCount();
+              },
+            ),
+            FloatingActionButton(
+              child: const Icon(Icons.numbers),
+              onPressed: () {
+                setData(0);
+              },
+            ),
+            Text(
+              '$count',
+            ),
+          ],
         ),
       ),
     );
   }
-  
+
   void updateData() async {
     await ref.update({
       "num": count,

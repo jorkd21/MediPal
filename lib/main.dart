@@ -18,10 +18,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // read/print database value
-  final ref = FirebaseDatabase.instance.ref();
-  final snapshot = await ref.child('test/num').get();
-  print(snapshot.value as int);
 
   // main app
   runApp(const MyApp());
