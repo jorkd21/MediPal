@@ -6,10 +6,11 @@ import 'package:firebase_database/firebase_database.dart'; // realtime database
 import 'package:cloud_firestore/cloud_firestore.dart'; // cloud firestore
 import 'package:firebase_auth/firebase_auth.dart'; // authentication
 import 'package:firebase_analytics/firebase_analytics.dart'; // analytics
+import 'package:firebase_ui_auth/firebase_ui_auth.dart'; //
 // pages
 import 'package:medipal/count.dart';
 import 'package:medipal/auth_gate.dart';
-import 'package:medipal/page2.dart';
+import 'package:medipal/form.dart';
 import 'package:medipal/page3.dart';
 
 void main() async {
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => HomePage(),
         '/Count': (context) => Count(),
         '/AuthGate': (context) => AuthGate(),
-        '/Page2': (context) => Page2(),
+        '/Form': (context) => MyForm(),
         '/Page3': (context) => Page3(),
         //'/Page4': (context) => BlankPage(),
       },
@@ -60,7 +61,7 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             ButtonWidget('Count', '/Count'),
             ButtonWidget('AuthGate', '/AuthGate'),
-            ButtonWidget('Page 2', '/Page2'),
+            ButtonWidget('Form', '/Form'),
             ButtonWidget('Page 3', '/Page3'),
             //ButtonWidget('Page 4', '/Page4'),
           ],
