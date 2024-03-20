@@ -40,7 +40,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   final middleNameController = TextEditingController();
   final lastNameController = TextEditingController();
 
-  DatabaseReference ref = FirebaseDatabase.instance.ref('patient/test');
+  DatabaseReference ref = FirebaseDatabase.instance.ref('test/patient');
 
   @override
   Widget build(BuildContext context) {
