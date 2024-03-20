@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "gui_flutter" "\0"
+            VALUE "FileDescription", "medipal" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "gui_flutter" "\0"
+            VALUE "InternalName", "medipal" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "gui_flutter.exe" "\0"
-            VALUE "ProductName", "gui_flutter" "\0"
+            VALUE "OriginalFilename", "medipal.exe" "\0"
+            VALUE "ProductName", "medipal" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

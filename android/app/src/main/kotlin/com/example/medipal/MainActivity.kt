@@ -1,4 +1,4 @@
-package com.example.gui_flutter
+package com.example.medipal
 
 import io.flutter.embedding.android.FlutterActivity
 
