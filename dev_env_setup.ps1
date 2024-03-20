@@ -36,7 +36,15 @@ code --install-extension Dart-Code.flutter
 
 # android studio components
 #cd $env:ANDROID_HOME\tools\bin\
-#sdkmanager "platform-tools" "platforms;android-33"
+#sdkmanager --list
+sdkmanager --install "emulator"
+sdkmanager --install "extras;google;Android_Emulator_Hypervisor_Driver"
+sdkmanager --install "build-tools;34.0.0-rc1"
+sdkmanager --install "platforms;android-34"
+sdkmanager --install "platform-tools"
+sdkmanager --install "system-images;android-34;google_apis;x86_64"
+sdkmanager --install "extras;intel;Hardware_Accelerated_Execution_Manager"
+sdkmanager --install "sources;android-34"
 
 firebase login
 #flutterfire configure
