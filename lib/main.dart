@@ -54,16 +54,48 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () {
+              if (FirebaseAuth.instance.currentUser != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<ProfileScreen>(
+                    builder: (context) => const ProfileScreen(),
+                  ),
+                );
+              }
+            },
+          )
+        ],
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          //mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ButtonWidget('Count', '/Count'),
             ButtonWidget('AuthGate', '/AuthGate'),
             ButtonWidget('Form', '/Form'),
             ButtonWidget('Page 3', '/Page3'),
             //ButtonWidget('Page 4', '/Page4'),
+            /* FirebaseAuth.instance.currentUser != null
+                ? Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                        child: Column(
+                      children: [
+                        Image.asset('dash.png'),
+                        Text(
+                          'Welcome!',
+                          style: Theme.of(context).textTheme.displaySmall,
+                        ),
+                        const SignOutButton(),
+                      ],
+                    )),
+                  )
+                : Container(), */
           ],
         ),
       ),
