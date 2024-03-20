@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class MyForm extends StatelessWidget {
@@ -35,6 +36,11 @@ class MyCustomFormState extends State<MyCustomForm> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
+  final firstNameController = TextEditingController();
+  final middleNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+
+  DatabaseReference ref = FirebaseDatabase.instance.ref('patient/test');
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +54,7 @@ class MyCustomFormState extends State<MyCustomForm> {
             children: [
               Text('First Name'),
               TextFormField(
-                // The validator receives the text that the user has entered.
+                controller: firstNameController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter some text';
@@ -58,7 +64,7 @@ class MyCustomFormState extends State<MyCustomForm> {
               ),
               Text('Middle Name'),
               TextFormField(
-                // The validator receives the text that the user has entered.
+                controller: middleNameController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter some text';
@@ -68,7 +74,7 @@ class MyCustomFormState extends State<MyCustomForm> {
               ),
               Text('Last Name'),
               TextFormField(
-                // The validator receives the text that the user has entered.
+                controller: lastNameController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter some text';
@@ -124,6 +130,14 @@ class MyCustomFormState extends State<MyCustomForm> {
                     if (_formKey.currentState!.validate()) {
                       // If the form is valid, display a snackbar. In the real world,
                       // you'd often call a server or save the information in a database.
+                      final String firstName = firstNameController.text;
+                      final String middleName = middleNameController.text;
+                      final String lastName = lastNameController.text;
+                      ref.push().set({
+                        'firstName': firstName,
+                        'middleName': middleName,
+                        'lastName': lastName,
+                      });
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Processing Data')),
                       );
