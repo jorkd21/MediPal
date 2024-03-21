@@ -161,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 24.0),
+                SizedBox(height: 56.0),
                 Align(
                   alignment: Alignment.center,
                   child: ElevatedButton(

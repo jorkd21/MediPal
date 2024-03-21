@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
         '/AuthGate': (context) => AuthGate(),
         '/Form': (context) => MyForm(),
         '/Page3': (context) => Page3(),
-        '/Page4': (context) => LoginPage(),
+        '/Login': (context) => LoginPage(),
         '/SignUp': (context) => SignUpPage(),
       },
     );
@@ -82,7 +82,7 @@ class HomePage extends StatelessWidget {
             ButtonWidget('AuthGate', '/AuthGate'),
             ButtonWidget('Form', '/Form'),
             ButtonWidget('Page 3', '/Page3'),
-            ButtonWidget('Page 4', '/Page4'),
+            ButtonWidget('Login', '/Login'),
             ButtonWidget('Sign Up', '/SignUp'),
             /* FirebaseAuth.instance.currentUser != null
                 ? Align(
