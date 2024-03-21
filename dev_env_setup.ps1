@@ -50,5 +50,8 @@ sdkmanager --install "cmdline-tools;latest"
 # accept android licenses
 flutter doctor --android-licenses
 
+#set ANDROID_SDK_ROOT set user variable
+#git config --global --add safe.directory C:/tools/flutter
+
 firebase login
 #flutterfire configure
