@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 // firebase
 import 'package:firebase_core/firebase_core.dart'; // firebase core
-import 'package:medipal/login..dart';
+import 'package:medipal/pages/SignUp.dart';
+import 'package:medipal/pages/login..dart';
 import 'firebase_options.dart'; // firebase api keys
 import 'package:firebase_database/firebase_database.dart'; // realtime database
 import 'package:cloud_firestore/cloud_firestore.dart'; // cloud firestore
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
         '/Form': (context) => MyForm(),
         '/Page3': (context) => Page3(),
         '/Page4': (context) => LoginPage(),
+        '/SignUp': (context) => SignUpPage(),
       },
     );
   }
@@ -81,6 +83,7 @@ class HomePage extends StatelessWidget {
             ButtonWidget('Form', '/Form'),
             ButtonWidget('Page 3', '/Page3'),
             ButtonWidget('Page 4', '/Page4'),
+            ButtonWidget('Sign Up', '/SignUp'),
             /* FirebaseAuth.instance.currentUser != null
                 ? Align(
                     alignment: Alignment.bottomCenter,
