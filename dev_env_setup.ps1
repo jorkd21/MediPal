@@ -45,6 +45,10 @@ sdkmanager --install "platform-tools"
 sdkmanager --install "system-images;android-34;google_apis;x86_64"
 sdkmanager --install "extras;intel;Hardware_Accelerated_Execution_Manager"
 sdkmanager --install "sources;android-34"
+sdkmanager --install "cmdline-tools;latest"
+
+# accept android licenses
+flutter doctor --android-licenses
 
 firebase login
 #flutterfire configure
