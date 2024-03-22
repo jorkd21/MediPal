@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:medipal/constant/images.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:medipal/main.dart';
+import 'package:medipal/pages/SignUp.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -12,22 +16,47 @@ class _LoginPageState extends State<LoginPage> {
 
   String _errorMessage = '';
 
-  void _login() {
+  void _login() async {
     String username = _usernameController.text;
     String password = _passwordController.text;
 
-    // Perform validation (you can add more complex validation as needed)
-    if (username.isNotEmpty && password.isNotEmpty) {
-      // For this example, let's just show a success message
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: username,
+        password: password,
+      );
+
+      // If sign-in is successful, navigate to the home page or show a success message
       setState(() {
         _errorMessage = 'Login successful!';
       });
-    } else {
+      // Navigate to the home page
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        setState(() {
+          _errorMessage = 'No user found for that email.';
+        });
+      } else if (e.code == 'wrong-password') {
+        setState(() {
+          _errorMessage = 'Wrong password provided for that user.';
+        });
+      } else {
+        setState(() {
+          _errorMessage = e.message ?? 'An error occurred.';
+        });
+      }
+    } catch (e) {
       setState(() {
-        _errorMessage = 'Please enter both username and password.';
+        _errorMessage = e.toString();
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -185,9 +214,17 @@ class _LoginPageState extends State<LoginPage> {
                           style: TextStyle(color: Color(0xFFEFEFEF), fontSize: 15, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(width: 4), // Padding of 4 between widgets
-                        Text(
-                          'Sign Up',
-                          style: TextStyle(color: Color(0xFFEFEFEF), fontSize: 15, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context, 
+                              MaterialPageRoute(builder: (context) => SignUpPage()),
+                              );
+                          },
+                          child: Text(
+                            'Sign Up',
+                            style: TextStyle(color: Color(0xFFEFEFEF), fontSize: 15, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ],
                     ),
