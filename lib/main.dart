@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => HomePage(),
         '/Count': (context) => Count(),
         '/AuthGate': (context) => AuthGate(),
-        '/Form': (context) => MyForm(),
+        '/Form': (context) => PatientForm(),
         '/Page3': (context) => Page3(),
         '/Page4': (context) => LoginPage(),
       },
