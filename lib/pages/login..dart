@@ -4,6 +4,7 @@ import 'package:medipal/constant/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:medipal/main.dart';
 import 'package:medipal/pages/SignUp.dart';
+import 'package:medipal/pages/forgotpasswd.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -180,12 +181,20 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(height: 12.0),
                   Padding(
                     padding: EdgeInsets.only(left: 50.0), // Adjust left padding as needed
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context, 
+                          MaterialPageRoute(builder: (context) => ForgotAuth()),
+                          );
+                      },
                     child: Text(
                       'Forgot password?',
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
+                        ),
                       ),
                     ),
                   ),

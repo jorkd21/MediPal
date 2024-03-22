@@ -13,7 +13,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart'; //
 import 'package:medipal/count.dart';
 import 'package:medipal/auth_gate.dart';
 import 'package:medipal/form.dart';
-import 'package:medipal/page3.dart';
+import 'package:medipal/pages/forgotpasswd.dart';
 
 void main() async {
   // initialize firebase
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
         '/Count': (context) => Count(),
         '/AuthGate': (context) => AuthGate(),
         '/Form': (context) => MyForm(),
-        '/Page3': (context) => Page3(),
+        '/forgotpasswd': (context) => ForgotAuth(),
         '/Login': (context) => LoginPage(),
         '/SignUp': (context) => SignUpPage(),
       },
@@ -82,7 +82,7 @@ class HomePage extends StatelessWidget {
             ButtonWidget('Count', '/Count'),
             ButtonWidget('AuthGate', '/AuthGate'),
             ButtonWidget('Form', '/Form'),
-            ButtonWidget('Page 3', '/Page3'),
+            ButtonWidget('Forgot', '/ForgotAuth'),
             ButtonWidget('Login', '/Login'),
             ButtonWidget('Sign Up', '/SignUp'),
             /* FirebaseAuth.instance.currentUser != null
