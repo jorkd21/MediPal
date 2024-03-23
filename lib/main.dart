@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 // firebase
 import 'package:firebase_core/firebase_core.dart'; // firebase core
-import 'package:medipal/login..dart';
+import 'package:medipal/pages/SignUp.dart';
+import 'package:medipal/pages/login..dart';
 import 'firebase_options.dart'; // firebase api keys
 import 'package:firebase_database/firebase_database.dart'; // realtime database
 import 'package:cloud_firestore/cloud_firestore.dart'; // cloud firestore
@@ -13,7 +14,7 @@ import 'package:medipal/count.dart';
 import 'package:medipal/auth_gate.dart';
 import 'package:medipal/form_gen_patient_info.dart';
 import 'package:medipal/form_health_conditions.dart';
-import 'package:medipal/page3.dart';
+import 'package:medipal/pages/forgotpasswd.dart';
 
 void main() async {
   // initialize firebase
@@ -21,17 +22,18 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  
   // main app
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Navigation Development Page',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -44,8 +46,9 @@ class MyApp extends StatelessWidget {
         '/AuthGate': (context) => AuthGate(),
         '/Patient': (context) => PatientForm(),
         '/Condition': (context) => ConditionsForm(),
-        '/Page3': (context) => Page3(),
-        '/Page4': (context) => LoginPage(),
+        '/forgotpasswd': (context) => ForgotAuth(),
+        '/Login': (context) => LoginPage(),
+        '/SignUp': (context) => SignUpPage(),
       },
     );
   }
@@ -81,9 +84,10 @@ class HomePage extends StatelessWidget {
             ButtonWidget('Count', '/Count'),
             ButtonWidget('AuthGate', '/AuthGate'),
             ButtonWidget('Patient', '/Patient'),
-            ButtonWidget('Page 3', '/Page3'),
             ButtonWidget('Condition', '/Condition'),
-            ButtonWidget('Page 4', '/Page4'),
+            ButtonWidget('Forgot', '/ForgotAuth'),
+            ButtonWidget('Login', '/Login'),
+            ButtonWidget('Sign Up', '/SignUp'),
             /* FirebaseAuth.instance.currentUser != null
                 ? Align(
                     alignment: Alignment.bottomCenter,
