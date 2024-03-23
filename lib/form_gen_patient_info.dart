@@ -44,7 +44,8 @@ class GenPatInfoFormState extends State<GenPatInfoForm> {
     TextEditingController(),
     TextEditingController(),
   ];
-  List<TextEditingController> illnessList = [TextEditingController()];
+  //List<TextEditingController> illnessList = [TextEditingController()];
+  List<PhoneData> contactList = [PhoneData(phoneNumber: TextEditingController())];
   // dropdown menues
   int? selectedYear;
   int? selectedMonth;
@@ -59,9 +60,10 @@ class GenPatInfoFormState extends State<GenPatInfoForm> {
   List<int> days = List.generate(31, (int index) => index + 1);
   List<String> bloodGroups = ['A', 'B', 'AB', 'O'];
   List<String> rhFactors = ['+', '-'];
-
+  List<String> phoneTypes = ['home','work','mobile'];
+  
   // database connection
-  DatabaseReference ref = FirebaseDatabase.instance.ref('test/patient');
+  DatabaseReference ref = FirebaseDatabase.instance.ref('test/patient/geninfo');
 
   @override
   Widget build(BuildContext context) {
@@ -188,39 +190,6 @@ class GenPatInfoFormState extends State<GenPatInfoForm> {
                   );
                 }).toList(),
               ),
-              Text('Phone'),
-              Row(
-                children: [
-                  Text('+'),
-                  SizedBox(width: 10),
-                  SizedBox(
-                    width: 60,
-                    child: TextFormField(
-                      controller: phoneNumberControllers[0],
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: TextFormField(
-                      controller: phoneNumberControllers[1],
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ],
-              ),
               Text('E-mail'),
               TextFormField(
                 // The validator receives the text that the user has entered.
@@ -231,28 +200,53 @@ class GenPatInfoFormState extends State<GenPatInfoForm> {
                   return null;
                 },
               ),
-              Text('Illness'),
+              Text('Phone'),
               Column(
                 children: [
-                  ...List.generate(illnessList.length, (index) {
-                    final controller = illnessList[index];
-                    return TextFormField(
-                      controller: controller,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Field is required';
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                          hintText: "illness ${index + 1}",
+                  ...List.generate(contactList.length, (index) {
+                    PhoneData contact = contactList[index];
+                    return Row(
+                      children: [
+                          DropdownMenu<String>(
+                          initialSelection: phoneTypes.last,
+                          onSelected: (String? value) {
+                            setState(() {
+                              contact.type = value!;
+                            });
+                          },
+                          dropdownMenuEntries:
+                              phoneTypes.map<DropdownMenuEntry<String>>((String value) {
+                            return DropdownMenuEntry<String>(
+                              value: value,
+                              label: value,
+                            );
+                          }).toList(),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: TextFormField(
+                            controller: contact.phoneNumber,
+                            keyboardType: TextInputType.number,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter some text';
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                          hintText: "phone number",
                           suffixIcon: index == 0
                               ? null
                               : GestureDetector(
                                   onTap: () {
-                                    removeTextField(index);
+                                    removeField(index);
                                   },
-                                  child: const Icon(Icons.delete))),
+                                  child: const Icon(Icons.delete),
+                                ),
+                            ),
+                          ),
+                        ),
+                      ],
                     );
                   }),
 
@@ -261,7 +255,7 @@ class GenPatInfoFormState extends State<GenPatInfoForm> {
                       alignment: Alignment.topRight,
                       child: TextButton(
                           onPressed: () {
-                            addTextField(TextEditingController());
+                            addField(PhoneData(phoneNumber: TextEditingController()));
                           },
                           child: const Text("Add More"))),
                 ],
@@ -282,17 +276,29 @@ class GenPatInfoFormState extends State<GenPatInfoForm> {
                       final int? day = selectedDay;
                       final String rhFactor = selectedRH;
                       final String bloodGroup = selectedBG;
-                      
-                      ref.push().set({
-                        'firstName': firstName,
-                        'middleName': middleName,
-                        'lastName': lastName,
-                        'year': year,
-                        'month': month,
-                        'day': day,
+
+                      // process lists
+                      Map<String, dynamic> contactData = {};
+                      for (int i = 0; i < contactList.length; i++) {
+                        PhoneData contact = contactList[i];
+                        contactData[contact.type!] = contact.phoneNumber.text;
+                      }
+
+                      final patientData = {
+                        'nameFirst': firstName,
+                        'nameMiddle': middleName,
+                        'nameLast': lastName,
+                        'dobYear': year,
+                        'dobMonth': month,
+                        'dobDay': day,
                         'bloodGroup': bloodGroup,
-                        'rhFactor': rhFactor,
-                      });
+                        'bloodRH': rhFactor,
+                        'contact': contactData,
+                      };
+
+                      DatabaseReference newPatientRef = ref.push();
+                      newPatientRef.set(patientData);
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Processing Data')),
                       );
@@ -308,13 +314,19 @@ class GenPatInfoFormState extends State<GenPatInfoForm> {
     );
   }
 
-  addTextField(TextEditingController value) {
-    illnessList.add(value);
+  addField(PhoneData value) {
+    contactList.add(value);
     setState(() {});
   }
 
-  removeTextField(int index) {
-    illnessList.removeAt(index);
+  removeField(int index) {
+    contactList.removeAt(index);
     setState(() {});
   }
+}
+
+class PhoneData {
+  String? type;
+  TextEditingController phoneNumber;
+  PhoneData({this.type, required this.phoneNumber});
 }
