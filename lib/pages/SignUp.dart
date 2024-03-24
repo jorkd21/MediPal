@@ -7,13 +7,24 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _insuranceNumberController =
+      TextEditingController();
+  final TextEditingController _countryController = TextEditingController();
+
+  String _errorMessage = '';
+  String myImage = 'assets/images/your_image_name_here.png'; // Replace with your image path
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(),
-        body: 
-        Container(
+        appBar: AppBar(title: Text("Sign Up Page")),
+        body: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.bottomCenter,
@@ -29,6 +40,56 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                TextField(
+                  controller: _firstNameController,
+                  decoration: InputDecoration(
+                    labelText: 'First Name',
+                  ),
+                ),
+                SizedBox(height: 20.0),
+                TextField(
+                  controller: _lastNameController,
+                  decoration: InputDecoration(
+                    labelText: 'Last Name',
+                  ),
+                ),
+                SizedBox(height: 20.0),
+                TextField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                  ),
+                ),
+                SizedBox(height: 20.0),
+                TextField(
+                  controller: _phoneNumberController,
+                  decoration: InputDecoration(
+                    labelText: 'Phone Number',
+                  ),
+                ),
+                SizedBox(height: 20.0),
+                TextField(
+                  controller: _insuranceNumberController,
+                  decoration: InputDecoration(
+                    labelText: '#Insurance Number',
+                  ),
+                ),
+                SizedBox(height: 20.0),
+                TextField(
+                  controller: _countryController,
+                  decoration: InputDecoration(
+                    labelText: 'Country',
+                  ),
+                ),
+                SizedBox(height: 20.0),
+                TextField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                  ),
+                  obscureText: true, // Hide the entered text
+                ),
+                SizedBox(height: 20.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -41,6 +102,18 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ],
                 ),
+                SizedBox(height: 20.0),
+                ElevatedButton(
+                  onPressed: () {
+                    // Add your sign-up logic here
+                  },
+                  child: Text('Sign Up'),
+                ),
+                if (_errorMessage.isNotEmpty)
+                  Text(
+                    _errorMessage,
+                    style: TextStyle(color: Colors.red),
+                  ),
               ],
             ),
           ),
