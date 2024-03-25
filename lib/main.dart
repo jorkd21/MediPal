@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 // firebase
 import 'package:firebase_core/firebase_core.dart'; // firebase core
-import 'package:medipal/pages/SignUp.dart';
-import 'package:medipal/pages/login..dart';
 import 'firebase_options.dart'; // firebase api keys
 import 'package:firebase_database/firebase_database.dart'; // realtime database
 import 'package:cloud_firestore/cloud_firestore.dart'; // cloud firestore
@@ -15,6 +13,8 @@ import 'package:medipal/auth_gate.dart';
 import 'package:medipal/form_gen_patient_info.dart';
 import 'package:medipal/form_health_conditions.dart';
 import 'package:medipal/pages/forgotpasswd.dart';
+import 'package:medipal/pages/SignUp.dart';
+import 'package:medipal/pages/login.dart';
 
 void main() async {
   // initialize firebase
