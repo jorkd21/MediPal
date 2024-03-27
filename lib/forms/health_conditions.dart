@@ -2,22 +2,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-class ConditionsForm extends StatelessWidget {
-  const ConditionsForm({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    const appTitle = 'Health Conditions Form';
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(appTitle),
-      ),
-      body: const HealthConditionsForm(),
-    );
-  }
-}
-
 class HealthConditionsForm extends StatefulWidget {
   const HealthConditionsForm({super.key});
 

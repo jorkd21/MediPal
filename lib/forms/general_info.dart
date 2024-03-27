@@ -1,35 +1,19 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-class PatientForm extends StatelessWidget {
-  const PatientForm({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    const appTitle = 'General Patient Information';
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(appTitle),
-      ),
-      body: const GenPatInfoForm(),
-    );
-  }
-}
-
 // Create a Form widget.
-class GenPatInfoForm extends StatefulWidget {
-  const GenPatInfoForm({super.key});
+class GeneralInfoForm extends StatefulWidget {
+  const GeneralInfoForm({super.key});
 
   @override
-  GenPatInfoFormState createState() {
-    return GenPatInfoFormState();
+  GeneralInfoFormState createState() {
+    return GeneralInfoFormState();
   }
 }
 
 // Create a corresponding State class.
 // This class holds data related to the form.
-class GenPatInfoFormState extends State<GenPatInfoForm> {
+class GeneralInfoFormState extends State<GeneralInfoForm> {
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
   //
