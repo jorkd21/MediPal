@@ -13,7 +13,7 @@ class _PatientFormState extends State<PatientForm> {
   List<Widget> _pages = [
     GeneralInfoForm(),
     HealthConditionsForm(),
-    //nextForm(),
+    NextForm(),
   ];
 
   void _nextPage() {
@@ -48,34 +48,55 @@ class _PatientFormState extends State<PatientForm> {
       appBar: AppBar(
         title: Text('Patient Form'),
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: PageView(
-              controller: _pageController,
-              onPageChanged: (index) {
-                setState(() {
-                  _pageIndex = index;
-                });
-              },
-              children: _pages,
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              ElevatedButton(
-                onPressed: _previousPage,
-                child: Text('Back'),
-              ),
-              ElevatedButton(
-                onPressed: _nextPage,
-                child: Text('Next'),
-              ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
+            colors: [
+              Color(0xFF6D98EB), // Light blue at the bottom
+              Color(0xFFBAA2DA), // Purple at the top
             ],
           ),
-        ],
+        ),
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  setState(() {
+                    _pageIndex = index;
+                  });
+                },
+                children: _pages,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                ElevatedButton(
+                  onPressed: _previousPage,
+                  child: Text('Back'),
+                ),
+                ElevatedButton(
+                  onPressed: _nextPage,
+                  child: Text('Next'),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class NextForm extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text('Next Form'),
     );
   }
 }
