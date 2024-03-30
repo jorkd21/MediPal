@@ -1,11 +1,12 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/forms/input_template.dart';
 import 'package:medipal/objects/patient.dart';
 
 // Create a Form widget.
 class GeneralInfoForm extends StatefulWidget {
-  const GeneralInfoForm({super.key});
+  final Patient patient;
+  final GlobalKey<FormState> formKey;
+  const GeneralInfoForm({super.key, required this.patient, required this.formKey });
 
   @override
   GeneralInfoFormState createState() {
@@ -21,10 +22,10 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
-  final _formKey = GlobalKey<FormState>();
+  //final _formKey = GlobalKey<FormState>();
 
   // Patient instance to hold form data
-  Patient _patient = Patient();
+  //Patient _patient = Patient();
 
   // Define lists for dropdown options
   List<int> years =
@@ -36,24 +37,24 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
   List<String> phoneTypes = ['home', 'work', 'mobile'];
 
   // database connection
-  DatabaseReference ref = FirebaseDatabase.instance.ref('test/patient/geninfo');
+  //DatabaseReference ref = FirebaseDatabase.instance.ref('test/patient/geninfo');
 
   @override
   Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
+    // Build a Form widget using the widget.formKey created above.
     return ListView(
       children: [
         Form(
-          key: _formKey,
+          key: widget.formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               buildTextFormField(
                 labelText: 'First Name',
-                value: _patient.firstName,
+                value: widget.patient.firstName,
                 onChanged: (value) {
                   setState(() {
-                    _patient.firstName = value;
+                    widget.patient.firstName = value;
                   });
                 },
                 validator: (value) {
@@ -65,10 +66,10 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
               ),
               buildTextFormField(
                 labelText: 'Middle Name',
-                value: _patient.middleName,
+                value: widget.patient.middleName,
                 onChanged: (value) {
                   setState(() {
-                    _patient.middleName = value;
+                    widget.patient.middleName = value;
                   });
                 },
                 validator: (value) {
@@ -80,10 +81,10 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
               ),
               buildTextFormField(
                 labelText: 'Last Name',
-                value: _patient.lastName,
+                value: widget.patient.lastName,
                 onChanged: (value) {
                   setState(() {
-                    _patient.lastName = value;
+                    widget.patient.lastName = value;
                   });
                 },
                 validator: (value) {
@@ -93,18 +94,18 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                   return null;
                 },
               ),
-              Text('Date of Birth'),
+              const Text('Date of Birth'),
               Row(
                 children: [
                   // Dropdown for Year
-                  Container(
+                  SizedBox(
                     width: 100,
                     child: buildDropdownFormField<int>(
-                      value: _patient.dob?.year,
+                      value: widget.patient.dob?.year,
                       onChanged: (int? value) {
                         setState(() {
-                          _patient.dob = DateTime(value ?? 0,
-                              _patient.dob?.month ?? 1, _patient.dob?.day ?? 1);
+                          widget.patient.dob = DateTime(value ?? 0,
+                              widget.patient.dob?.month ?? 1, widget.patient.dob?.day ?? 1);
                         });
                       },
                       items: years,
@@ -117,16 +118,16 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                     ),
                   ),
                   // Dropdown for Month
-                  Container(
+                  SizedBox(
                     width: 50,
                     child: buildDropdownFormField<int>(
-                      value: _patient.dob?.month,
+                      value: widget.patient.dob?.month,
                       onChanged: (int? value) {
                         setState(() {
-                          _patient.dob = DateTime(
-                              _patient.dob?.year ?? DateTime.now().year,
+                          widget.patient.dob = DateTime(
+                              widget.patient.dob?.year ?? DateTime.now().year,
                               value ?? 1,
-                              _patient.dob?.day ?? 1);
+                              widget.patient.dob?.day ?? 1);
                         });
                       },
                       items: months,
@@ -139,15 +140,15 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                     ),
                   ),
                   // Dropdown for Day
-                  Container(
+                  SizedBox(
                     width: 50,
                     child: buildDropdownFormField<int>(
-                      value: _patient.dob?.day,
+                      value: widget.patient.dob?.day,
                       onChanged: (int? value) {
                         setState(() {
-                          _patient.dob = DateTime(
-                              _patient.dob?.year ?? DateTime.now().year,
-                              _patient.dob?.month ?? 1,
+                          widget.patient.dob = DateTime(
+                              widget.patient.dob?.year ?? DateTime.now().year,
+                              widget.patient.dob?.month ?? 1,
                               value ?? 1);
                         });
                       },
@@ -164,14 +165,14 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
               ),
               Row(
                 children: [
-                  Text('Blood Group'),
-                  Container(
+                  const Text('Blood Group'),
+                  SizedBox(
                     width: 50,
                     child: buildDropdownFormField<String>(
-                      value: _patient.bloodGroup,
+                      value: widget.patient.bloodGroup,
                       onChanged: (String? value) {
                         setState(() {
-                          _patient.bloodGroup = value;
+                          widget.patient.bloodGroup = value;
                         });
                       },
                       validator: (value) {
@@ -183,14 +184,14 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                       items: bloodGroups,
                     ),
                   ),
-                  Text('RH Factor'),
-                  Container(
+                  const Text('RH Factor'),
+                  SizedBox(
                     width: 50,
                     child: buildDropdownFormField<String>(
-                      value: _patient.rhFactor,
+                      value: widget.patient.rhFactor,
                       onChanged: (String? value) {
                         setState(() {
-                          _patient.rhFactor = value;
+                          widget.patient.rhFactor = value;
                         });
                       },
                       validator: (value) {
@@ -206,10 +207,10 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
               ),
               buildTextFormField(
                 labelText: 'E-mail',
-                value: _patient.email,
+                value: widget.patient.email,
                 onChanged: (value) {
                   setState(() {
-                    _patient.email = value;
+                    widget.patient.email = value;
                   });
                 },
                 validator: (value) {
@@ -219,11 +220,11 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                   return null;
                 },
               ),
-              Text('Phone'),
+              const Text('Phone'),
               Column(
                 children: [
-                  ...List.generate(_patient.phone?.length ?? 0, (index) {
-                    PhoneData contact = _patient.phone![index];
+                  ...List.generate(widget.patient.phone?.length ?? 0, (index) {
+                    PhoneData contact = widget.patient.phone![index];
                     return Row(
                       children: [
                         Container(
@@ -244,7 +245,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                             },
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: buildTextFormField(
                             labelText: 'Phone Number',
@@ -265,35 +266,15 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                       ],
                     );
                   }),
-
                   ///Add more button
                   Align(
                       alignment: Alignment.topRight,
                       child: TextButton(
                           onPressed: () {
-                            addField(_patient.phone, PhoneData());
+                            addField(widget.patient.phone, PhoneData());
                           },
                           child: const Text("Add More"))),
                 ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Validate returns true if the form is valid, or false otherwise.
-                    if (_formKey.currentState!.validate()) {
-                      // If the form is valid, display a snackbar. In the real world,
-                      // you'd often call a server or save the information in a database.
-                      DatabaseReference newPatientRef = ref.push();
-                      newPatientRef.set(_patient.toJson());
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Processing Data')),
-                      );
-                    }
-                  },
-                  child: const Text('Submit'),
-                ),
               ),
             ],
           ),
@@ -303,16 +284,13 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
   }
 
   addField(List<dynamic>? list, dynamic value) {
-    if (list == null) {
-      list = [];
-    }
     list!.add(value);
     setState(() {});
   }
 
   removeField(int index) {
-    if (_patient.phone != null && index < _patient.phone!.length) {
-      _patient.phone!.removeAt(index);
+    if (widget.patient.phone != null && index < widget.patient.phone!.length) {
+      widget.patient.phone!.removeAt(index);
       setState(() {});
     }
   }

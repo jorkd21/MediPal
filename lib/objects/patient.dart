@@ -32,6 +32,9 @@ class Patient {
       'rhFactor': rhFactor,
       'email': email,
       'phone': phone?.map((e) => e.toJson()).toList(),
+      'illnessCurr': currIllness ?? [],
+      'illnessPrev': prevIllness ?? [],
+      'allergies': allergies ?? [],
     };
   }
 }
