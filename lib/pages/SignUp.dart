@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
+import 'package:medipal/main.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -12,14 +15,49 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
-  final TextEditingController _insuranceNumberController =
-      TextEditingController();
+  final TextEditingController _licenseController = TextEditingController();
   final TextEditingController _countryController = TextEditingController();
 
   String _errorMessage = '';
 
   void _signUp() async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
 
+      User? user = userCredential.user;
+
+      if (user != null) {
+        // Update user profile with first name, last name, and license number
+        // ignore: deprecated_member_use
+        await user.updateProfile(
+          displayName: '${_firstNameController.text} ${_lastNameController.text}',
+          photoURL: _licenseController.text,
+        );
+
+        // Update user's phone number
+        //await user.updatePhoneNumber(_phoneNumberController.text);
+
+        // Update user's country
+        // ignore: deprecated_member_use
+        await user.updateProfile(
+          photoURL: _countryController.text,
+        );
+      }
+
+      // Navigate to HomeScreen or any other page after successful sign up
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+
+    } catch (e) {
+      setState(() {
+        _errorMessage = e.toString();
+      });
+    }
   }
 
   @override
@@ -137,13 +175,14 @@ class _SignUpPageState extends State<SignUpPage> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: TextField(
-                          controller: _phoneNumberController,
+                          controller: _passwordController,
                           decoration: InputDecoration(
                             labelText: 'Password',
                             border: InputBorder.none,
                             contentPadding:
                                 EdgeInsets.symmetric(horizontal: 10.0),
                           ),
+                          obscureText: true, // Hide the entered text
                         ),
                       ),
                     ),
@@ -156,7 +195,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: TextField(
-                          controller: _insuranceNumberController,
+                          controller: _phoneNumberController,
                           decoration: InputDecoration(
                             labelText: 'Phone Number',
                             border: InputBorder.none,
@@ -175,7 +214,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: TextField(
-                          controller: _countryController,
+                          controller: _licenseController,
                           decoration: InputDecoration(
                             labelText: 'License Number',
                             border: InputBorder.none,
@@ -194,14 +233,13 @@ class _SignUpPageState extends State<SignUpPage> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: TextField(
-                          controller: _passwordController,
+                          controller: _countryController,
                           decoration: InputDecoration(
                             labelText: 'Country',
                             border: InputBorder.none,
                             contentPadding:
                                 EdgeInsets.symmetric(horizontal: 10.0),
                           ),
-                          obscureText: true, // Hide the entered text
                         ),
                       ),
                     ),
