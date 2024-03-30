@@ -1,6 +1,8 @@
 // Create a Form widget.
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:medipal/forms/input_template.dart';
+import 'package:medipal/objects/patient.dart';
 
 class HealthConditionsForm extends StatefulWidget {
   const HealthConditionsForm({super.key});
@@ -15,11 +17,10 @@ class HealthConditionsForm extends StatefulWidget {
 // This class holds data related to the form.
 class HealthConditionsFormState extends State<HealthConditionsForm> {
   final _formKey = GlobalKey<FormState>();
-  List<TextEditingController> illnessCurrList = [TextEditingController()];
-  List<TextEditingController> illnessPrevList = [TextEditingController()];
-  List<TextEditingController> allergiesList = [TextEditingController()];
+  Patient _patient = Patient();
   // database connection
-  DatabaseReference ref = FirebaseDatabase.instance.ref('test/patient/conditions');
+  DatabaseReference ref =
+      FirebaseDatabase.instance.ref('test/patient/conditions');
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
@@ -33,34 +34,31 @@ class HealthConditionsFormState extends State<HealthConditionsForm> {
               Text('Current Illness'),
               Column(
                 children: [
-                  ...List.generate(illnessCurrList.length, (index) {
-                    final controller = illnessCurrList[index];
-                    return TextFormField(
-                      controller: controller,
+                  ...List.generate(_patient.currIllness!.length, (index) {
+                    String? illness = _patient.currIllness![index];
+                    return buildTextFormField(
+                      labelText: 'illness',
+                      value: illness,
+                      onChanged: (value) {
+                        _patient.currIllness![index] = value!;
+                      },
                       validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Field is required';
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
                         }
                         return null;
                       },
-                      decoration: InputDecoration(
-                          hintText: "illness ${index + 1}",
-                          suffixIcon: index == 0
-                              ? null
-                              : GestureDetector(
-                                  onTap: () {
-                                    removeTextField(illnessCurrList,index);
-                                  },
-                                  child: const Icon(Icons.delete))),
+                      onSuffixIconTap: index == 0
+                          ? null
+                          : () => removeField(_patient.currIllness, index),
                     );
                   }),
-
                   ///Add more button
                   Align(
                       alignment: Alignment.topRight,
                       child: TextButton(
                           onPressed: () {
-                            addTextField(illnessCurrList,TextEditingController());
+                            addField(_patient.currIllness, '');
                           },
                           child: const Text("Add More"))),
                 ],
@@ -68,34 +66,31 @@ class HealthConditionsFormState extends State<HealthConditionsForm> {
               Text('Previous Illness'),
               Column(
                 children: [
-                  ...List.generate(illnessPrevList.length, (index) {
-                    final controller = illnessPrevList[index];
-                    return TextFormField(
-                      controller: controller,
+                  ...List.generate(_patient.prevIllness!.length, (index) {
+                    String? illness = _patient.prevIllness![index];
+                    return buildTextFormField(
+                      labelText: 'illness',
+                      value: illness,
+                      onChanged: (value) {
+                        _patient.prevIllness![index] = value!;
+                      },
                       validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Field is required';
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
                         }
                         return null;
                       },
-                      decoration: InputDecoration(
-                          hintText: "illness ${index + 1}",
-                          suffixIcon: index == 0
-                              ? null
-                              : GestureDetector(
-                                  onTap: () {
-                                    removeTextField(illnessPrevList,index);
-                                  },
-                                  child: const Icon(Icons.delete))),
+                      onSuffixIconTap: index == 0
+                          ? null
+                          : () => removeField(_patient.prevIllness, index),
                     );
                   }),
-
                   ///Add more button
                   Align(
                       alignment: Alignment.topRight,
                       child: TextButton(
                           onPressed: () {
-                            addTextField(illnessPrevList,TextEditingController());
+                            addField(_patient.prevIllness, '');
                           },
                           child: const Text("Add More"))),
                 ],
@@ -103,34 +98,31 @@ class HealthConditionsFormState extends State<HealthConditionsForm> {
               Text('Specific allergies'),
               Column(
                 children: [
-                  ...List.generate(allergiesList.length, (index) {
-                    final controller = allergiesList[index];
-                    return TextFormField(
-                      controller: controller,
+                  ...List.generate(_patient.allergies!.length, (index) {
+                    String? illness = _patient.allergies![index];
+                    return buildTextFormField(
+                      labelText: 'allergy',
+                      value: illness,
+                      onChanged: (value) {
+                        _patient.allergies![index] = value!;
+                      },
                       validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Field is required';
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
                         }
                         return null;
                       },
-                      decoration: InputDecoration(
-                          hintText: "allergy ${index + 1}",
-                          suffixIcon: index == 0
-                              ? null
-                              : GestureDetector(
-                                  onTap: () {
-                                    removeTextField(allergiesList,index);
-                                  },
-                                  child: const Icon(Icons.delete))),
+                      onSuffixIconTap: index == 0
+                          ? null
+                          : () => removeField(_patient.allergies, index),
                     );
                   }),
-
                   ///Add more button
                   Align(
                       alignment: Alignment.topRight,
                       child: TextButton(
                           onPressed: () {
-                            addTextField(allergiesList,TextEditingController());
+                            addField(_patient.allergies, '');
                           },
                           child: const Text("Add More"))),
                 ],
@@ -143,24 +135,24 @@ class HealthConditionsFormState extends State<HealthConditionsForm> {
                     if (_formKey.currentState!.validate()) {
                       // process lists
                       List<String> illnessesCurrData = [];
-                      for (int i = 0; i < illnessCurrList.length; i++) {
-                        String illness = illnessCurrList[i].text;
+                      for (int i = 0; i < _patient.currIllness!.length; i++) {
+                        String illness = _patient.currIllness![i];
                         if (illness.isNotEmpty) {
                           illnessesCurrData.add(illness);
                         }
                       }
                       // process lists
                       List<String> illnessesPrevData = [];
-                      for (int i = 0; i < illnessPrevList.length; i++) {
-                        String illness = illnessPrevList[i].text;
+                      for (int i = 0; i < _patient.prevIllness!.length; i++) {
+                        String illness = _patient.prevIllness![i];
                         if (illness.isNotEmpty) {
                           illnessesPrevData.add(illness);
                         }
                       }
                       // process lists
                       List<String> allergiesData = [];
-                      for (int i = 0; i < allergiesList.length; i++) {
-                        String allergy = allergiesList[i].text;
+                      for (int i = 0; i < _patient.allergies!.length; i++) {
+                        String allergy = _patient.allergies![i];
                         if (allergy.isNotEmpty) {
                           allergiesData.add(allergy);
                         }
@@ -187,6 +179,22 @@ class HealthConditionsFormState extends State<HealthConditionsForm> {
       ],
     );
   }
+
+  addField(List<dynamic>? list, dynamic value) {
+    if (list == null) {
+      list = [];
+    }
+    list!.add(value);
+    setState(() {});
+  }
+
+  removeField(List<dynamic>? list, int index) {
+    if (list != null && index < list!.length) {
+      list!.removeAt(index);
+      setState(() {});
+    }
+  }
+
   addTextField(List<TextEditingController> list, TextEditingController value) {
     list.add(value);
     setState(() {});
