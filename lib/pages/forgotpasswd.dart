@@ -6,7 +6,10 @@ import 'package:medipal/main.dart';
 import 'package:medipal/pages/SignUp.dart';
 import 'package:medipal/pages/forgotpasswd.dart';
 
-class ForgotAuth extends StatelessWidget {
+class ForgotPassPage extends StatelessWidget {
+
+  final TextEditingController _emailController = TextEditingController();
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,6 +59,21 @@ class ForgotAuth extends StatelessWidget {
                     textAlign: TextAlign.left,
                   ),
                 ),
+                SizedBox(height: 20),
+                  TextField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      hintText: 'Enter your email',
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: EdgeInsets.all(15.0),
+                    ),
+                  ),
+                  SizedBox(height: 20),
               ],
             ),
           ),
