@@ -90,27 +90,16 @@ class GenPatInfoFormState extends State<GenPatInfoForm> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('First Name'),
-                TextFormField(
+                CustomTextFormField(
                   controller: firstNameController,
+                  labelText: 'First Name',
+                  hintText: 'Enter your first name',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter some text';
                     }
                     return null;
                   },
-                  style: TextStyle(color: Colors.white),  // Set input text color to white
-                  decoration: InputDecoration(
-                    labelText: 'First Name',
-                    labelStyle: TextStyle(color: Colors.white),  // Set label text color to white
-                    hintText: 'Enter your first name',
-                    hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),  // Set hint text color to lighter shade of white
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),  // Set border color to white
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),  // Set focused border color to white
-                    ),
-                  ),
                 ),
                 Text('Middle Name'),
                 TextFormField(
@@ -359,3 +348,44 @@ class PhoneData {
   TextEditingController phoneNumber;
   PhoneData({this.type, required this.phoneNumber});
 }
+
+class CustomTextFormField extends StatelessWidget {
+  final TextEditingController controller;
+  final String labelText;
+  final String hintText;
+  final Function(String?)? validator;
+
+  const CustomTextFormField({
+    required this.controller,
+    required this.labelText,
+    required this.hintText,
+    this.validator,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      validator: (value) {
+        if (validator != null) {
+          return validator!(value);
+        }
+        return null;
+      },
+      style: TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: TextStyle(color: Colors.white),
+        hintText: hintText,
+        hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+        ),
+      ),
+    );
+  }
+}
+
