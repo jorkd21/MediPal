@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'package:medipal/objects/patient.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -10,6 +10,10 @@ import 'package:medipal/pages/signup.dart';
 import 'package:medipal/pages/forgotpasswd.dart';
 
 class PatientPage extends StatelessWidget {
+
+  //final Patient patient;
+  //PatientPage({required this.patient});
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -96,7 +100,7 @@ class PatientPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Name of Patient',
+                    'Name of Patient', //${patient.firstName ?? ''} ${patient.middleName ?? ''} ${patient.lastName ?? ''}
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -118,8 +122,7 @@ class PatientPage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 23.24,),
-              
+              SizedBox(height: 23.24,),  
                 Container(
                   decoration: BoxDecoration(
                     color: Color(0xFFDADFEC),
@@ -145,14 +148,97 @@ class PatientPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      for (int i = 0; i < 4; i++)
+                      
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
                             padding: EdgeInsets.only(top: 18.92, left: 30),
                             child: Text(
-                              'Title $i:',
+                              'Date of birth',
+                              style: TextStyle(
+                                color: Color(0xFF7B7B7B),
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 18.92, right: 111),
+                            child: Text(
+                              '31/12/1988',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: 18.92, left: 30),
+                            child: Text(
+                              'Location',
+                              style: TextStyle(
+                                color: Color(0xFF7B7B7B),
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 18.92, right: 101),
+                            child: Text(
+                              'United States',
+                              textAlign: TextAlign.end,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16,
+                              ),
+                            ),
+                            ),
+                          ],
+                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: 18.92, left: 30),
+                            child: Text(
+                              'Id',
+                              style: TextStyle(
+                                color: Color(0xFF7B7B7B),
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 18.92, right: 120),
+                            child: Text(
+                              '0000-0026',
+                              textAlign: TextAlign.end,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16,
+                              ),
+                            ),
+                            ),
+                          ],
+                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: 18.92, left: 30),
+                            child: Text(
+                              'Blood type',
                               style: TextStyle(
                                 color: Color(0xFF7B7B7B),
                                 fontWeight: FontWeight.normal,
@@ -163,7 +249,8 @@ class PatientPage extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(top: 18.92, right: 179),
                             child: Text(
-                              'Item $i',
+                              'O+',
+                              textAlign: TextAlign.end,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.normal,
@@ -359,4 +446,5 @@ class PatientPage extends StatelessWidget {
         ),
       );
   }
+  
 }
