@@ -24,8 +24,8 @@ class PatientPage extends StatelessWidget {
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                     colors: [
-                      Color(0xFF6D98EB), // Light blue at the bottom
-                      Color(0xFFBAD2FF),
+                      Color.fromARGB(255, 151, 183, 247), // Light blue at the bottom
+                      Color.fromARGB(255, 192, 212, 248),
                     ],
                   ),
                 ),
@@ -38,7 +38,7 @@ class PatientPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           IconButton(
-                            icon: Icon(Icons.arrow_back, color: Colors.white, size: 40),
+                            icon: Icon(Icons.arrow_back, color: Colors.black, size: 40),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
