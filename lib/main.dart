@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // firebase
 import 'package:firebase_core/firebase_core.dart'; // firebase core
+import 'package:medipal/pages/patientpage.dart';
 import 'package:medipal/pages/signup.dart';
 import 'package:medipal/pages/login.dart';
 import 'firebase_options.dart'; // firebase api keys
@@ -45,10 +46,10 @@ class MyApp extends StatelessWidget {
         '/': (context) => HomePage(),
         '/Count': (context) => Count(),
         '/AuthGate': (context) => AuthGate(),
-        '/forgotpasswd': (context) => ForgotPassPage(),
         '/Login': (context) => LoginPage(),
         '/SignUp': (context) => SignUpPage(),
         '/Form': (context) => PatientForm(),
+        '/PatientPage': (context) => PatientPage(),
       },
     );
   }
@@ -83,10 +84,10 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             ButtonWidget('Count', '/Count'),
             ButtonWidget('AuthGate', '/AuthGate'),
-            ButtonWidget('Forgot', '/ForgotAuth'),
             ButtonWidget('Login', '/Login'),
             ButtonWidget('Sign Up', '/SignUp'),
             ButtonWidget('Form', '/Form'),
+            ButtonWidget('PatientPage', '/PatientPage')
             /* FirebaseAuth.instance.currentUser != null
                 ? Align(
                     alignment: Alignment.bottomCenter,
