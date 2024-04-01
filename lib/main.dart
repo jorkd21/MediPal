@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 // firebase
 import 'package:firebase_core/firebase_core.dart'; // firebase core
-import 'package:medipal/pages/SignUp.dart';
+import 'package:medipal/pages/signup.dart';
 import 'package:medipal/pages/login.dart';
 import 'firebase_options.dart'; // firebase api keys
 import 'package:firebase_database/firebase_database.dart'; // realtime database
@@ -14,7 +14,7 @@ import 'package:medipal/count.dart';
 import 'package:medipal/auth_gate.dart';
 import 'package:medipal/form_patient.dart';
 import 'package:medipal/pages/forgotpasswd.dart';
-import 'package:medipal/pages/SignUp.dart';
+import 'package:medipal/pages/signup.dart';
 import 'package:medipal/pages/login.dart';
 
 void main() async {
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => HomePage(),
         '/Count': (context) => Count(),
         '/AuthGate': (context) => AuthGate(),
-        '/forgotpasswd': (context) => ForgotAuth(),
+        '/forgotpasswd': (context) => ForgotPassPage(),
         '/Login': (context) => LoginPage(),
         '/SignUp': (context) => SignUpPage(),
         '/Form': (context) => PatientForm(),
