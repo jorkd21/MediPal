@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/forms/general_info.dart';
 import 'package:medipal/forms/health_conditions.dart';
+import 'package:medipal/forms/patient_data.dart';
 import 'package:medipal/objects/patient.dart';
 
 class PatientForm extends StatefulWidget {
@@ -30,9 +31,9 @@ class _PatientFormState extends State<PatientForm> {
     _patient = Patient(); // Create patient object
     _pages = [
       GeneralInfoForm(patient: _patient, formKey: _generalInfoFormKey),
-      HealthConditionsForm(
-          patient: _patient, formKey: _healthConditionsFormKey),
+      HealthConditionsForm(patient: _patient, formKey: _healthConditionsFormKey),
       NextForm(),
+      GetPatientData( patientId: '-NuMRL2au8iPxGLcdQj8',),
     ];
   }
 
