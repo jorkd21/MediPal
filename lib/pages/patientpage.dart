@@ -29,7 +29,7 @@ class PatientPage extends StatelessWidget {
                     end: Alignment.topCenter,
                     colors: [
                       Color.fromARGB(255, 151, 183, 247), // Light blue at the bottom
-                      Color.fromARGB(255, 192, 212, 248),
+                      Color.fromARGB(255, 192, 212, 248), // White at top
                     ],
                   ),
                 ),
