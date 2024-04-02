@@ -148,14 +148,14 @@ class PatientPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      
+                      for (int i = 0; i < 5; i++)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
                             padding: EdgeInsets.only(top: 18.92, left: 30),
                             child: Text(
-                              'Date of birth',
+                              i == 0 ? 'Date of birth' : i == 1 ? 'Location' : i == 2 ? 'Id' : i == 3 ? 'Blood type' : 'Marital status',
                               style: TextStyle(
                                 color: Color(0xFF7B7B7B),
                                 fontWeight: FontWeight.normal,
@@ -166,7 +166,7 @@ class PatientPage extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(top: 18.92, right: 111),
                             child: Text(
-                              '31/12/1988',
+                              i == 0 ? '08/12/1986' : i == 1 ? 'United States' : i == 2 ? '0000-0026' : i == 3 ? 'O+' : 'Married',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.normal,
@@ -176,90 +176,6 @@ class PatientPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: 18.92, left: 30),
-                            child: Text(
-                              'Location',
-                              style: TextStyle(
-                                color: Color(0xFF7B7B7B),
-                                fontWeight: FontWeight.normal,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 18.92, right: 101),
-                            child: Text(
-                              'United States',
-                              textAlign: TextAlign.end,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 16,
-                              ),
-                            ),
-                            ),
-                          ],
-                        ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: 18.92, left: 30),
-                            child: Text(
-                              'Id',
-                              style: TextStyle(
-                                color: Color(0xFF7B7B7B),
-                                fontWeight: FontWeight.normal,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 18.92, right: 120),
-                            child: Text(
-                              '0000-0026',
-                              textAlign: TextAlign.end,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 16,
-                              ),
-                            ),
-                            ),
-                          ],
-                        ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: 18.92, left: 30),
-                            child: Text(
-                              'Blood type',
-                              style: TextStyle(
-                                color: Color(0xFF7B7B7B),
-                                fontWeight: FontWeight.normal,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 18.92, right: 179),
-                            child: Text(
-                              'O+',
-                              textAlign: TextAlign.end,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 16,
-                              ),
-                            ),
-                            ),
-                          ],
-                        ),
                         SizedBox(height: 23.01),
                         Row(
                           children: [
@@ -283,7 +199,7 @@ class PatientPage extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(top: 18.92, left: 30),
                             child: Text(
-                              'Title $i:',
+                              i == 0 ? 'Date of diagnosis' : 'Date of diagnosis',
                               style: TextStyle(
                                 color: Color(0xFF7B7B7B),
                                 fontWeight: FontWeight.normal,
@@ -292,9 +208,9 @@ class PatientPage extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(top: 18.92, right: 179),
+                            padding: EdgeInsets.only(top: 18.92, right: 111),
                             child: Text(
-                              'Item $i',
+                              i == 0 ? 'lorem ipsum' : 'lorem ipsum',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.normal,
@@ -336,7 +252,7 @@ class PatientPage extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(top: 18.92, right: 179),
+                            padding: EdgeInsets.only(top: 18.92, right: 111),
                             child: Text(
                               'Item $i',
                               style: TextStyle(
@@ -364,14 +280,14 @@ class PatientPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      for (int i = 0; i < 2; i++)
+                      for (int i = 0; i < 4; i++)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
                             padding: EdgeInsets.only(top: 18.92, left: 30),
                             child: Text(
-                              'Title $i:',
+                              i == 0 ? 'Tuberculosis' : i == 1 ? 'Influenza' : i == 2 ? 'Malaria' : 'Dengue',
                               style: TextStyle(
                                 color: Color(0xFF7B7B7B),
                                 fontWeight: FontWeight.normal,
@@ -380,9 +296,9 @@ class PatientPage extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(top: 18.92, right: 179),
+                            padding: EdgeInsets.only(top: 18.92, right: 111),
                             child: Text(
-                              'Item $i',
+                              i == 0 ? 'Updated' : i == 1 ? 'Updated' : i == 2 ? 'Updated' : 'Booster needed',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.normal,
@@ -415,7 +331,7 @@ class PatientPage extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(top: 18.92, left: 30),
                             child: Text(
-                              'Title $i:',
+                              i == 0 ? 'Blood tests' : 'X-Rays',
                               style: TextStyle(
                                 color: Color(0xFF7B7B7B),
                                 fontWeight: FontWeight.normal,
@@ -424,9 +340,9 @@ class PatientPage extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(top: 18.92, right: 179),
+                            padding: EdgeInsets.only(top: 18.92, right: 111),
                             child: Text(
-                              'Item $i',
+                              i == 0 ? 'RH testing' : 'Spinal scan',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.normal,
