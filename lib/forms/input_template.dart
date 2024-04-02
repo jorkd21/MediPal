@@ -28,6 +28,7 @@ Widget buildTextFormField({
 }) {
   return TextFormField(
     decoration: InputDecoration(
+      fillColor: Colors.white,
       labelText: labelText,
       suffixIcon: onSuffixIconTap != null
           ? GestureDetector(
