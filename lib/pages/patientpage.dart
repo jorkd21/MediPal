@@ -243,7 +243,7 @@ class PatientPage extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(top: 18.92, left: 30),
                             child: Text(
-                              'Title $i:',
+                              i == 0 ? 'Illness' : 'Alergy',
                               style: TextStyle(
                                 color: Color(0xFF7B7B7B),
                                 fontWeight: FontWeight.normal,
@@ -254,7 +254,7 @@ class PatientPage extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(top: 18.92, right: 111),
                             child: Text(
-                              'Item $i',
+                              i == 0 ? 'Polio' : 'Lactose intolerance',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.normal,
