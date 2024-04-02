@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:medipal/main.dart';
-import 'package:medipal/pages/signup.dart';
+import 'package:medipal/pages/SignUp.dart';
 import 'package:medipal/pages/forgotpasswd.dart';
 
 class PatientPage extends StatelessWidget {
