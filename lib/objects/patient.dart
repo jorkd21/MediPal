@@ -12,14 +12,14 @@ class Patient {
   // contact
   String? email;
   List<PhoneData>? phone = [];
-  List<Map<String, PhoneData>>? emergency;
+  //List<Map<String, PhoneData>>? emergency;
   // illnesses/allergies
   List<String>? currIllness = [];
   List<String>? prevIllness = [];
   List<String>? allergies = [];
   // medications
-  //List<String>? currMedications;
-  //List<String>? prevMedications;
+  List<String>? currMedications;
+  List<String>? prevMedications;
 
   // CONSTRUCTORS
   Patient();
@@ -51,51 +51,25 @@ class Patient {
     p.bloodGroup = jsonMap['bloodGroup'];
     p.rhFactor = jsonMap['rhFactor'];
     p.email = jsonMap['email'];
+    p.phone = (jsonMap["phone"] as List<dynamic>)
+        .map((phoneMap) => PhoneData(
+            phoneNumber: phoneMap["phoneNumber"] as String,
+            type: phoneMap["type"] as String))
+        .toList();
+    List<dynamic>? allergiesList = jsonMap['allergies'];
+    if (allergiesList is List<dynamic>) {
+      p.allergies = allergiesList.cast<String>(); // Cast to List<String>
+    }
+    List<dynamic>? currList = jsonMap['illnessCurr'];
+    if (currList is List<dynamic>) {
+      p.currIllness = currList.cast<String>(); // Cast to List<String>
+    }
+    List<dynamic>? prevList = jsonMap['illnessPrev'];
+    if (prevList is List<dynamic>) {
+      p.prevIllness = prevList.cast<String>(); // Cast to List<String>
+    }
     return p;
   }
-   /* Patient.fromJson(String jsonString) {
-    // Remove curly braces
-    jsonString = jsonString.substring(1, jsonString.length - 1);
-
-    // Split the string by comma and trim each part
-    List<String> parts = jsonString.split(',').map((e) => e.trim()).toList();
-
-    // Create a map from the parts
-    Map<String, dynamic> map = {};
-    for (String part in parts) {
-      List<String> keyValue = part.split(':');
-      String key = keyValue[0].trim();
-      String value = keyValue.sublist(1).join(':').trim();
-
-      // Handle string values without quotes
-      if (value.startsWith("'") && value.endsWith("'")) {
-        value = value.substring(1, value.length - 1);
-      }
-
-      // Handle array values
-      if (value.startsWith('[') && value.endsWith(']')) {
-        List<dynamic> listValue = json.decode(value);
-        map[key] = listValue;
-      } else {
-        map[key] = value;
-      }
-    }
-    print(map);
-    // Assign values to patient object
-    firstName = map['firstName'];
-    middleName = map['middleName'];
-    lastName = map['lastName'];
-    dob = map['dob'] != null ? DateTime.tryParse(map['dob']) : null;
-    bloodGroup = map['bloodGroup'];
-    rhFactor = map['rhFactor'];
-    email = map['email'];
-    phone = (map['phone'] as List<dynamic>?)
-        ?.map((e) => PhoneData.fromJson(e))
-        .toList();
-    currIllness = List<String>.from(map['illnessCurr'] ?? []);
-    prevIllness = List<String>.from(map['illnessPrev'] ?? []);
-    allergies = List<String>.from(map['allergies'] ?? []);
-  } */
 
   String toString() {
     String str = '';
@@ -106,7 +80,10 @@ class Patient {
     str += "bloodGroup: $bloodGroup\n";
     str += "rhFactor: $rhFactor\n";
     str += "email: $email\n";
-    str += "phone: $phone";
+    str += "phone: ${phone.toString()}\n";
+    str += "allergies: $allergies\n";
+    str += "currIllness: $currIllness\n";
+    str += "prevIllness: $prevIllness\n";
     return str;
   }
 }
@@ -123,10 +100,18 @@ class PhoneData {
       'phoneNumber': phoneNumber,
     };
   }
+
   factory PhoneData.fromJson(Map<String, dynamic> json) {
     return PhoneData(
       phoneNumber: json['phoneNumber'],
       type: json['type'],
     );
+  }
+
+  String toString() {
+    String str = '';
+    str += "type: $type ";
+    str += "phoneNumber: $phoneNumber\n";
+    return str;
   }
 }

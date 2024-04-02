@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/objects/patient.dart';
@@ -37,27 +34,7 @@ class GetPatientDataState extends State<GetPatientData> {
     if (snapshot.exists) {
       print(snapshot.value.toString());
       String data = snapshot.value.toString();
-      // Remove curly braces
-      data = data.substring(1, data.length - 1);
-
-      // Split the string by comma and trim each part
-      List<String> parts = data.split(',').map((e) => e.trim()).toList();
-
-      // Create a map from the parts
-      Map<String, dynamic> map = {};
-      for (String part in parts) {
-        List<String> keyValue = part.split(':');
-        String key = keyValue[0].trim();
-        String value = keyValue[1].trim();
-        // Handle string values without quotes
-        if (value.startsWith("'") && value.endsWith("'")) {
-          value = value.substring(1, value.length - 1);
-        }
-        map[key] = value;
-      }
-
-      // Convert map to JSON string
-      String jsonString = json.encode(map);
+      String jsonString = _convertToJsonStringQuotes(data);
       print(jsonString);
       Patient p = Patient.fromJson(jsonString);
       print(p.toString());
@@ -67,6 +44,28 @@ class GetPatientDataState extends State<GetPatientData> {
     }
   }
 
+  String _convertToJsonStringQuotes(String raw) {
+    String jsonString = raw;
+
+    /// add quotes to json string
+    jsonString = jsonString.replaceAll('{', '{"');
+    jsonString = jsonString.replaceAll(': ', '": "');
+    jsonString = jsonString.replaceAll(', ', '", "');
+    jsonString = jsonString.replaceAll('}', '"}');
+
+    /// remove quotes on object json string
+    jsonString = jsonString.replaceAll('"{"', '{"');
+    jsonString = jsonString.replaceAll('"}"', '"}');
+
+    /// remove quotes on array json string
+    jsonString = jsonString.replaceAll('"[{', '[{');
+    jsonString = jsonString.replaceAll('}]"', '}]');
+    //
+    jsonString = jsonString.replaceAll('"[', '["');
+    jsonString = jsonString.replaceAll(']"', '"]');
+
+    return jsonString;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,6 +95,10 @@ class GetPatientDataState extends State<GetPatientData> {
                   subtitle: Text(_patient.bloodGroup ?? ''),
                 ),
                 ListTile(
+                  title: Text('RH Factor'),
+                  subtitle: Text(_patient.rhFactor ?? ''),
+                ),
+                ListTile(
                   title: Text('Email'),
                   subtitle: Text(_patient.email ?? ''),
                 ),
@@ -107,6 +110,39 @@ class GetPatientDataState extends State<GetPatientData> {
                           children: _patient.phone!.map((phoneData) {
                             return Text(
                                 '${phoneData.type}: ${phoneData.phoneNumber}');
+                          }).toList(),
+                        )
+                      : Text(''),
+                ),
+                ListTile(
+                  title: Text('Allergies'),
+                  subtitle: _patient.allergies != null && _patient.allergies!.isNotEmpty
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: _patient.allergies!.map((allergy) {
+                            return Text(allergy);
+                          }).toList(),
+                        )
+                      : Text(''),
+                ),
+                ListTile(
+                  title: Text('Current Illnesses'),
+                  subtitle: _patient.currIllness != null && _patient.currIllness!.isNotEmpty
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: _patient.currIllness!.map((allergy) {
+                            return Text(allergy);
+                          }).toList(),
+                        )
+                      : Text(''),
+                ),
+                ListTile(
+                  title: Text('Previous Illnesses'),
+                  subtitle: _patient.prevIllness != null && _patient.prevIllness!.isNotEmpty
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: _patient.prevIllness!.map((allergy) {
+                            return Text(allergy);
                           }).toList(),
                         )
                       : Text(''),
