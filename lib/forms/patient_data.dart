@@ -17,8 +17,8 @@ class GetPatientData extends StatefulWidget {
 // This class holds data related to the form.
 class GetPatientDataState extends State<GetPatientData> {
   final String patientId;
-  late Patient _patient;
-  GetPatientDataState({required this.patientId});
+  Patient _patient;
+  GetPatientDataState({required this.patientId}) : _patient = Patient();
   @override
   void initState() {
     super.initState();
@@ -34,38 +34,16 @@ class GetPatientDataState extends State<GetPatientData> {
     if (snapshot.exists) {
       print(snapshot.value.toString());
       String data = snapshot.value.toString();
-      String jsonString = _convertToJsonStringQuotes(data);
-      print(jsonString);
-      Patient p = Patient.fromJson(jsonString);
-      print(p.toString());
+      //Patient p = Patient.fromJson(data);
+      //_patient = Patient.fromJson(data);
       setState(() {
-        _patient = p;
+        //_patient = p;
+        _patient = Patient.fromJson(data);
       });
+      print(_patient.toString());
     }
   }
 
-  String _convertToJsonStringQuotes(String raw) {
-    String jsonString = raw;
-
-    /// add quotes to json string
-    jsonString = jsonString.replaceAll('{', '{"');
-    jsonString = jsonString.replaceAll(': ', '": "');
-    jsonString = jsonString.replaceAll(', ', '", "');
-    jsonString = jsonString.replaceAll('}', '"}');
-
-    /// remove quotes on object json string
-    jsonString = jsonString.replaceAll('"{"', '{"');
-    jsonString = jsonString.replaceAll('"}"', '"}');
-
-    /// remove quotes on array json string
-    jsonString = jsonString.replaceAll('"[{', '[{');
-    jsonString = jsonString.replaceAll('}]"', '}]');
-    //
-    jsonString = jsonString.replaceAll('"[', '["');
-    jsonString = jsonString.replaceAll(']"', '"]');
-
-    return jsonString;
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
