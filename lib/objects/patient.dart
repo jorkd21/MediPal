@@ -86,7 +86,7 @@ class Patient {
     jsonString = jsonString.replaceAll(']"', '"]');
     // Parse the JSON string into a map
     Map<String, dynamic> jsonMap = json.decode(jsonString);
-    print(jsonMap);
+    //print(jsonMap);
     Patient p = Patient();
     p.firstName = jsonMap['firstName'];
     p.middleName = jsonMap['middleName'];

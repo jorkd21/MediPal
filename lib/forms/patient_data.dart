@@ -32,7 +32,7 @@ class GetPatientDataState extends State<GetPatientData> {
     DataSnapshot snapshot = await ref.child(patientId).get();
     // set state
     if (snapshot.exists) {
-      print(snapshot.value.toString());
+      //print(snapshot.value.toString());
       String data = snapshot.value.toString();
       //Patient p = Patient.fromJson(data);
       //_patient = Patient.fromJson(data);
@@ -40,13 +40,16 @@ class GetPatientDataState extends State<GetPatientData> {
         //_patient = p;
         _patient = Patient.fromJson(data);
       });
-      print(_patient.toString());
+      //print(_patient.toString());
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(patientId),
+      ),
       body: _patient != null
           ? ListView(
               children: [

@@ -30,7 +30,7 @@ class _PatientListState extends State<PatientList> {
     // get snapshot
     DataSnapshot snapshot = await ref.child('patient').get();
     if (snapshot.value != null) {
-      print(snapshot.value);
+      //print(snapshot.value);
       String jsonString = snapshot.value.toString();
       // convert from json without quotes to one with
       jsonString = jsonString.replaceAll('{', '{"');
@@ -50,11 +50,11 @@ class _PatientListState extends State<PatientList> {
       jsonString = jsonString.replaceAll(']"', '"]');
       // Parse the JSON string into a map
       Map<String, dynamic> jsonMap = json.decode(jsonString);
-      print(jsonMap.values);
+      //print(jsonMap.values);
       //Map<dynamic, dynamic>? patientsMap = snapshot.value as Map?;
       List<Patient> pl = [];
       jsonMap.forEach((key, value) {
-        print(key);
+        //print(key);
         Patient p = Patient.fromMap(value);
         //print(p);
         pl.add(p);
@@ -69,8 +69,8 @@ class _PatientListState extends State<PatientList> {
       setState(() {
         _patients = pl;
       }); // Trigger rebuild to load patient data
-      print(_patients);
-      print(_currentPageIndex);
+      //print(_patients);
+      //print(_currentPageIndex);
     }
   }
 
