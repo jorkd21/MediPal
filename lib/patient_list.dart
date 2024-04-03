@@ -74,32 +74,6 @@ class _PatientListState extends State<PatientList> {
     }
   }
 
-  void _nextPage() {
-    setState(() {
-      if (_currentPageIndex < _patients.length - 1) {
-        _currentPageIndex++;
-        _pageController.animateToPage(
-          _currentPageIndex,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-    });
-  }
-
-  void _previousPage() {
-    setState(() {
-      if (_currentPageIndex > 0) {
-        _currentPageIndex--;
-        _pageController.animateToPage(
-          _currentPageIndex,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,36 +92,61 @@ class _PatientListState extends State<PatientList> {
                   ],
                 ),
               ),
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    child: PageView.builder(
-                      controller: _pageController,
-                      onPageChanged: (index) {
-                        setState(() {
-                          _currentPageIndex = index;
-                        });
-                      },
-                      itemCount: _patients.length,
-                      itemBuilder: (context, index) {
-                        return GetPatientData(patientId: _patientKeys[index]);
-                      },
+              child: ListView.builder(
+                itemCount: _patients.length,
+                itemBuilder: (context, index) {
+                  // Construct the full name with first, middle, and last name
+                  String fullName = '${_patients[index].firstName ?? ""} '
+                      '${_patients[index].middleName ?? ""} '
+                      '${_patients[index].lastName ?? ""}';
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Patient ID: ${_patientKeys[index]}',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Name: $fullName",
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(width: 16),
+                                  Text(
+                                    "DOB: ${_patients[index].dob?.year}/${_patients[index].dob?.month}/${_patients[index].dob?.day}",
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => GetPatientData(
+                                  patientId: _patientKeys[index],
+                                ),
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.arrow_forward),
+                        ),
+                      ],
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      ElevatedButton(
-                        onPressed: _previousPage,
-                        child: const Text('Back'),
-                      ),
-                      ElevatedButton(
-                        onPressed: _nextPage,
-                        child: const Text('Next'),
-                      ),
-                    ],
-                  ),
-                ],
+                  );
+                },
               ),
             )
           : Center(
