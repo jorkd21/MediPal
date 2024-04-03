@@ -33,7 +33,7 @@ class _PatientFormState extends State<PatientForm> {
       GeneralInfoForm(patient: _patient, formKey: _generalInfoFormKey),
       HealthConditionsForm(patient: _patient, formKey: _healthConditionsFormKey),
       NextForm(),
-      GetPatientData( patientId: '-NuNPJvREwd61hnesFhZ',),
+      //GetPatientData( patientId: '-NuNPJvREwd61hnesFhZ',),
     ];
   }
 
