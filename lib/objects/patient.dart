@@ -3,27 +3,49 @@ import 'dart:convert';
 class Patient {
   // VARTIABLES
   // personal info
+  // name
   String? firstName;
   String? middleName;
   String? lastName;
+  // date of birth
   DateTime? dob;
+  // blood
   String? bloodGroup;
   String? rhFactor;
+  String? maritalStatus;
   // contact
   String? email;
-  List<PhoneData>? phone = [];
-  List<EmergancyData>? emergency;
+  List<PhoneData>? phone = [PhoneData()];
+  List<EmergancyData>? emergency = [];
   // illnesses/allergies
   List<String>? currIllness = [];
   List<String>? prevIllness = [];
   List<String>? allergies = [];
   // medications
-  List<String>? currMedications;
-  List<String>? prevMedications;
+  List<String>? currMedications = [];
+  List<String>? prevMedications = [];
 
-  // CONSTRUCTORS
-  Patient();
-  // convert patient data to a map
+  // CONSTRUCTOR
+  Patient(
+      /* {
+    this.firstName,
+    this.middleName,
+    this.lastName,
+    this.dob,
+    this.bloodGroup,
+    this.rhFactor,
+    this.maritalStatus,
+    this.email,
+    this.phone,
+    this.emergency,
+    this.currIllness,
+    this.prevIllness,
+    this.allergies,
+    this.currMedications,
+    this.prevMedications,
+  } */
+      );
+  // convert patient data to json map
   // used for input to database
   Map<String, dynamic> toJson() {
     return {
@@ -33,14 +55,20 @@ class Patient {
       'dob': dob?.toIso8601String(),
       'bloodGroup': bloodGroup,
       'rhFactor': rhFactor,
+      'maritalStatus': maritalStatus,
       'email': email,
-      'phone': phone?.map((e) => e.toJson()).toList(),
+      'phone': phone
+          ?.map((e) => e.toJson())
+          .toList(), // prob bug when not submiting with phone number.
       'illnessCurr': currIllness ?? [],
       'illnessPrev': prevIllness ?? [],
       'allergies': allergies ?? [],
+      'medicationsCurr': currMedications ?? [],
+      'medicationsPrev': prevMedications ?? [],
     };
   }
-  factory Patient.fromMap( Map<String,dynamic> jsonMap ) {
+
+  factory Patient.fromMap(Map<String, dynamic> jsonMap) {
     Patient p = Patient();
     p.firstName = jsonMap['firstName'];
     p.middleName = jsonMap['middleName'];
@@ -56,15 +84,23 @@ class Patient {
         .toList();
     List<dynamic>? allergiesList = jsonMap['allergies'];
     if (allergiesList is List<dynamic>) {
-      p.allergies = allergiesList.cast<String>(); // Cast to List<String>
+      p.allergies = allergiesList.cast<String>();
     }
     List<dynamic>? currList = jsonMap['illnessCurr'];
     if (currList is List<dynamic>) {
-      p.currIllness = currList.cast<String>(); // Cast to List<String>
+      p.currIllness = currList.cast<String>();
     }
     List<dynamic>? prevList = jsonMap['illnessPrev'];
     if (prevList is List<dynamic>) {
-      p.prevIllness = prevList.cast<String>(); // Cast to List<String>
+      p.prevIllness = prevList.cast<String>();
+    }
+    List<dynamic>? currMed = jsonMap['medicationsCurr'];
+    if (currMed is List<dynamic>) {
+      p.currMedications = currMed.cast<String>();
+    }
+    List<dynamic>? prevMed = jsonMap['medicationsPrev'];
+    if (prevMed is List<dynamic>) {
+      p.prevMedications = prevMed.cast<String>();
     }
     return p;
   }
@@ -75,10 +111,10 @@ class Patient {
     jsonString = jsonString.replaceAll(': ', '": "');
     jsonString = jsonString.replaceAll(', ', '", "');
     jsonString = jsonString.replaceAll('}', '"}');
-    /// remove quotes on object json string
+    // remove quotes on object json string
     jsonString = jsonString.replaceAll('"{"', '{"');
     jsonString = jsonString.replaceAll('"}"', '"}');
-    /// remove quotes on array json string
+    // remove quotes on array json string
     jsonString = jsonString.replaceAll('"[{', '[{');
     jsonString = jsonString.replaceAll('}]"', '}]');
     // fix quotes on first and last item in lists
@@ -86,11 +122,11 @@ class Patient {
     jsonString = jsonString.replaceAll(']"', '"]');
     // Parse the JSON string into a map
     Map<String, dynamic> jsonMap = json.decode(jsonString);
-    //print(jsonMap);
     Patient p = Patient.fromMap(jsonMap);
     return p;
   }
 
+  @override
   String toString() {
     String str = '';
     str += "firstName: $firstName\n";
@@ -109,10 +145,14 @@ class Patient {
 }
 
 class PhoneData {
-  // variables
   String? type;
   String? phoneNumber;
-  PhoneData({this.phoneNumber, this.type});
+
+  PhoneData({
+    this.phoneNumber,
+    this.type,
+  });
+  
   // convert phone data to a map
   Map<String, dynamic> toJson() {
     return {
@@ -128,6 +168,7 @@ class PhoneData {
     );
   }
 
+  @override
   String toString() {
     String str = '';
     str += "type: $type ";
@@ -137,7 +178,34 @@ class PhoneData {
 }
 
 class EmergancyData extends PhoneData {
-  //
   String? name;
-  EmergancyData(String this.name, String type, String phoneNumber) : super(type: type, phoneNumber: phoneNumber);
+
+  EmergancyData({
+    this.name,
+    super.type,
+    super.phoneNumber,
+  });
+
+  @override
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> map = {'name': name};
+    map.addAll(super.toJson());
+    return map;
+  }
+
+  factory EmergancyData.fromJson(Map<String, dynamic> json) {
+    return EmergancyData(
+      name: json['name'],
+      phoneNumber: json['phoneNumber'],
+      type: json['type'],
+    );
+  }
+
+  @override
+  String toString() {
+    String str = '';
+    str += "type: $name ";
+    str += super.toString();
+    return str;
+  }
 }
