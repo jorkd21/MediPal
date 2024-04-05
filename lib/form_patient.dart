@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/forms/general_info.dart';
 import 'package:medipal/forms/health_conditions.dart';
+import 'package:medipal/forms/medications.dart';
 import 'package:medipal/forms/patient_data.dart';
 import 'package:medipal/objects/patient.dart';
 
@@ -16,24 +17,33 @@ class _PatientFormState extends State<PatientForm> {
   int _pageIndex = 0;
   final PageController _pageController = PageController();
   late List<Widget> _pages;
-  late String _patientKey;
+  String _patientKey = '';
   late Patient _patient;
-  // database connection
-  DatabaseReference ref = FirebaseDatabase.instance.ref('patient');
   // Create separate global keys for each form
   final GlobalKey<FormState> _generalInfoFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _healthConditionsFormKey = GlobalKey<FormState>();
-
+  final GlobalKey<FormState> _medicationsFormKey = GlobalKey<FormState>();
+  // initialize state
   @override
   void initState() {
     super.initState();
-    _patientKey = UniqueKey().toString(); // Generate unique patient key
+    //_patientKey = UniqueKey().toString(); // Generate unique patient key
     _patient = Patient(); // Create patient object
     _pages = [
-      GeneralInfoForm(patient: _patient, formKey: _generalInfoFormKey),
-      HealthConditionsForm(patient: _patient, formKey: _healthConditionsFormKey),
-      NextForm(),
-      //GetPatientData( patientId: '-NuNPJvREwd61hnesFhZ',),
+      GeneralInfoForm(
+        patient: _patient,
+        formKey: _generalInfoFormKey,
+      ),
+      HealthConditionsForm(
+        patient: _patient,
+        formKey: _healthConditionsFormKey,
+      ),
+      MedicationsForm(
+        patient: _patient,
+        formKey: _medicationsFormKey,
+      ),
+      const NextForm(),
+      if ( _patientKey != '' ) GetPatientData( patientId: _patientKey ),
     ];
   }
 
@@ -65,15 +75,21 @@ class _PatientFormState extends State<PatientForm> {
 
   void _submitForm() {
     // Validate returns true if the form is valid, or false otherwise.
-    if (_generalInfoFormKey.currentState!.validate() /* &&  _healthConditionsFormKey.currentState!.validate() */ ) {
-      // If the form is valid, display a snackbar. In the real world,
-      // you'd often call a server or save the information in a database.
+    if (_generalInfoFormKey.currentState!.validate() /* &&
+        _healthConditionsFormKey.currentState!.validate() */) {
+      // database connection
+      DatabaseReference ref = FirebaseDatabase.instance.ref('patient');
       //DatabaseReference newPatientRef = ref.child(_patientKey);
       DatabaseReference newPatientRef = ref.push();
+      setState(() {
+        _patientKey = newPatientRef.key!;
+      });
       newPatientRef.set(_patient.toJson());
-
+      // If the form is valid, display a snackbar. In the real world,
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Processing Data')),
+        const SnackBar(
+          content: Text('Processing Data'),
+        ),
       );
     }
   }
