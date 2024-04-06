@@ -1,3 +1,5 @@
+import 'package:firebase_database/firebase_database.dart';
+
 class Patient {
   // VARTIABLES
   // personal info
@@ -63,6 +65,14 @@ class Patient {
       'medicationsCurr': currMedications ?? [],
       'medicationsPrev': prevMedications ?? [],
     };
+  }
+
+  factory Patient.fromSnapshot(DataSnapshot snapshot) {
+    if (snapshot.exists) {
+      Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
+      return Patient.fromMap(value.cast<String, dynamic>());
+    }
+    throw const FormatException('snapshot does not exist');
   }
 
   factory Patient.fromMap(Map<String, dynamic> jsonMap) {
