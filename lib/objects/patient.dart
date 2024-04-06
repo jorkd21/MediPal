@@ -1,29 +1,51 @@
-import 'dart:convert';
+import 'package:firebase_database/firebase_database.dart';
 
 class Patient {
   // VARTIABLES
   // personal info
+  // name
   String? firstName;
   String? middleName;
   String? lastName;
+  // date of birth
   DateTime? dob;
+  // blood
   String? bloodGroup;
   String? rhFactor;
+  String? maritalStatus;
   // contact
   String? email;
-  List<PhoneData>? phone = [];
-  List<EmergancyData>? emergency;
+  List<PhoneData>? phone = [PhoneData()];
+  List<EmergancyData>? emergency = [EmergancyData()];
   // illnesses/allergies
   List<String>? currIllness = [];
   List<String>? prevIllness = [];
   List<String>? allergies = [];
   // medications
-  List<String>? currMedications;
-  List<String>? prevMedications;
+  List<String>? currMedications = [];
+  List<String>? prevMedications = [];
 
-  // CONSTRUCTORS
-  Patient();
-  // convert patient data to a map
+  // CONSTRUCTOR
+  Patient(
+      /* {
+    this.firstName,
+    this.middleName,
+    this.lastName,
+    this.dob,
+    this.bloodGroup,
+    this.rhFactor,
+    this.maritalStatus,
+    this.email,
+    this.phone,
+    this.emergency,
+    this.currIllness,
+    this.prevIllness,
+    this.allergies,
+    this.currMedications,
+    this.prevMedications,
+  } */
+      );
+  // convert patient data to json map
   // used for input to database
   Map<String, dynamic> toJson() {
     return {
@@ -33,60 +55,27 @@ class Patient {
       'dob': dob?.toIso8601String(),
       'bloodGroup': bloodGroup,
       'rhFactor': rhFactor,
+      'maritalStatus': maritalStatus,
       'email': email,
       'phone': phone?.map((e) => e.toJson()).toList(),
+      'emergancy': emergency?.map((e) => e.toJson()).toList(),
       'illnessCurr': currIllness ?? [],
       'illnessPrev': prevIllness ?? [],
       'allergies': allergies ?? [],
+      'medicationsCurr': currMedications ?? [],
+      'medicationsPrev': prevMedications ?? [],
     };
   }
-  factory Patient.fromMap( Map<String,dynamic> jsonMap ) {
-    Patient p = Patient();
-    p.firstName = jsonMap['firstName'];
-    p.middleName = jsonMap['middleName'];
-    p.lastName = jsonMap['lastName'];
-    p.dob = jsonMap['dob'] != null ? DateTime.parse(jsonMap['dob']) : null;
-    p.bloodGroup = jsonMap['bloodGroup'];
-    p.rhFactor = jsonMap['rhFactor'];
-    p.email = jsonMap['email'];
-    p.phone = (jsonMap["phone"] as List<dynamic>)
-        .map((phoneMap) => PhoneData(
-            phoneNumber: phoneMap["phoneNumber"] as String,
-            type: phoneMap["type"] as String))
-        .toList();
-    List<dynamic>? allergiesList = jsonMap['allergies'];
-    if (allergiesList is List<dynamic>) {
-      p.allergies = allergiesList.cast<String>(); // Cast to List<String>
+
+  factory Patient.fromSnapshot(DataSnapshot snapshot) {
+    if (snapshot.exists) {
+      Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
+      return Patient.fromMap(value.cast<String, dynamic>());
     }
-    List<dynamic>? currList = jsonMap['illnessCurr'];
-    if (currList is List<dynamic>) {
-      p.currIllness = currList.cast<String>(); // Cast to List<String>
-    }
-    List<dynamic>? prevList = jsonMap['illnessPrev'];
-    if (prevList is List<dynamic>) {
-      p.prevIllness = prevList.cast<String>(); // Cast to List<String>
-    }
-    return p;
+    throw const FormatException('snapshot does not exist');
   }
-  // convert snapshot.value string value to Patient object
-  factory Patient.fromJson(String jsonString) {
-    // convert from json without quotes to one with
-    jsonString = jsonString.replaceAll('{', '{"');
-    jsonString = jsonString.replaceAll(': ', '": "');
-    jsonString = jsonString.replaceAll(', ', '", "');
-    jsonString = jsonString.replaceAll('}', '"}');
-    /// remove quotes on object json string
-    jsonString = jsonString.replaceAll('"{"', '{"');
-    jsonString = jsonString.replaceAll('"}"', '"}');
-    /// remove quotes on array json string
-    jsonString = jsonString.replaceAll('"[{', '[{');
-    jsonString = jsonString.replaceAll('}]"', '}]');
-    // fix quotes on first and last item in lists
-    jsonString = jsonString.replaceAll('"[', '["');
-    jsonString = jsonString.replaceAll(']"', '"]');
-    // Parse the JSON string into a map
-    Map<String, dynamic> jsonMap = json.decode(jsonString);
-    //print(jsonMap);
+
+  factory Patient.fromMap(Map<String, dynamic> jsonMap) {
     Patient p = Patient();
     p.firstName = jsonMap['firstName'];
     p.middleName = jsonMap['middleName'];
@@ -95,26 +84,49 @@ class Patient {
     p.bloodGroup = jsonMap['bloodGroup'];
     p.rhFactor = jsonMap['rhFactor'];
     p.email = jsonMap['email'];
-    p.phone = (jsonMap["phone"] as List<dynamic>)
-        .map((phoneMap) => PhoneData(
-            phoneNumber: phoneMap["phoneNumber"] as String,
-            type: phoneMap["type"] as String))
-        .toList();
+    // Check if phone list is not null before mapping
+    if (jsonMap['phone'] != null && jsonMap['phone'] is List<dynamic>) {
+      p.phone = (jsonMap["phone"] as List<dynamic>)
+          .map((phoneMap) => PhoneData(
+                phoneNumber: phoneMap["phoneNumber"] as String,
+                type: phoneMap["type"] as String,
+              ))
+          .toList();
+    }
+    // Check if emergency list is not null before mapping
+    if (jsonMap['emergency'] != null && jsonMap['emergency'] is List<dynamic>) {
+      p.emergency = (jsonMap["emergency"] as List<dynamic>)
+          .map((emergencyMap) => EmergancyData(
+                name: emergencyMap["name"] as String,
+                phoneNumber: emergencyMap["phoneNumber"] as String,
+                type: emergencyMap["type"] as String,
+              ))
+          .toList();
+    }
     List<dynamic>? allergiesList = jsonMap['allergies'];
     if (allergiesList is List<dynamic>) {
-      p.allergies = allergiesList.cast<String>(); // Cast to List<String>
+      p.allergies = allergiesList.cast<String>();
     }
     List<dynamic>? currList = jsonMap['illnessCurr'];
     if (currList is List<dynamic>) {
-      p.currIllness = currList.cast<String>(); // Cast to List<String>
+      p.currIllness = currList.cast<String>();
     }
     List<dynamic>? prevList = jsonMap['illnessPrev'];
     if (prevList is List<dynamic>) {
-      p.prevIllness = prevList.cast<String>(); // Cast to List<String>
+      p.prevIllness = prevList.cast<String>();
+    }
+    List<dynamic>? currMed = jsonMap['medicationsCurr'];
+    if (currMed is List<dynamic>) {
+      p.currMedications = currMed.cast<String>();
+    }
+    List<dynamic>? prevMed = jsonMap['medicationsPrev'];
+    if (prevMed is List<dynamic>) {
+      p.prevMedications = prevMed.cast<String>();
     }
     return p;
   }
 
+  @override
   String toString() {
     String str = '';
     str += "firstName: $firstName\n";
@@ -133,10 +145,14 @@ class Patient {
 }
 
 class PhoneData {
-  // variables
   String? type;
   String? phoneNumber;
-  PhoneData({this.phoneNumber, this.type});
+
+  PhoneData({
+    this.phoneNumber,
+    this.type,
+  });
+
   // convert phone data to a map
   Map<String, dynamic> toJson() {
     return {
@@ -145,13 +161,7 @@ class PhoneData {
     };
   }
 
-  factory PhoneData.fromJson(Map<String, dynamic> json) {
-    return PhoneData(
-      phoneNumber: json['phoneNumber'],
-      type: json['type'],
-    );
-  }
-
+  @override
   String toString() {
     String str = '';
     str += "type: $type ";
@@ -161,7 +171,34 @@ class PhoneData {
 }
 
 class EmergancyData extends PhoneData {
-  //
   String? name;
-  EmergancyData(String this.name, String type, String phoneNumber) : super(type: type, phoneNumber: phoneNumber);
+
+  EmergancyData({
+    this.name,
+    super.type,
+    super.phoneNumber,
+  });
+
+  @override
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> map = {'name': name};
+    map.addAll(super.toJson());
+    return map;
+  }
+
+  factory EmergancyData.fromJson(Map<String, dynamic> json) {
+    return EmergancyData(
+      name: json['name'],
+      phoneNumber: json['phoneNumber'],
+      type: json['type'],
+    );
+  }
+
+  @override
+  String toString() {
+    String str = '';
+    str += "type: $name ";
+    str += super.toString();
+    return str;
+  }
 }
