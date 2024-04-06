@@ -43,7 +43,6 @@ class _PatientFormState extends State<PatientForm> {
         formKey: _medicationsFormKey,
       ),
       const NextForm(),
-      if ( _patientKey != '' ) GetPatientData( patientId: _patientKey ),
     ];
   }
 
@@ -72,17 +71,21 @@ class _PatientFormState extends State<PatientForm> {
       }
     });
   }
-
   void _submitForm() {
     // Validate returns true if the form is valid, or false otherwise.
-    if (_generalInfoFormKey.currentState!.validate() /* &&
-        _healthConditionsFormKey.currentState!.validate() */) {
+    //print("gen: ${_generalInfoFormKey.currentState!.validate()}");
+    //print("health: ${_healthConditionsFormKey.currentState!.validate()}");
+    //print("med: ${_medicationsFormKey.currentState!.validate()}");
+    if (_generalInfoFormKey.currentState!.validate()/*&&
+        _healthConditionsFormKey.currentState!.validate() &&
+        _medicationsFormKey.currentState!.validate() */) {
       // database connection
       DatabaseReference ref = FirebaseDatabase.instance.ref('patient');
       //DatabaseReference newPatientRef = ref.child(_patientKey);
       DatabaseReference newPatientRef = ref.push();
       setState(() {
         _patientKey = newPatientRef.key!;
+        _pages.add(GetPatientData(patientId: _patientKey));
       });
       newPatientRef.set(_patient.toJson());
       // If the form is valid, display a snackbar. In the real world,
