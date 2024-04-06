@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 // firebase
 import 'package:firebase_core/firebase_core.dart'; // firebase core
 import 'package:medipal/pages/signup.dart';
+import 'package:medipal/pages/patientpage.dart';
 import 'package:medipal/pages/login.dart';
+import 'package:medipal/patient_list.dart';
 import 'firebase_options.dart'; // firebase api keys
 import 'package:firebase_database/firebase_database.dart'; // realtime database
 import 'package:cloud_firestore/cloud_firestore.dart'; // cloud firestore
@@ -45,10 +47,11 @@ class MyApp extends StatelessWidget {
         '/': (context) => HomePage(),
         '/Count': (context) => Count(),
         '/AuthGate': (context) => AuthGate(),
-        '/forgotpasswd': (context) => ForgotPassPage(),
         '/Login': (context) => LoginPage(),
         '/SignUp': (context) => SignUpPage(),
-        '/Form': (context) => PatientForm(),
+        '/PatientForm': (context) => PatientForm(),
+        '/PatientPage': (context) => PatientPage(),
+        '/PatientList': (context) => PatientList(),
       },
     );
   }
@@ -83,10 +86,11 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             ButtonWidget('Count', '/Count'),
             ButtonWidget('AuthGate', '/AuthGate'),
-            ButtonWidget('Forgot', '/ForgotAuth'),
             ButtonWidget('Login', '/Login'),
             ButtonWidget('Sign Up', '/SignUp'),
-            ButtonWidget('Form', '/Form'),
+            ButtonWidget('PatientForm', '/PatientForm'),
+            ButtonWidget('PatientPage', '/PatientPage'),
+            ButtonWidget('PatientList', '/PatientList')
             /* FirebaseAuth.instance.currentUser != null
                 ? Align(
                     alignment: Alignment.bottomCenter,

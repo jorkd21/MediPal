@@ -1,9 +1,12 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:medipal/forms/input_template.dart';
+import 'package:medipal/objects/patient.dart';
 
 // Create a Form widget.
 class GeneralInfoForm extends StatefulWidget {
-  const GeneralInfoForm({super.key});
+  final Patient patient;
+  final GlobalKey<FormState> formKey;
+  const GeneralInfoForm({super.key, required this.patient, required this.formKey });
 
   @override
   GeneralInfoFormState createState() {
@@ -19,23 +22,10 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
-  final _formKey = GlobalKey<FormState>();
-  // Text
-  final firstNameController = TextEditingController();
-  final middleNameController = TextEditingController();
-  final lastNameController = TextEditingController();
-  final phoneNumberControllers = [
-    TextEditingController(),
-    TextEditingController(),
-  ];
-  //List<TextEditingController> illnessList = [TextEditingController()];
-  List<PhoneData> contactList = [PhoneData(phoneNumber: TextEditingController())];
-  // dropdown menues
-  int? selectedYear;
-  int? selectedMonth;
-  int? selectedDay;
-  String selectedBG = '';
-  String selectedRH = '';
+  //final _formKey = GlobalKey<FormState>();
+
+  // Patient instance to hold form data
+  //Patient _patient = Patient();
 
   // Define lists for dropdown options
   List<int> years =
@@ -44,24 +34,29 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
   List<int> days = List.generate(31, (int index) => index + 1);
   List<String> bloodGroups = ['A', 'B', 'AB', 'O'];
   List<String> rhFactors = ['+', '-'];
-  List<String> phoneTypes = ['home','work','mobile'];
-  
+  List<String> phoneTypes = ['home', 'work', 'mobile'];
+
   // database connection
-  DatabaseReference ref = FirebaseDatabase.instance.ref('test/patient/geninfo');
+  //DatabaseReference ref = FirebaseDatabase.instance.ref('test/patient/geninfo');
 
   @override
   Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
+    // Build a Form widget using the widget.formKey created above.
     return ListView(
       children: [
         Form(
-          key: _formKey,
+          key: widget.formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('First Name'),
-              TextFormField(
-                controller: firstNameController,
+              buildTextFormField(
+                labelText: 'First Name',
+                value: widget.patient.firstName,
+                onChanged: (value) {
+                  setState(() {
+                    widget.patient.firstName = value;
+                  });
+                },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter some text';
@@ -69,9 +64,14 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                   return null;
                 },
               ),
-              Text('Middle Name'),
-              TextFormField(
-                controller: middleNameController,
+              buildTextFormField(
+                labelText: 'Middle Name',
+                value: widget.patient.middleName,
+                onChanged: (value) {
+                  setState(() {
+                    widget.patient.middleName = value;
+                  });
+                },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter some text';
@@ -79,9 +79,14 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                   return null;
                 },
               ),
-              Text('Last Name'),
-              TextFormField(
-                controller: lastNameController,
+              buildTextFormField(
+                labelText: 'Last Name',
+                value: widget.patient.lastName,
+                onChanged: (value) {
+                  setState(() {
+                    widget.patient.lastName = value;
+                  });
+                },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter some text';
@@ -89,94 +94,125 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                   return null;
                 },
               ),
-              Text('Date of Birth'),
+              const Text('Date of Birth'),
               Row(
                 children: [
                   // Dropdown for Year
-                  DropdownMenu<int>(
-                    initialSelection: years.last,
-                    onSelected: (int? value) {
-                      setState(() {
-                        selectedYear = value!;
-                      });
-                    },
-                    dropdownMenuEntries:
-                        years.map<DropdownMenuEntry<int>>((int value) {
-                      return DropdownMenuEntry<int>(
-                        value: value,
-                        label: value.toString(),
-                      );
-                    }).toList(),
+                  SizedBox(
+                    width: 100,
+                    child: buildDropdownFormField<int>(
+                      value: widget.patient.dob?.year,
+                      onChanged: (int? value) {
+                        setState(() {
+                          widget.patient.dob = DateTime(value ?? 0,
+                              widget.patient.dob?.month ?? 1, widget.patient.dob?.day ?? 1);
+                        });
+                      },
+                      items: years,
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please select a year';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
                   // Dropdown for Month
-                  DropdownMenu<int>(
-                    initialSelection: months.last,
-                    onSelected: (int? value) {
-                      setState(() {
-                        selectedMonth = value!;
-                      });
-                    },
-                    dropdownMenuEntries:
-                        months.map<DropdownMenuEntry<int>>((int value) {
-                      return DropdownMenuEntry<int>(
-                        value: value,
-                        label: value.toString(),
-                      );
-                    }).toList(),
+                  SizedBox(
+                    width: 50,
+                    child: buildDropdownFormField<int>(
+                      value: widget.patient.dob?.month,
+                      onChanged: (int? value) {
+                        setState(() {
+                          widget.patient.dob = DateTime(
+                              widget.patient.dob?.year ?? DateTime.now().year,
+                              value ?? 1,
+                              widget.patient.dob?.day ?? 1);
+                        });
+                      },
+                      items: months,
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please select a month';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
                   // Dropdown for Day
-                  DropdownMenu<int>(
-                    initialSelection: days.last,
-                    onSelected: (int? value) {
-                      setState(() {
-                        selectedDay = value!;
-                      });
-                    },
-                    dropdownMenuEntries:
-                        days.map<DropdownMenuEntry<int>>((int value) {
-                      return DropdownMenuEntry<int>(
-                        value: value,
-                        label: value.toString(),
-                      );
-                    }).toList(),
+                  SizedBox(
+                    width: 50,
+                    child: buildDropdownFormField<int>(
+                      value: widget.patient.dob?.day,
+                      onChanged: (int? value) {
+                        setState(() {
+                          widget.patient.dob = DateTime(
+                              widget.patient.dob?.year ?? DateTime.now().year,
+                              widget.patient.dob?.month ?? 1,
+                              value ?? 1);
+                        });
+                      },
+                      items: days,
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please select a day';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
                 ],
               ),
-              Text('Blood Group'),
-              DropdownMenu<String>(
-                initialSelection: bloodGroups.last,
-                onSelected: (String? value) {
+              Row(
+                children: [
+                  const Text('Blood Group'),
+                  SizedBox(
+                    width: 50,
+                    child: buildDropdownFormField<String>(
+                      value: widget.patient.bloodGroup,
+                      onChanged: (String? value) {
+                        setState(() {
+                          widget.patient.bloodGroup = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select a blood group';
+                        }
+                        return null;
+                      },
+                      items: bloodGroups,
+                    ),
+                  ),
+                  const Text('RH Factor'),
+                  SizedBox(
+                    width: 50,
+                    child: buildDropdownFormField<String>(
+                      value: widget.patient.rhFactor,
+                      onChanged: (String? value) {
+                        setState(() {
+                          widget.patient.rhFactor = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select an RH factor';
+                        }
+                        return null;
+                      },
+                      items: rhFactors,
+                    ),
+                  ),
+                ],
+              ),
+              buildTextFormField(
+                labelText: 'E-mail',
+                value: widget.patient.email,
+                onChanged: (value) {
                   setState(() {
-                    selectedBG = value!;
+                    widget.patient.email = value;
                   });
                 },
-                dropdownMenuEntries:
-                    bloodGroups.map<DropdownMenuEntry<String>>((String value) {
-                  return DropdownMenuEntry<String>(
-                    value: value,
-                    label: value,
-                  );
-                }).toList(),
-              ),
-              Text('RH Factor'),
-              DropdownMenu<String>(
-                initialSelection: rhFactors.last,
-                onSelected: (String? value) {
-                  setState(() {
-                    selectedRH = value!;
-                  });
-                },
-                dropdownMenuEntries:
-                    rhFactors.map<DropdownMenuEntry<String>>((String value) {
-                  return DropdownMenuEntry<String>(
-                    value: value,
-                    label: value,
-                  );
-                }).toList(),
-              ),
-              Text('E-mail'),
-              TextFormField(
-                // The validator receives the text that the user has entered.
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter some text';
@@ -184,112 +220,61 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                   return null;
                 },
               ),
-              Text('Phone'),
+              const Text('Phone'),
               Column(
                 children: [
-                  ...List.generate(contactList.length, (index) {
-                    PhoneData contact = contactList[index];
+                  ...List.generate(widget.patient.phone?.length ?? 0, (index) {
+                    PhoneData contact = widget.patient.phone![index];
                     return Row(
                       children: [
-                          DropdownMenu<String>(
-                          initialSelection: phoneTypes.last,
-                          onSelected: (String? value) {
-                            setState(() {
-                              contact.type = value!;
-                            });
-                          },
-                          dropdownMenuEntries:
-                              phoneTypes.map<DropdownMenuEntry<String>>((String value) {
-                            return DropdownMenuEntry<String>(
-                              value: value,
-                              label: value,
-                            );
-                          }).toList(),
+                        Container(
+                          width: 100,
+                          child: buildDropdownFormField<String>(
+                            value: contact.type,
+                            onChanged: (String? value) {
+                              setState(() {
+                                contact.type = value;
+                              });
+                            },
+                            items: phoneTypes,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please select a phone type';
+                              }
+                              return null;
+                            },
+                          ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
-                          child: TextFormField(
-                            controller: contact.phoneNumber,
-                            keyboardType: TextInputType.number,
+                          child: buildTextFormField(
+                            labelText: 'Phone Number',
+                            value: contact.phoneNumber?.toString(),
+                            onChanged: (value) {
+                              contact.phoneNumber = value;
+                            },
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter some text';
                               }
                               return null;
                             },
-                            decoration: InputDecoration(
-                          hintText: "phone number",
-                          suffixIcon: index == 0
-                              ? null
-                              : GestureDetector(
-                                  onTap: () {
-                                    removeField(index);
-                                  },
-                                  child: const Icon(Icons.delete),
-                                ),
-                            ),
+                            onSuffixIconTap:
+                                index == 0 ? null : () => removeField(index),
                           ),
                         ),
                       ],
                     );
                   }),
-
                   ///Add more button
                   Align(
                       alignment: Alignment.topRight,
                       child: TextButton(
                           onPressed: () {
-                            addField(PhoneData(phoneNumber: TextEditingController()));
+                            addField(widget.patient.phone, PhoneData());
                           },
                           child: const Text("Add More"))),
                 ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Validate returns true if the form is valid, or false otherwise.
-                    if (_formKey.currentState!.validate()) {
-                      // If the form is valid, display a snackbar. In the real world,
-                      // you'd often call a server or save the information in a database.
-                      final String firstName = firstNameController.text;
-                      final String middleName = middleNameController.text;
-                      final String lastName = lastNameController.text;
-                      final int? year = selectedYear;
-                      final int? month = selectedMonth;
-                      final int? day = selectedDay;
-                      final String rhFactor = selectedRH;
-                      final String bloodGroup = selectedBG;
-
-                      // process lists
-                      Map<String, dynamic> contactData = {};
-                      for (int i = 0; i < contactList.length; i++) {
-                        PhoneData contact = contactList[i];
-                        contactData[contact.type!] = contact.phoneNumber.text;
-                      }
-
-                      final patientData = {
-                        'nameFirst': firstName,
-                        'nameMiddle': middleName,
-                        'nameLast': lastName,
-                        'dobYear': year,
-                        'dobMonth': month,
-                        'dobDay': day,
-                        'bloodGroup': bloodGroup,
-                        'bloodRH': rhFactor,
-                        'contact': contactData,
-                      };
-
-                      DatabaseReference newPatientRef = ref.push();
-                      newPatientRef.set(patientData);
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Processing Data')),
-                      );
-                    }
-                  },
-                  child: const Text('Submit'),
-                ),
               ),
             ],
           ),
@@ -298,19 +283,22 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
     );
   }
 
-  addField(PhoneData value) {
-    contactList.add(value);
+  addField(List<dynamic>? list, dynamic value) {
+    list!.add(value);
     setState(() {});
   }
 
   removeField(int index) {
-    contactList.removeAt(index);
-    setState(() {});
+    if (widget.patient.phone != null && index < widget.patient.phone!.length) {
+      widget.patient.phone!.removeAt(index);
+      setState(() {});
+    }
   }
 }
 
-class PhoneData {
-  String? type;
-  TextEditingController phoneNumber;
-  PhoneData({this.type, required this.phoneNumber});
+String? validateDropDown(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Please select an option';
+  }
+  return null;
 }

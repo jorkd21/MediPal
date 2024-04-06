@@ -65,7 +65,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: Text("Sign Up Page")),
+        // Purple at the top,),
         body: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -84,8 +84,15 @@ class _SignUpPageState extends State<SignUpPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_back,
+                            color: Colors.white, size: 40),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
                       Container(
                         height: 100,
                         width: 100,
@@ -95,8 +102,6 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 17.0),
-                  SizedBox(height: 17.0),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0.0, 0.0, 100, 25.0),
                     child: Text(
@@ -109,13 +114,21 @@ class _SignUpPageState extends State<SignUpPage> {
                       textAlign: TextAlign.left,
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 21.0),
                   FractionallySizedBox(
                     widthFactor: 0.75, // Set width factor to half
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
                       ),
                       child: TextField(
                         controller: _firstNameController,
@@ -128,13 +141,21 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 24.0),
                   FractionallySizedBox(
                     widthFactor: 0.75, // Set width factor to half
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
                       ),
                       child: TextField(
                         controller: _lastNameController,
@@ -147,13 +168,21 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 24.0),
                   FractionallySizedBox(
                     widthFactor: 0.75, // Set width factor to half
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
                       ),
                       child: TextField(
                         controller: _emailController,
@@ -166,13 +195,21 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 24.0),
                   FractionallySizedBox(
                     widthFactor: 0.75, // Set width factor to half
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
                       ),
                       child: TextField(
                         controller: _passwordController,
@@ -186,13 +223,21 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 24.0),
                   FractionallySizedBox(
                     widthFactor: 0.75, // Set width factor to half
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
                       ),
                       child: TextField(
                         controller: _phoneNumberController,
@@ -205,13 +250,21 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 24.0),
                   FractionallySizedBox(
                     widthFactor: 0.75, // Set width factor to half
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
                       ),
                       child: TextField(
                         controller: _licenseController,
@@ -231,6 +284,14 @@ class _SignUpPageState extends State<SignUpPage> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
                       ),
                       child: TextField(
                         controller: _countryController,
@@ -243,7 +304,20 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 40.0),
+                  SizedBox(height: 31.14),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'By clicking “Create Account” you accept our Terms and Services agreement.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 7),
                   Align(
                     alignment: Alignment.center,
                     child: ElevatedButton(
@@ -263,11 +337,14 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 20),
                   if (_errorMessage.isNotEmpty)
                     Text(
                       _errorMessage,
+                      textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.red),
                     ),
+                  SizedBox(height: 20),
                 ],
               ),
             ),
