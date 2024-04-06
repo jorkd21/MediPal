@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 // firebase
 import 'package:firebase_core/firebase_core.dart'; // firebase core
-import 'package:medipal/pages/SignUp.dart';
+import 'package:medipal/pages/signup.dart';
 import 'package:medipal/pages/login.dart';
 import 'firebase_options.dart'; // firebase api keys
 import 'package:firebase_database/firebase_database.dart'; // realtime database
@@ -12,10 +12,9 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart'; //
 // pages
 import 'package:medipal/count.dart';
 import 'package:medipal/auth_gate.dart';
-import 'package:medipal/form_gen_patient_info.dart';
-import 'package:medipal/form_health_conditions.dart';
+import 'package:medipal/form_patient.dart';
 import 'package:medipal/pages/forgotpasswd.dart';
-import 'package:medipal/pages/SignUp.dart';
+import 'package:medipal/pages/signup.dart';
 import 'package:medipal/pages/login.dart';
 
 void main() async {
@@ -46,11 +45,10 @@ class MyApp extends StatelessWidget {
         '/': (context) => HomePage(),
         '/Count': (context) => Count(),
         '/AuthGate': (context) => AuthGate(),
-        '/Patient': (context) => PatientForm(),
-        '/Condition': (context) => ConditionsForm(),
-        '/forgotpasswd': (context) => ForgotAuth(),
+        '/forgotpasswd': (context) => ForgotPassPage(),
         '/Login': (context) => LoginPage(),
         '/SignUp': (context) => SignUpPage(),
+        '/Form': (context) => PatientForm(),
       },
     );
   }
@@ -85,11 +83,10 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             ButtonWidget('Count', '/Count'),
             ButtonWidget('AuthGate', '/AuthGate'),
-            ButtonWidget('Patient', '/Patient'),
-            ButtonWidget('Condition', '/Condition'),
             ButtonWidget('Forgot', '/ForgotAuth'),
             ButtonWidget('Login', '/Login'),
             ButtonWidget('Sign Up', '/SignUp'),
+            ButtonWidget('Form', '/Form'),
             /* FirebaseAuth.instance.currentUser != null
                 ? Align(
                     alignment: Alignment.bottomCenter,
