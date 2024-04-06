@@ -16,7 +16,7 @@ class Patient {
   // contact
   String? email;
   List<PhoneData>? phone = [PhoneData()];
-  List<EmergancyData>? emergency = [];
+  //List<EmergancyData>? emergency = [EmergancyData()];
   // illnesses/allergies
   List<String>? currIllness = [];
   List<String>? prevIllness = [];
@@ -57,9 +57,8 @@ class Patient {
       'rhFactor': rhFactor,
       'maritalStatus': maritalStatus,
       'email': email,
-      'phone': phone
-          ?.map((e) => e.toJson())
-          .toList(), // prob bug when not submiting with phone number.
+      'phone': phone?.map((e) => e.toJson()).toList(),
+      //'emergancy': emergency?.map((e) => e.toJson()).toList(),
       'illnessCurr': currIllness ?? [],
       'illnessPrev': prevIllness ?? [],
       'allergies': allergies ?? [],
@@ -82,6 +81,12 @@ class Patient {
             phoneNumber: phoneMap["phoneNumber"] as String,
             type: phoneMap["type"] as String))
         .toList();
+    /* p.emergency = (jsonMap["phone"] as List<dynamic>)
+        .map((emergancyMap) => EmergancyData(
+            name: emergancyMap["name"] as String,
+            phoneNumber: emergancyMap["phoneNumber"] as String,
+            type: emergancyMap["type"] as String))
+        .toList(); */
     List<dynamic>? allergiesList = jsonMap['allergies'];
     if (allergiesList is List<dynamic>) {
       p.allergies = allergiesList.cast<String>();
@@ -102,27 +107,6 @@ class Patient {
     if (prevMed is List<dynamic>) {
       p.prevMedications = prevMed.cast<String>();
     }
-    return p;
-  }
-  // convert snapshot.value string value to Patient object
-  factory Patient.fromJson(String jsonString) {
-    // convert from json without quotes to one with
-    jsonString = jsonString.replaceAll('{', '{"');
-    jsonString = jsonString.replaceAll(': ', '": "');
-    jsonString = jsonString.replaceAll(', ', '", "');
-    jsonString = jsonString.replaceAll('}', '"}');
-    // remove quotes on object json string
-    jsonString = jsonString.replaceAll('"{"', '{"');
-    jsonString = jsonString.replaceAll('"}"', '"}');
-    // remove quotes on array json string
-    jsonString = jsonString.replaceAll('"[{', '[{');
-    jsonString = jsonString.replaceAll('}]"', '}]');
-    // fix quotes on first and last item in lists
-    jsonString = jsonString.replaceAll('"[', '["');
-    jsonString = jsonString.replaceAll(']"', '"]');
-    // Parse the JSON string into a map
-    Map<String, dynamic> jsonMap = json.decode(jsonString);
-    Patient p = Patient.fromMap(jsonMap);
     return p;
   }
 
@@ -152,20 +136,13 @@ class PhoneData {
     this.phoneNumber,
     this.type,
   });
-  
+
   // convert phone data to a map
   Map<String, dynamic> toJson() {
     return {
       'type': type,
       'phoneNumber': phoneNumber,
     };
-  }
-
-  factory PhoneData.fromJson(Map<String, dynamic> json) {
-    return PhoneData(
-      phoneNumber: json['phoneNumber'],
-      type: json['type'],
-    );
   }
 
   @override

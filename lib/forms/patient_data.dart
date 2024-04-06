@@ -36,9 +36,9 @@ class GetPatientDataState extends State<GetPatientData> {
     DataSnapshot snapshot = await ref.child(widget.patientId).get();
     // set state
     if (snapshot.exists) {
-      String data = snapshot.value.toString();
+      Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic,dynamic>;
       setState(() {
-        _patient = Patient.fromJson(data);
+        _patient = Patient.fromMap(value.cast<String,dynamic>());
       });
     }
   }
@@ -130,6 +130,30 @@ class GetPatientDataState extends State<GetPatientData> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: _patient.prevIllness!.map((allergy) {
                           return Text(allergy);
+                        }).toList(),
+                      )
+                    : Text(''),
+          ),
+          ListTile(
+            title: Text('Current Medication'),
+            subtitle:
+                _patient.currMedications != null && _patient.currMedications!.isNotEmpty
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: _patient.currMedications!.map((medication) {
+                          return Text(medication);
+                        }).toList(),
+                      )
+                    : Text(''),
+          ),
+          ListTile(
+            title: Text('Previous Medication'),
+            subtitle:
+                _patient.prevMedications != null && _patient.prevMedications!.isNotEmpty
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: _patient.prevMedications!.map((medication) {
+                          return Text(medication);
                         }).toList(),
                       )
                     : Text(''),
