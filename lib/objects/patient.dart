@@ -83,7 +83,6 @@ class Patient {
               ))
           .toList();
     }
-
     // Check if emergency list is not null before mapping
     if (jsonMap['emergency'] != null && jsonMap['emergency'] is List<dynamic>) {
       p.emergency = (jsonMap["emergency"] as List<dynamic>)

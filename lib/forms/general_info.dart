@@ -284,7 +284,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                   ),
                 ],
               ),
-              /* Text('Emergancy Contacts'),
+              Text('Emergancy Contacts'),
               Column(
                 children: [
                   ...List.generate(widget.patient.emergency?.length ?? 0, (index) {
@@ -357,7 +357,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                     ),
                   ),
                 ],
-              ), */
+              ),
             ],
           ),
         ),
