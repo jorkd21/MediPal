@@ -99,6 +99,18 @@ class GetPatientDataState extends State<GetPatientData> {
                 : Text(''),
           ),
           ListTile(
+            title: Text('Emergancy Contact'),
+            subtitle: _patient.emergency != null && _patient.emergency!.isNotEmpty
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: _patient.emergency!.map((emergencyData) {
+                      return Text(
+                          '${emergencyData.name}: ${emergencyData.type}: ${emergencyData.phoneNumber}');
+                    }).toList(),
+                  )
+                : Text(''),
+          ),
+          ListTile(
             title: Text('Allergies'),
             subtitle:
                 _patient.allergies != null && _patient.allergies!.isNotEmpty

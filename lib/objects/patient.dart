@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class Patient {
   // VARTIABLES
   // personal info
@@ -16,7 +14,7 @@ class Patient {
   // contact
   String? email;
   List<PhoneData>? phone = [PhoneData()];
-  //List<EmergancyData>? emergency = [EmergancyData()];
+  List<EmergancyData>? emergency = [EmergancyData()];
   // illnesses/allergies
   List<String>? currIllness = [];
   List<String>? prevIllness = [];
@@ -58,7 +56,7 @@ class Patient {
       'maritalStatus': maritalStatus,
       'email': email,
       'phone': phone?.map((e) => e.toJson()).toList(),
-      //'emergancy': emergency?.map((e) => e.toJson()).toList(),
+      'emergancy': emergency?.map((e) => e.toJson()).toList(),
       'illnessCurr': currIllness ?? [],
       'illnessPrev': prevIllness ?? [],
       'allergies': allergies ?? [],
@@ -76,17 +74,26 @@ class Patient {
     p.bloodGroup = jsonMap['bloodGroup'];
     p.rhFactor = jsonMap['rhFactor'];
     p.email = jsonMap['email'];
-    p.phone = (jsonMap["phone"] as List<dynamic>)
-        .map((phoneMap) => PhoneData(
-            phoneNumber: phoneMap["phoneNumber"] as String,
-            type: phoneMap["type"] as String))
-        .toList();
-    /* p.emergency = (jsonMap["phone"] as List<dynamic>)
-        .map((emergancyMap) => EmergancyData(
-            name: emergancyMap["name"] as String,
-            phoneNumber: emergancyMap["phoneNumber"] as String,
-            type: emergancyMap["type"] as String))
-        .toList(); */
+    // Check if phone list is not null before mapping
+    if (jsonMap['phone'] != null && jsonMap['phone'] is List<dynamic>) {
+      p.phone = (jsonMap["phone"] as List<dynamic>)
+          .map((phoneMap) => PhoneData(
+                phoneNumber: phoneMap["phoneNumber"] as String,
+                type: phoneMap["type"] as String,
+              ))
+          .toList();
+    }
+
+    // Check if emergency list is not null before mapping
+    if (jsonMap['emergency'] != null && jsonMap['emergency'] is List<dynamic>) {
+      p.emergency = (jsonMap["emergency"] as List<dynamic>)
+          .map((emergencyMap) => EmergancyData(
+                name: emergencyMap["name"] as String,
+                phoneNumber: emergencyMap["phoneNumber"] as String,
+                type: emergencyMap["type"] as String,
+              ))
+          .toList();
+    }
     List<dynamic>? allergiesList = jsonMap['allergies'];
     if (allergiesList is List<dynamic>) {
       p.allergies = allergiesList.cast<String>();
