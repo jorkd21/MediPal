@@ -266,14 +266,14 @@ class GetPatientDataState extends State<GetPatientData> {
                         ),
                       ],
                     ),
-                    for (int i = 0; i < 2; i++)
+                    for (int i = 0; i < 3; i++)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Padding(
                           padding: EdgeInsets.only(top: 18.92, left: 30),
                           child: Text(
-                            i == 0 ? 'Illness' : 'Allergy',
+                            i == 0 ? 'Prior Illness' : i == 1 ? 'Current Illness' : 'Allergy',
                             style: TextStyle(
                               color: Color(0xFF7B7B7B),
                               fontWeight: FontWeight.normal,
@@ -284,7 +284,7 @@ class GetPatientDataState extends State<GetPatientData> {
                         Padding(
                           padding: EdgeInsets.only(top: 18.92, right: 111),
                           child: Text(
-                            i == 0 ? '${_patient.currIllness}' : '${_patient.allergies}',
+                            i == 0 ? '${_patient.prevIllness}' : i == 1 ? '${_patient.currIllness}' : '${_patient.allergies}',
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.normal,
