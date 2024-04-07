@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/objects/patient.dart';
@@ -15,8 +13,10 @@ class PatientList extends StatefulWidget {
 class _PatientListState extends State<PatientList> {
   late List<String> _patientKeys = [];
   late List<Patient> _patients = [];
+  late List<Patient> _originalPatients = [];
   late int _currentPageIndex = 0;
   final PageController _pageController = PageController();
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -30,28 +30,7 @@ class _PatientListState extends State<PatientList> {
     // get snapshot
     DataSnapshot snapshot = await ref.child('patient').get();
     if (snapshot.value != null) {
-      //print(snapshot.value);
-      String jsonString = snapshot.value.toString();
-      // convert from json without quotes to one with
-      jsonString = jsonString.replaceAll('{', '{"');
-      jsonString = jsonString.replaceAll(': ', '": "');
-      jsonString = jsonString.replaceAll(', ', '", "');
-      jsonString = jsonString.replaceAll('}', '"}');
-
-      /// remove quotes on object json string
-      jsonString = jsonString.replaceAll('"{"', '{"');
-      jsonString = jsonString.replaceAll('"}"', '"}');
-
-      /// remove quotes on array json string
-      jsonString = jsonString.replaceAll('"[{', '[{');
-      jsonString = jsonString.replaceAll('}]"', '}]');
-      // fix quotes on first and last item in lists
-      jsonString = jsonString.replaceAll('"[', '["');
-      jsonString = jsonString.replaceAll(']"', '"]');
-      // Parse the JSON string into a map
-      Map<String, dynamic> jsonMap = json.decode(jsonString);
-      //print(jsonMap.values);
-      //Map<dynamic, dynamic>? patientsMap = snapshot.value as Map?;
+      Map<dynamic, dynamic>? jsonMap = snapshot.value as Map<dynamic, dynamic>;
       List<Patient> pl = [];
       jsonMap.forEach((key, value) {
         //print(key);
@@ -63,16 +42,24 @@ class _PatientListState extends State<PatientList> {
           _currentPageIndex++;
           _patientKeys.add(key);
         });
-        //_patients.add(p);
-        //_patients.add(Patient.fromMap(value));
       });
-      //print(pl);
       setState(() {
         _patients = pl;
+        _originalPatients = pl;
       }); // Trigger rebuild to load patient data
-      //print(_patients);
-      //print(_currentPageIndex);
     }
+  }
+
+  List<Patient> _filterPatients(String searchTerm) {
+    // If search term is empty, return the original list
+    if (searchTerm.isEmpty) {
+      return _originalPatients;
+    }
+    return _originalPatients.where((patient) {
+      String fullName =
+          '${patient.firstName ?? ""} ${patient.middleName ?? ""} ${patient.lastName ?? ""}';
+      return fullName.toLowerCase().contains(searchTerm.toLowerCase());
+    }).toList();
   }
 
   @override
@@ -80,6 +67,27 @@ class _PatientListState extends State<PatientList> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Patient List'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: SizedBox(
+              width: 200, // Adjust the width as needed
+              child: TextField(
+                controller: _searchController,
+                onChanged: (value) {
+                  setState(() {
+                    // Update the UI based on the new search term
+                    _patients = _filterPatients(value);
+                  });
+                },
+                decoration: InputDecoration(
+                  hintText: 'Search by name...',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: _patients.isNotEmpty
           ? Container(
@@ -119,12 +127,14 @@ class _PatientListState extends State<PatientList> {
                                 children: [
                                   Text(
                                     "Name: $fullName",
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   SizedBox(width: 16),
                                   Text(
                                     "DOB: ${_patients[index].dob?.year}/${_patients[index].dob?.month}/${_patients[index].dob?.day}",
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ],
                               ),

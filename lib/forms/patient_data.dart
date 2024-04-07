@@ -14,11 +14,15 @@ import 'package:medipal/pages/forgotpasswd.dart';
 
 class GetPatientData extends StatefulWidget {
   final String patientId;
-  const GetPatientData({super.key, required this.patientId});
+
+  const GetPatientData({
+    super.key,
+    required this.patientId,
+  });
 
   @override
   GetPatientDataState createState() {
-    return GetPatientDataState(patientId: patientId);
+    return GetPatientDataState();
   }
 }
 
@@ -27,6 +31,13 @@ class GetPatientDataState extends State<GetPatientData> {
   Patient _patient;
   GetPatientDataState({required this.patientId}) : _patient = Patient();
 
+=======
+  // VARIABLES
+  Patient _patient = Patient();
+
+  // CONSTRUCTOR
+  GetPatientDataState();
+  // initialize
   @override
   void initState() {
     super.initState();
@@ -35,15 +46,18 @@ class GetPatientDataState extends State<GetPatientData> {
 
   void _initData() async {
     DatabaseReference ref = FirebaseDatabase.instance.ref('patient');
-    DataSnapshot snapshot = await ref.child(patientId).get();
+    // get snapshot
+    DataSnapshot snapshot = await ref.child(widget.patientId).get();
+    // set state
     if (snapshot.exists) {
-      String data = snapshot.value.toString();
+      Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic,dynamic>;
       setState(() {
-        _patient = Patient.fromJson(data);
+        _patient = Patient.fromMap(value.cast<String,dynamic>());
       });
     }
   }
 
+  // build
   @override
   Widget build(BuildContext context) {
     return SafeArea(
