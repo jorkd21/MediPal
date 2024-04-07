@@ -94,6 +94,36 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                   return null;
                 },
               ),
+              buildTextFormField(
+                labelText: 'Location',
+                value: widget.patient.location,
+                onChanged: (value) {
+                  setState(() {
+                    widget.patient.location = value;
+                  });
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
+              ),
+              buildTextFormField(
+                labelText: 'Sex',
+                value: widget.patient.sex,
+                onChanged: (value) {
+                  setState(() {
+                    widget.patient.sex = value;
+                  });
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
+              ),
               const Text('Date of Birth'),
               Row(
                 children: [

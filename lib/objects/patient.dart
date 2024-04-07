@@ -9,6 +9,8 @@ class Patient {
   DateTime? dob;
   String? bloodGroup;
   String? rhFactor;
+  String? sex;
+  String? location;
   // contact
   String? email;
   List<PhoneData>? phone = [];
@@ -30,6 +32,8 @@ class Patient {
       'firstName': firstName,
       'middleName': middleName,
       'lastName': lastName,
+      'location': location,
+      'sex': sex,
       'dob': dob?.toIso8601String(),
       'bloodGroup': bloodGroup,
       'rhFactor': rhFactor,
@@ -45,6 +49,8 @@ class Patient {
     p.firstName = jsonMap['firstName'];
     p.middleName = jsonMap['middleName'];
     p.lastName = jsonMap['lastName'];
+    p.sex = jsonMap['sex'];
+    p.location = jsonMap['location'];
     p.dob = jsonMap['dob'] != null ? DateTime.parse(jsonMap['dob']) : null;
     p.bloodGroup = jsonMap['bloodGroup'];
     p.rhFactor = jsonMap['rhFactor'];
@@ -91,6 +97,8 @@ class Patient {
     p.firstName = jsonMap['firstName'];
     p.middleName = jsonMap['middleName'];
     p.lastName = jsonMap['lastName'];
+    p.sex = jsonMap['sex'];
+    p.location = jsonMap['location'];
     p.dob = jsonMap['dob'] != null ? DateTime.parse(jsonMap['dob']) : null;
     p.bloodGroup = jsonMap['bloodGroup'];
     p.rhFactor = jsonMap['rhFactor'];
@@ -120,6 +128,8 @@ class Patient {
     str += "firstName: $firstName\n";
     str += "middleName: $middleName\n";
     str += "lastName: $lastName\n";
+    str += "sex: $sex\n";
+    str += "location:";
     str += "dob: $dob\n";
     str += "bloodGroup: $bloodGroup\n";
     str += "rhFactor: $rhFactor\n";

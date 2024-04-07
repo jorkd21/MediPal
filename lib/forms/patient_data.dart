@@ -143,7 +143,7 @@ class GetPatientDataState extends State<GetPatientData> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Gender',
+                    '${_patient.sex}',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.normal,
@@ -196,7 +196,7 @@ class GetPatientDataState extends State<GetPatientData> {
                         Padding(
                           padding: EdgeInsets.only(top: 18.92, right: 111),
                           child: Text(
-                            i == 0 ? '${_patient.dob?.day}/${_patient.dob?.month}/${_patient.dob?.year}' : i == 1 ? 'United States' : i == 2 ? '${patientId}' : i == 3 ? '${_patient.bloodGroup}${_patient.rhFactor}' : 'Married',
+                            i == 0 ? '${_patient.dob?.day}/${_patient.dob?.month}/${_patient.dob?.year}' : i == 1 ? '${_patient.location}' : i == 2 ? '${patientId}' : i == 3 ? '${_patient.bloodGroup}${_patient.rhFactor}' : 'Married',
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.normal,
