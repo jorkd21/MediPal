@@ -31,13 +31,6 @@ class AppointmentPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment
                             .spaceBetween, // Align logo and "Appointments" text at opposite ends
                         children: [
-                          Container(
-                            height: 100,
-                            width: 100,
-                            child: Image.asset(
-                              myImage, // Replace with your image path
-                            ),
-                          ),
                           Padding(
                             padding: EdgeInsets.all(10.25),
                             child: Text(
@@ -54,6 +47,13 @@ class AppointmentPage extends StatelessWidget {
                                   ),
                                 ],
                               ),
+                            ),
+                          ),
+                          Container(
+                            height: 100,
+                            width: 100,
+                            child: Image.asset(
+                              myImage, // Replace with your image path
                             ),
                           ),
                         ],
@@ -158,6 +158,28 @@ class AppointmentPage extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // Add your onPressed logic here
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blue, // Text color
+                  padding: EdgeInsets.symmetric(
+                      vertical: 15, horizontal: 20), // Button padding
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(10), // Button border radius
+                  ),
+                ),
+                child: Text(
+                  'Create Appointment',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
                 ),
               ),
             ],
