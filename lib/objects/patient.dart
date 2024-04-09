@@ -71,6 +71,14 @@ class Patient {
     };
   }
   
+  factory Patient.fromSnapshot(DataSnapshot snapshot) {
+    if (snapshot.exists) {
+      Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
+      return Patient.fromMap(value.cast<String, dynamic>());
+    }
+    throw const FormatException('snapshot does not exist');
+  }
+  
   factory Patient.fromMap(Map<String, dynamic> jsonMap) {
     Patient p = Patient();
     p.firstName = jsonMap['firstName'];
