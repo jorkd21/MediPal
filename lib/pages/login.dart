@@ -22,7 +22,8 @@ class _LoginPageState extends State<LoginPage> {
     String password = _passwordController.text;
 
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: username,
         password: password,
       );
@@ -36,7 +37,6 @@ class _LoginPageState extends State<LoginPage> {
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
       );
-
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         setState(() {
@@ -57,7 +57,6 @@ class _LoginPageState extends State<LoginPage> {
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +131,8 @@ class _LoginPageState extends State<LoginPage> {
                               color: Colors.black.withOpacity(0.5),
                               spreadRadius: 2,
                               blurRadius: 5,
-                              offset: Offset(0, 3), // changes position of shadow
+                              offset:
+                                  Offset(0, 3), // changes position of shadow
                             ),
                           ],
                         ),
@@ -141,7 +141,9 @@ class _LoginPageState extends State<LoginPage> {
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             labelText: 'Email or phone',
-                            labelStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal),
+                            labelStyle: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.normal),
                             contentPadding:
                                 EdgeInsets.symmetric(horizontal: 10.0),
                           ),
@@ -163,7 +165,8 @@ class _LoginPageState extends State<LoginPage> {
                               color: Colors.black.withOpacity(0.5),
                               spreadRadius: 2,
                               blurRadius: 5,
-                              offset: Offset(0, 3), // changes position of shadow
+                              offset:
+                                  Offset(0, 3), // changes position of shadow
                             ),
                           ],
                         ),
@@ -172,7 +175,9 @@ class _LoginPageState extends State<LoginPage> {
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             labelText: 'Password',
-                            labelStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal),
+                            labelStyle: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.normal),
                             contentPadding:
                                 EdgeInsets.symmetric(horizontal: 10.0),
                           ),
@@ -183,20 +188,22 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   SizedBox(height: 12.0),
                   Padding(
-                    padding: EdgeInsets.only(left: 50.0), // Adjust left padding as needed
+                    padding: EdgeInsets.only(
+                        left: 50.0), // Adjust left padding as needed
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
-                          context, 
-                          MaterialPageRoute(builder: (context) => ForgotPassPage()),
-                          );
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ForgotPassPage()),
+                        );
                       },
-                    child: Text(
-                      'Forgot password?',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                      child: Text(
+                        'Forgot password?',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -207,12 +214,17 @@ class _LoginPageState extends State<LoginPage> {
                     child: ElevatedButton(
                       onPressed: _login,
                       style: ButtonStyle(
-                        minimumSize: MaterialStateProperty.all<Size>(Size(278.0, 44.0)),
-                        backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF003CD6)),
+                        minimumSize:
+                            MaterialStateProperty.all<Size>(Size(278.0, 44.0)),
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Color(0xFF003CD6)),
                       ),
                       child: Text(
                         'Login',
-                        style: TextStyle(color: Color(0xFFEFEFEF), fontSize: 20, fontStyle: FontStyle.normal),
+                        style: TextStyle(
+                            color: Color(0xFFEFEFEF),
+                            fontSize: 20,
+                            fontStyle: FontStyle.normal),
                       ),
                     ),
                   ),
@@ -223,19 +235,28 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         Text(
                           'Don\'t have an account? ',
-                          style: TextStyle(color: Color(0xFFEFEFEF), fontSize: 15, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              color: Color(0xFFEFEFEF),
+                              fontSize: 15,
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.bold),
                         ),
                         SizedBox(width: 4), // Padding of 4 between widgets
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
-                              context, 
-                              MaterialPageRoute(builder: (context) => SignUpPage()),
-                              );
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SignUpPage()),
+                            );
                           },
                           child: Text(
                             'Sign Up',
-                            style: TextStyle(color: Color(0xFFEFEFEF), fontSize: 15, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                color: Color(0xFFEFEFEF),
+                                fontSize: 15,
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],
