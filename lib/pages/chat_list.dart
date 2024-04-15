@@ -37,11 +37,11 @@ class _ChatListState extends State<ChatListPage> {
             if (snapshot.connectionState == ConnectionState.waiting){
               return const Text('Loading');
             }
-
-            DataSnapshot dataSnapshot = snapshot.data!.snapshot;
+            print("Snapshot data: ${snapshot.data}");
+            DataSnapshot? dataSnapshot = snapshot.data!.snapshot;
             List<String> users = [];
 
-            if (dataSnapshot.value != null){
+            if (dataSnapshot != null && dataSnapshot.value != null){
               Map<dynamic, dynamic> usersMap = snapshot.data!.snapshot.value;
               usersMap.forEach((key, value){
                 if (value != null && value['email'] != null){
@@ -50,6 +50,7 @@ class _ChatListState extends State<ChatListPage> {
                   }
                 }
               });
+              print("Users list: $users");
             }
             return _buildUserList(users);
           }
