@@ -32,24 +32,45 @@ class ChatService extends ChangeNotifier{
     String chatRoomId = ids.join("_");
 
     await _firebaseDatabase
-        .collection('chat_rooms')
-        .doc(chatRoomId)
-        .collection('messages')
-        .add(newMessage.toMap());
+        // ignore: deprecated_member_use
+        .reference()
+        .child('chat_rooms')
+        .child(chatRoomId)
+        .child('messages')
+        .push()
+        .set(newMessage.toMap());
   }
 
-  Stream<QuerySnapshot> getMessages(String userId, String otherUserId){
+  Stream<List<Message>> getMessages(String userId, String otherUserId){
 
     List<String> ids = [userId, otherUserId];
     ids.sort();
     String chatRoomId = ids.join("_");
 
     return _firebaseDatabase
-        .collection('chat_rooms')
-        .doc(chatRoomId)
-        .collection('messages')
-        .orderBy('timestamp', descending: false);
-        .snapshots();
+        // ignore: deprecated_member_use
+        .reference()
+        .child('chat_rooms')
+        .child(chatRoomId)
+        .child('messages')
+        .orderByChild('timestamp')
+        .onValue
+        .map((event) => parseMessages(event.snapshot));
+  }
+
+  List<Message> parseMessages(DataSnapshot dataSnapshot){
+    List<Message> messages = [];
+
+    if (dataSnapshot.value != null){
+      Map<dynamic, dynamic> messagesMap = dataSnapshot.value as Map<dynamic, dynamic>;
+      messagesMap.forEach((key, value){
+        Message message = Message.fromMap(value as Map<String, dynamic>);
+        messages.add(message);
+      });
+    }
+
+    return messages;
+
   }
 
 
