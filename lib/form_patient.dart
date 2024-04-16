@@ -71,14 +71,17 @@ class _PatientFormState extends State<PatientForm> {
       }
     });
   }
+
   void _submitForm() {
     // Validate returns true if the form is valid, or false otherwise.
     //print("gen: ${_generalInfoFormKey.currentState!.validate()}");
     //print("health: ${_healthConditionsFormKey.currentState!.validate()}");
     //print("med: ${_medicationsFormKey.currentState!.validate()}");
-    if (_generalInfoFormKey.currentState!.validate()/*&&
+    if (_generalInfoFormKey.currentState!
+            .validate() /*&&
         _healthConditionsFormKey.currentState!.validate() &&
-        _medicationsFormKey.currentState!.validate() */) {
+        _medicationsFormKey.currentState!.validate() */
+        ) {
       // database connection
       DatabaseReference ref = FirebaseDatabase.instance.ref('patient');
       //DatabaseReference newPatientRef = ref.child(_patientKey);
@@ -102,6 +105,20 @@ class _PatientFormState extends State<PatientForm> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Patient Form'),
+        flexibleSpace: Container(
+          //appbar container
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                Color(0xFFBAA2DA), // Light blue at the bottom
+                Color.fromARGB(255, 228, 192, 248), // White at top
+              ],
+            ),
+          ),
+        ),
       ),
       body: Container(
         decoration: const BoxDecoration(

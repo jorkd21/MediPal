@@ -66,6 +66,20 @@ class _PatientListState extends State<PatientList> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Patient List'),
+        flexibleSpace: Container(
+          //appbar container
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                Color(0xFFBAA2DA), // Light blue at the bottom
+                Color.fromARGB(255, 228, 192, 248), // White at top
+              ],
+            ),
+          ),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -79,7 +93,7 @@ class _PatientListState extends State<PatientList> {
                     _patients = _filterPatients(value);
                   });
                 },
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Search by name...',
                   border: OutlineInputBorder(),
                 ),

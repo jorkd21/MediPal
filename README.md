@@ -5,3 +5,4 @@ Medical Tracking App for rural communities
 Kai McKenzie  
 Andrew Solbjor  
 Shu Zhang
+Chris Vo
