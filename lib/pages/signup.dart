@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -47,6 +48,10 @@ class _SignUpPageState extends State<SignUpPage> {
         await user.updateProfile(
           photoURL: _countryController.text,
         );
+        // add patient data
+        DatabaseReference ref = FirebaseDatabase.instance.ref('practitioner');
+        final newRef = ref.child(user.uid);
+        await newRef.set('');
       }
 
       // Navigate to HomeScreen or any other page after successful sign up
