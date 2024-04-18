@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // firebase
 import 'package:firebase_core/firebase_core.dart'; // firebase core
+import 'package:medipal/objects/patient.dart';
 import 'package:medipal/pages/appointment.dart';
 import 'package:medipal/pages/signup.dart';
 import 'package:medipal/pages/patientpage.dart';
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
         '/AuthGate': (context) => AuthGate(),
         '/Login': (context) => LoginPage(),
         '/SignUp': (context) => SignUpPage(),
-        '/PatientForm': (context) => PatientForm(),
+        '/PatientForm': (context) => PatientForm(patient: Patient()),
         '/PatientPage': (context) => PatientPage(),
         '/PatientList': (context) => PatientList(),
         '/AppointmentPage': (context) => AppointmentPage(),

@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:medipal/form_patient.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/forms/patient_data.dart';
 
@@ -59,6 +60,24 @@ class _PatientListState extends State<PatientList> {
           '${patient.firstName ?? ""} ${patient.middleName ?? ""} ${patient.lastName ?? ""}';
       return fullName.toLowerCase().contains(searchTerm.toLowerCase());
     }).toList();
+  }
+
+  Future<void> _deletePatient(String key) async {
+    // Initialize database
+    DatabaseReference ref = FirebaseDatabase.instance.ref();
+
+    // Delete the patient from the database
+    await ref.child('patient/$key').remove();
+
+    // Update the local state
+    setState(() {
+      // Remove the patient from the list of patients using the key
+      int index = _patientKeys.indexOf(key);
+      if (index != -1) {
+        _patientKeys.removeAt(index);
+        _patients.removeAt(index);
+      }
+    });
   }
 
   @override
@@ -152,6 +171,26 @@ class _PatientListState extends State<PatientList> {
                             );
                           },
                           icon: Icon(Icons.arrow_forward),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PatientForm(
+                                  patient: _patients[index],
+                                ),
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.add),
+                        ),
+                        // delete patient
+                        IconButton(
+                          onPressed: () async {
+                            await _deletePatient(_patientKeys[index]);
+                          },
+                          icon: Icon(Icons.delete),
                         ),
                       ],
                     ),

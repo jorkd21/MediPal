@@ -7,7 +7,8 @@ import 'package:medipal/forms/patient_data.dart';
 import 'package:medipal/objects/patient.dart';
 
 class PatientForm extends StatefulWidget {
-  const PatientForm({super.key});
+  final Patient patient;
+  const PatientForm({super.key, required this.patient});
 
   @override
   _PatientFormState createState() => _PatientFormState();
@@ -28,7 +29,7 @@ class _PatientFormState extends State<PatientForm> {
   void initState() {
     super.initState();
     //_patientKey = UniqueKey().toString(); // Generate unique patient key
-    _patient = Patient(); // Create patient object
+    _patient = widget.patient; // Create patient object
     _pages = [
       GeneralInfoForm(
         patient: _patient,
