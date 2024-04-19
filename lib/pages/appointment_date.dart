@@ -64,7 +64,7 @@ class _AppointmentDateState extends State<AppointmentDate> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 10,
-                      vertical: 10,
+                      vertical: 40,
                     ),
                     alignment: Alignment.center,
                     child: const Text(
@@ -122,38 +122,78 @@ class _AppointmentDateState extends State<AppointmentDate> {
                       crossAxisCount: 5, //amount of buttons per row
                       childAspectRatio: 1.5), //size ratio of the buttons
                 ),
-          const SliverToBoxAdapter(
-              //patient select
-
-              ),
-          SliverToBoxAdapter(
-            //the submit button
-            child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 180),
-              child: SizedBox(
-                height: 40,
-                width: 100,
-                child: TextButton(
-                  onPressed: //disables button if time is not picked or the day is not available
-                      _isButtonDisabled && _timeselected ? () => {} : null,
-                  style: const ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll(
-                      Color.fromARGB(197, 29, 53, 161), //button color
-                    ),
-                  ),
-                  child: const Text(
-                    'Submit',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                      color: Colors.white,
-                    ),
+          _isWeekend
+              ? const SliverToBoxAdapter(
+                  child: SizedBox
+                      .shrink(), //creates the smallest box possible in place of null
+                )
+              : SliverToBoxAdapter(
+                  //the submit button
+                  child: Column(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20),
+                        child: Text(
+                          'Please Select a Patient',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 100),
+                        child: SizedBox(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              TextButton(
+                                onPressed: () => {
+                                  Navigator.of(context).pop(),
+                                },
+                                style: const ButtonStyle(
+                                  backgroundColor: MaterialStatePropertyAll(
+                                    Color.fromARGB(
+                                        197, 29, 53, 161), //button color
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: //disables button if time is not picked or the day is not available
+                                    _isButtonDisabled && _timeselected
+                                        ? () => {}
+                                        : null,
+                                style: const ButtonStyle(
+                                  backgroundColor: MaterialStatePropertyAll(
+                                    Color.fromARGB(
+                                        197, 29, 53, 161), //button color
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Submit',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ),
-          ),
         ],
       ),
     );
