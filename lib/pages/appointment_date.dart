@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -131,14 +132,25 @@ class _AppointmentDateState extends State<AppointmentDate> {
                   //the submit button
                   child: Column(
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        child: Text(
-                          'Please Select a Patient',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                      Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: DropdownSearch<String>(
+                          //dropdown search
+                          popupProps: const PopupProps.bottomSheet(
+                            showSearchBox: true,
                           ),
+                          items: const [
+                            "Jorge",
+                            "Kobe",
+                            "ZZZ",
+                            'Alfred'
+                          ], //replace with list of patients
+                          dropdownDecoratorProps: const DropDownDecoratorProps(
+                            dropdownSearchDecoration: InputDecoration(
+                              labelText: "Select a Patient",
+                            ),
+                          ),
+                          selectedItem: null,
                         ),
                       ),
                       Container(
