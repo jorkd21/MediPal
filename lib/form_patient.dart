@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:medipal/forms/family.dart';
 import 'package:medipal/forms/general_info.dart';
 import 'package:medipal/forms/health_conditions.dart';
 import 'package:medipal/forms/medications.dart';
@@ -24,6 +25,7 @@ class _PatientFormState extends State<PatientForm> {
   final GlobalKey<FormState> _generalInfoFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _healthConditionsFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _medicationsFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _familyFormKey = GlobalKey<FormState>();
   // initialize state
   @override
   void initState() {
@@ -42,6 +44,10 @@ class _PatientFormState extends State<PatientForm> {
       MedicationsForm(
         patient: _patient,
         formKey: _medicationsFormKey,
+      ),
+      FamilyForm(
+        patient: _patient,
+        formKey: _familyFormKey,
       ),
       const NextForm(),
     ];
