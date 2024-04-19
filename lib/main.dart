@@ -14,8 +14,6 @@ import 'package:firebase_auth/firebase_auth.dart'; // authentication
 import 'package:firebase_analytics/firebase_analytics.dart'; // analytics
 import 'package:firebase_ui_auth/firebase_ui_auth.dart'; //
 // pages
-import 'package:medipal/count.dart';
-import 'package:medipal/auth_gate.dart';
 import 'package:medipal/form_patient.dart';
 import 'package:medipal/pages/forgotpasswd.dart';
 import 'package:medipal/pages/signup.dart';
@@ -47,8 +45,6 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => HomePage(),
-        '/Count': (context) => Count(),
-        '/AuthGate': (context) => AuthGate(),
         '/Login': (context) => LoginPage(),
         '/SignUp': (context) => SignUpPage(),
         '/PatientForm': (context) => PatientForm(patient: Patient()),
@@ -87,8 +83,6 @@ class HomePage extends StatelessWidget {
         child: Column(
           //mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ButtonWidget('Count', '/Count'),
-            ButtonWidget('AuthGate', '/AuthGate'),
             ButtonWidget('Login', '/Login'),
             ButtonWidget('Sign Up', '/SignUp'),
             ButtonWidget('PatientForm', '/PatientForm'),
