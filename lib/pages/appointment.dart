@@ -1,9 +1,10 @@
-import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
+import 'package:medipal/pages/appointment_date.dart';
 
 class AppointmentPage extends StatelessWidget {
+  const AppointmentPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -13,7 +14,7 @@ class AppointmentPage extends StatelessWidget {
             children: [
               Container(
                 width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
@@ -24,7 +25,7 @@ class AppointmentPage extends StatelessWidget {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
+                  padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
                   child: Column(
                     children: [
                       Row(
@@ -32,7 +33,7 @@ class AppointmentPage extends StatelessWidget {
                             .spaceBetween, // Align logo and "Appointments" text at opposite ends
                         children: [
                           Padding(
-                            padding: EdgeInsets.all(10.25),
+                            padding: const EdgeInsets.all(10.25),
                             child: Text(
                               'Appointments',
                               style: TextStyle(
@@ -42,14 +43,14 @@ class AppointmentPage extends StatelessWidget {
                                 shadows: [
                                   Shadow(
                                     color: Colors.black.withOpacity(0.5),
-                                    offset: Offset(0, 3),
+                                    offset: const Offset(0, 3),
                                     blurRadius: 5,
                                   ),
                                 ],
                               ),
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             height: 100,
                             width: 100,
                             child: Image.asset(
@@ -58,18 +59,18 @@ class AppointmentPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: Colors.white, // White background color
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            const Text(
                               'Next Appointments',
                               style: TextStyle(
                                 fontSize: 20,
@@ -78,7 +79,7 @@ class AppointmentPage extends StatelessWidget {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.symmetric(vertical: 10),
+                              margin: const EdgeInsets.symmetric(vertical: 10),
                               decoration: BoxDecoration(
                                 border: Border(
                                   top: BorderSide(
@@ -91,12 +92,12 @@ class AppointmentPage extends StatelessWidget {
                             ),
                             Container(
                               width: double.infinity,
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                 color: Colors.red, // Red background color
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Text(
+                              child: const Text(
                                 'April 10, 2024 - 10:00 AM',
                                 style: TextStyle(
                                   fontSize: 18,
@@ -111,18 +112,18 @@ class AppointmentPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Container(
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   color: Colors.white, // White background color
                   borderRadius: BorderRadius.circular(10),
                 ),
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Upcoming Appointments',
                       style: TextStyle(
                         fontSize: 20,
@@ -131,7 +132,7 @@ class AppointmentPage extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.symmetric(vertical: 10),
+                      margin: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
                         border: Border(
                           top: BorderSide(
@@ -144,12 +145,12 @@ class AppointmentPage extends StatelessWidget {
                     ),
                     Container(
                       width: double.infinity,
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: Colors.blue, // Blue background color
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Text(
+                      child: const Text(
                         'Tue, Feb 5',
                         style: TextStyle(
                           fontSize: 18,
@@ -160,22 +161,27 @@ class AppointmentPage extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  // Add your onPressed logic here
+                  // goes to appointment_date.dart
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AppointmentDate()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.blue, // Text color
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                       vertical: 15, horizontal: 20), // Button padding
                   shape: RoundedRectangleBorder(
                     borderRadius:
                         BorderRadius.circular(10), // Button border radius
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'Create Appointment',
                   style: TextStyle(
                     fontSize: 18,
