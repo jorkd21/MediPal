@@ -1,5 +1,8 @@
-import 'package:dropdown_search/dropdown_search.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:dropdown_search/dropdown_search.dart';
+import 'package:medipal/objects/appointment_patient.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AppointmentDate extends StatefulWidget {
@@ -15,6 +18,46 @@ class _AppointmentDateState extends State<AppointmentDate> {
   bool _timeselected = false;
   bool _isButtonDisabled = true;
   int? _currentIndex;
+
+  late List<Patient> _patients = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchPatientData();
+  }
+
+  void _fetchPatientData() async {
+    // initialize database
+    DatabaseReference ref = FirebaseDatabase.instance.ref();
+    // get snapshot
+    DataSnapshot snapshot = await ref.child('patient').get();
+    if (snapshot.value != null) {
+      Map<dynamic, dynamic>? jsonMap = snapshot.value as Map<dynamic, dynamic>;
+      List<Patient> pl = [];
+      jsonMap.forEach((key, value) {
+        //print(key);
+        Patient p = Patient.fromMap(value.cast<String, dynamic>());
+        //print(p);
+        pl.add(p);
+      });
+      setState(() {
+        _patients = pl;
+      }); // Trigger rebuild to load patient data
+    }
+  }
+
+  Future<void> addAppointment(String name) async {
+    try {
+      await FirebaseFirestore.instance.collection('appointments').add({
+        'name': name,
+        // Add additional fields as needed
+      });
+      print('Appointment added successfully');
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,22 +177,20 @@ class _AppointmentDateState extends State<AppointmentDate> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(15),
-                        child: DropdownSearch<String>(
+                        child: DropdownSearch<Patient>(
                           //dropdown search
                           popupProps: const PopupProps.bottomSheet(
                             showSearchBox: true,
                           ),
-                          items: const [
-                            "Jorge",
-                            "Kobe",
-                            "ZZZ",
-                            'Alfred'
-                          ], //replace with list of patients
+                          items: _patients, // Set items to fetched patient data
                           dropdownDecoratorProps: const DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
                               labelText: "Select a Patient",
                             ),
                           ),
+                          onChanged: (Patient? newValue) {
+                            // Handle when a new value is selected
+                          },
                           selectedItem: null,
                         ),
                       ),
