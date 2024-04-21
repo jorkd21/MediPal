@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:medipal/constant/images.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:medipal/main.dart';
 
 class ChatListPage extends StatefulWidget {
@@ -15,6 +15,8 @@ class ChatListPage extends StatefulWidget {
 class _ChatListState extends State<ChatListPage> {
 
   late User? currentUser;
+  List<String> users = [];
+  
   void initState(){
     super.initState();
     currentUser = FirebaseAuth.instance.currentUser;
@@ -42,7 +44,7 @@ class _ChatListState extends State<ChatListPage> {
             List<String> users = [];
 
             if (dataSnapshot != null && dataSnapshot.value != null){
-              Map<dynamic, dynamic> usersMap = snapshot.data!.snapshot.value;
+              Map<dynamic, dynamic> usersMap = dataSnapshot.value as Map<dynamic, dynamic>;
               usersMap.forEach((key, value){
                 if (value != null && value['email'] != null){
                   if (value['email'] != FirebaseAuth.instance.currentUser?.email){
@@ -67,14 +69,14 @@ class _ChatListState extends State<ChatListPage> {
     }
   }
 
-  Widget _buildUserListItem(String usserEmail, BuildContext context){
+  Widget _buildUserListItem(String userEmail, BuildContext context){
     return ListTile(
-      title: Text(usserEmail),
+      title: Text(userEmail),
       onTap: () {
         Navigator.pushNamed(
           context, 
           '/chat',
-          arguments: {'receiverUserEmail': usserEmail},
+          arguments: {'receiverUserEmail': userEmail},
         );
       }
     );
@@ -95,4 +97,6 @@ class ChatScreen extends StatelessWidget {
       ),
     );
   }
+
+
 }
