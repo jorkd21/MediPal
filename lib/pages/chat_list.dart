@@ -24,8 +24,8 @@ class _ChatListState extends State<ChatListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: 
-      Scaffold(
+    return SafeArea(
+      child: Scaffold(
         appBar: AppBar(
         ),
         body: StreamBuilder(
@@ -81,22 +81,3 @@ class _ChatListState extends State<ChatListPage> {
       }
     );
   }
-
-class ChatScreen extends StatelessWidget {
-  final String receiverUserEmail;
-  ChatScreen({required this.receiverUserEmail});
-
-  @override
-  Widget build(BuildContext context){
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('$receiverUserEmail'),
-      ),
-      body: Center(
-        child: Text('Chatting with: $receiverUserEmail'),
-      ),
-    );
-  }
-
-
-}
