@@ -73,11 +73,11 @@ class _ChatListState extends State<ChatListPage> {
     return ListTile(
       title: Text(userEmail),
       onTap: () {
-        Navigator.pushNamed(
-          context, 
-          '/chat',
-          arguments: {'receiverUserEmail': userEmail},
-        );
+      Navigator.pushNamed(
+        context, 
+        '/chat',
+        arguments: {'receiverUserEmail': userEmail},
+      );
       }
     );
   }

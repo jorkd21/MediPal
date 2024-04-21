@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
         '/AppointmentPage': (context) => AppointmentPage(),
         '/ChatListPage': (context) => ChatListPage(),
         '/Dashboard': (context) => Dashboard(),
-        '/chat': (context) => ChatScreen(receiverUserEmail: ''),
+        '/chat': (context) => ChatScreen(),
       },
     );
   }

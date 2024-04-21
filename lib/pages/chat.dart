@@ -9,11 +9,12 @@ import 'package:medipal/main.dart';
 
 class ChatScreen extends StatelessWidget {
 
-  final String receiverUserEmail;
-  ChatScreen({required this.receiverUserEmail});
-
   @override
   Widget build(BuildContext context){
+
+    final Map<String, dynamic> args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final String receiverUserEmail = args['receiverUserEmail'];
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
