@@ -5,14 +5,14 @@ import 'package:medipal/objects/patient.dart';
 import 'package:medipal/forms/patient_data.dart';
 
 class PatientList extends StatefulWidget {
-  const PatientList({Key? key}) : super(key: key);
+  const PatientList({super.key});
 
   @override
   _PatientListState createState() => _PatientListState();
 }
 
 class _PatientListState extends State<PatientList> {
-  late List<String> _patientKeys = [];
+  late final List<String> _patientKeys = [];
   late List<Patient> _patients = [];
   late List<Patient> _originalPatients = [];
   late int _currentPageIndex = 0;
@@ -85,7 +85,22 @@ class _PatientListState extends State<PatientList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, //remove back arrow from appbar
         title: const Text('Patient List'),
+        flexibleSpace: Container(
+          //appbar container
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                Color.fromARGB(255, 192, 212, 248), // light blue at bottom
+                Color.fromARGB(255, 214, 228, 255), // White at top
+              ],
+            ),
+          ),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -99,7 +114,7 @@ class _PatientListState extends State<PatientList> {
                     _patients = _filterPatients(value);
                   });
                 },
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Search by name...',
                   border: OutlineInputBorder(),
                 ),
@@ -110,13 +125,15 @@ class _PatientListState extends State<PatientList> {
       ),
       body: _patients.isNotEmpty
           ? Container(
+              padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                   colors: [
-                    Color(0xFF6D98EB), // Light blue at the bottom
-                    Color(0xFFBAA2DA), // Purple at the top
+                    Color.fromARGB(
+                        255, 151, 183, 247), // Light blue at the bottom
+                    Color.fromARGB(255, 192, 212, 248), // White at top
                   ],
                 ),
               ),
@@ -135,27 +152,22 @@ class _PatientListState extends State<PatientList> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              const SizedBox(height: 4),
+                              Text(
+                                "Name: $fullName",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "DOB: ${_patients[index].dob?.year}/${_patients[index].dob?.month}/${_patients[index].dob?.day}",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
                               Text(
                                 'Patient ID: ${_patientKeys[index]}',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
-                              ),
-                              SizedBox(height: 4),
-                              Row(
-                                children: [
-                                  Text(
-                                    "Name: $fullName",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(width: 16),
-                                  Text(
-                                    "DOB: ${_patients[index].dob?.year}/${_patients[index].dob?.month}/${_patients[index].dob?.day}",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ],
                               ),
                             ],
                           ),
@@ -171,7 +183,7 @@ class _PatientListState extends State<PatientList> {
                               ),
                             );
                           },
-                          icon: Icon(Icons.arrow_forward),
+                          icon: const Icon(Icons.arrow_forward),
                         ),
                         IconButton(
                           onPressed: () {
@@ -199,7 +211,7 @@ class _PatientListState extends State<PatientList> {
                 },
               ),
             )
-          : Center(
+          : const Center(
               child: CircularProgressIndicator(),
             ),
     );
