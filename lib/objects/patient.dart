@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 class Patient {
   // VARTIABLES
   // personal info
+  String? id;
   // name
   String? firstName;
   String? middleName;
@@ -26,6 +27,8 @@ class Patient {
   // medications
   List<String>? currMedications = [];
   List<String>? prevMedications = [];
+  // family
+  List<Patient>? family = [];
 
   // CONSTRUCTOR
   Patient(
@@ -68,6 +71,7 @@ class Patient {
       'allergies': allergies ?? [],
       'medicationsCurr': currMedications ?? [],
       'medicationsPrev': prevMedications ?? [],
+      'family': family?.map((patient) => patient.id).toList(),
     };
   }
   
