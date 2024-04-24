@@ -19,15 +19,28 @@ class FamilyForm extends StatefulWidget {
 }
 
 class FamilyFormState extends State<FamilyForm> {
-  late List<String> _patientKeys = [];
   late List<Patient> _patients = [];
-  late List<Patient> _originalPatients = [];
-  late int _currentPageIndex = 0;
+  late List<Patient> _family = [];
 
   @override
   void initState() {
     super.initState();
     _fetchPatientData();
+    //_fetchFamilyData();
+  }
+
+  void _fetchFamilyData() {
+    List<Patient> patientsCopy = List.of(_patients);
+    for (String s in widget.patient.family!) {
+      for (Patient p in patientsCopy) {
+        if (p.id == s) {
+          setState(() {
+            _family.add(p);
+            _patients.remove(p);
+          });
+        }
+      }
+    }
   }
 
   void _fetchPatientData() async {
@@ -42,22 +55,19 @@ class FamilyFormState extends State<FamilyForm> {
         Patient p = Patient.fromMap(value.cast<String, dynamic>());
         p.id = key;
         pl.add(p);
-        setState(() {
-          _currentPageIndex++;
-          _patientKeys.add(key);
-        });
       });
       setState(() {
         _patients = pl;
-        _originalPatients = pl;
       }); // Trigger rebuild to load patient data
+      _fetchFamilyData();
     }
   }
 
   // Function to add a patient to the family list
   void _addToFamily(Patient patient) {
     setState(() {
-      widget.patient.family?.add(patient);
+      widget.patient.family!.add(patient.id!); // Add patient ID to family list
+      _family.add(patient);
       _patients.remove(patient);
     });
   }
@@ -65,7 +75,8 @@ class FamilyFormState extends State<FamilyForm> {
   // Function to remove a patient from the family list and add them back to the patients list
   void _removeFromFamily(Patient patient) {
     setState(() {
-      widget.patient.family?.remove(patient);
+      widget.patient.family!.remove(patient.id);
+      _family.remove(patient);
       _patients.add(patient);
     });
   }
@@ -73,7 +84,8 @@ class FamilyFormState extends State<FamilyForm> {
   // Function to create a widget for displaying a patient's information
   Widget buildPatientInfo(Patient patient, bool isInFamily) {
     return ListTile(
-      title: Text('${patient.firstName} ${patient.middleName} ${patient.lastName}'),
+      title: Text(
+          '${patient.firstName} ${patient.middleName} ${patient.lastName}'),
       subtitle: Text('DOB: ${patient.dob.toString()}'),
       trailing: ElevatedButton(
         onPressed: () {
@@ -104,9 +116,9 @@ class FamilyFormState extends State<FamilyForm> {
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: widget.patient.family!.length,
+                    itemCount: _family.length,
                     itemBuilder: (context, index) {
-                      Patient familyPatient = widget.patient.family![index];
+                      Patient familyPatient = _family[index];
                       return buildPatientInfo(familyPatient, true);
                     },
                   ),

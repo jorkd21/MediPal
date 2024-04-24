@@ -28,7 +28,7 @@ class Patient {
   List<String>? currMedications = [];
   List<String>? prevMedications = [];
   // family
-  List<Patient>? family = [];
+  List<String>? family = [];
 
   // CONSTRUCTOR
   Patient(
@@ -71,7 +71,8 @@ class Patient {
       'allergies': allergies ?? [],
       'medicationsCurr': currMedications ?? [],
       'medicationsPrev': prevMedications ?? [],
-      'family': family?.map((patient) => patient.id).toList(),
+      //'family': family?.map((patient) => patient.id).toList(),
+      'family': family ?? [],
     };
   }
   
@@ -93,6 +94,7 @@ class Patient {
     p.dob = jsonMap['dob'] != null ? DateTime.parse(jsonMap['dob']) : null;
     p.bloodGroup = jsonMap['bloodGroup'];
     p.rhFactor = jsonMap['rhFactor'];
+    p.maritalStatus = jsonMap['maritalStatus'];
     p.email = jsonMap['email'];
     // Check if phone list is not null before mapping
     if (jsonMap['phone'] != null && jsonMap['phone'] is List<dynamic>) {
@@ -132,6 +134,10 @@ class Patient {
     List<dynamic>? prevMed = jsonMap['medicationsPrev'];
     if (prevMed is List<dynamic>) {
       p.prevMedications = prevMed.cast<String>();
+    }
+    List<dynamic>? family = jsonMap['family'];
+    if (family is List<dynamic>) {
+      p.family = family.cast<String>();
     }
     return p;
   }
