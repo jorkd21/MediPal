@@ -80,32 +80,52 @@ class _PatientFormState extends State<PatientForm> {
   }
 
   void _submitForm() {
-    // Validate returns true if the form is valid, or false otherwise.
-    //print("gen: ${_generalInfoFormKey.currentState!.validate()}");
-    //print("health: ${_healthConditionsFormKey.currentState!.validate()}");
-    //print("med: ${_medicationsFormKey.currentState!.validate()}");
-    if (_generalInfoFormKey.currentState!
-            .validate() /*&&
+  // Validate forms as before
+  if (_generalInfoFormKey.currentState!.validate() /*&&
         _healthConditionsFormKey.currentState!.validate() &&
         _medicationsFormKey.currentState!.validate() */
         ) {
-      // database connection
+    // Check if patient ID is present (widget.patient.id)
+    if (widget.patient.id != null && widget.patient.id!.isNotEmpty) {
+      // Update existing patient data
+      DatabaseReference ref = FirebaseDatabase.instance.ref('patient/${widget.patient.id}');
+      ref.update(_patient.toJson()).then((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Patient data updated'),
+          ),
+        );
+      }).catchError((error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error updating patient: $error'),
+          ),
+        );
+      });
+    } else {
+      // Create new patient data (existing functionality)
       DatabaseReference ref = FirebaseDatabase.instance.ref('patient');
-      //DatabaseReference newPatientRef = ref.child(_patientKey);
       DatabaseReference newPatientRef = ref.push();
       setState(() {
         _patientKey = newPatientRef.key!;
         _pages.add(GetPatientData(patientId: _patientKey));
       });
-      newPatientRef.set(_patient.toJson());
-      // If the form is valid, display a snackbar. In the real world,
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Processing Data'),
-        ),
-      );
+      newPatientRef.set(_patient.toJson()).then((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Patient data added'),
+          ),
+        );
+      }).catchError((error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error adding patient: $error'),
+          ),
+        );
+      });
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {
