@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:medipal/objects/patient.dart';
@@ -20,6 +21,7 @@ class GetPatientData extends StatefulWidget {
 class GetPatientDataState extends State<GetPatientData> {
   // VARIABLES
   Patient _patient = Patient();
+  String? imageUrl;
 
   // CONSTRUCTOR
   GetPatientDataState();
@@ -37,15 +39,23 @@ class GetPatientDataState extends State<GetPatientData> {
     DataSnapshot snapshot = await ref.child(widget.patientId).get();
     // set state
     if (snapshot.exists) {
-      Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic,dynamic>;
+      Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
       setState(() {
-        _patient = Patient.fromMap(value.cast<String,dynamic>());
+        _patient = Patient.fromMap(value.cast<String, dynamic>());
       });
     }
+    // Load image URL
+    final storageRef = FirebaseStorage.instance.ref();
+    final downloadUrl = await storageRef
+        .child("patients/${widget.patientId}/idImage.jpg")
+        .getDownloadURL();
+    setState(() {
+      imageUrl = downloadUrl;
+    });
   }
 
   // build
- // build
+  // build
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -74,7 +84,8 @@ class GetPatientDataState extends State<GetPatientData> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           IconButton(
-                            icon: Icon(Icons.arrow_back, color: Colors.black, size: 40),
+                            icon: Icon(Icons.arrow_back,
+                                color: Colors.black, size: 40),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
@@ -88,9 +99,8 @@ class GetPatientDataState extends State<GetPatientData> {
                           ),
                         ],
                       ),
-                      
                       Row(
-                        children: [ 
+                        children: [
                           Image.asset(
                             myCal,
                           ),
@@ -119,15 +129,26 @@ class GetPatientDataState extends State<GetPatientData> {
                 ),
               ),
               SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    profilePic,
-                  ),
-                ],
+              SizedBox(
+                width: 200, // Set the desired width here
+                child: Center(
+                  child: imageUrl != null
+                      ? Image.network(
+                          imageUrl!,
+                          fit: BoxFit.cover,
+                          width: 200, // Match the width of the SizedBox
+                          height: 200, // Optional: specify the height
+                        )
+                      : Image.asset(
+                          profilePic,
+                          width: 200, // Match the width of the SizedBox
+                          height: 200, // Optional: specify the height
+                        ), // Placeholder while loading
+                ),
               ),
-              SizedBox(height: 8.47,),
+              SizedBox(
+                height: 8.47,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -140,7 +161,9 @@ class GetPatientDataState extends State<GetPatientData> {
                   ),
                 ],
               ),
-              SizedBox(height: 21.64,),
+              SizedBox(
+                height: 21.64,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -154,7 +177,9 @@ class GetPatientDataState extends State<GetPatientData> {
                   ),
                 ],
               ),
-              SizedBox(height: 23.24,),  
+              SizedBox(
+                height: 23.24,
+              ),
               Container(
                 decoration: BoxDecoration(
                   color: Color(0xFFDADFEC),
@@ -181,33 +206,49 @@ class GetPatientDataState extends State<GetPatientData> {
                       ],
                     ),
                     for (int i = 0; i < 5; i++)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 18.92, left: 30),
-                          child: Text(
-                            i == 0 ? 'Date of birth' : i == 1 ? 'Location' : i == 2 ? 'Id' : i == 3 ? 'Blood type' : 'Marital status',
-                            style: TextStyle(
-                              color: Color(0xFF7B7B7B),
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: 18.92, left: 30),
+                            child: Text(
+                              i == 0
+                                  ? 'Date of birth'
+                                  : i == 1
+                                      ? 'Location'
+                                      : i == 2
+                                          ? 'Id'
+                                          : i == 3
+                                              ? 'Blood type'
+                                              : 'Marital status',
+                              style: TextStyle(
+                                color: Color(0xFF7B7B7B),
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 18.92, right: 111),
-                          child: Text(
-                            i == 0 ? '${_patient.dob?.day}/${_patient.dob?.month}/${_patient.dob?.year}' : i == 1 ? '${_patient.location}' : i == 2 ? '' : i == 3 ? '${_patient.bloodGroup}${_patient.rhFactor}' : 'Married',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
+                          Padding(
+                            padding: EdgeInsets.only(top: 18.92, right: 111),
+                            child: Text(
+                              i == 0
+                                  ? '${_patient.dob?.day}/${_patient.dob?.month}/${_patient.dob?.year}'
+                                  : i == 1
+                                      ? '${_patient.location}'
+                                      : i == 2
+                                          ? ''
+                                          : i == 3
+                                              ? '${_patient.bloodGroup}${_patient.rhFactor}'
+                                              : 'Married',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
                     SizedBox(height: 23.01),
                     Row(
                       children: [
@@ -225,33 +266,33 @@ class GetPatientDataState extends State<GetPatientData> {
                       ],
                     ),
                     for (int i = 0; i < 2; i++)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 18.92, left: 30),
-                          child: Text(
-                            i == 0 ? 'Prescription' : 'Prescription',
-                            style: TextStyle(
-                              color: Color(0xFF7B7B7B),
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: 18.92, left: 30),
+                            child: Text(
+                              i == 0 ? 'Prescription' : 'Prescription',
+                              style: TextStyle(
+                                color: Color(0xFF7B7B7B),
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 18.92, right: 111),
-                          child: Text(
-                            i == 0 ? 'lorem ipsum' : 'lorem ipsum',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
+                          Padding(
+                            padding: EdgeInsets.only(top: 18.92, right: 111),
+                            child: Text(
+                              i == 0 ? 'lorem ipsum' : 'lorem ipsum',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
                     SizedBox(height: 25.91),
                     Row(
                       children: [
@@ -269,34 +310,42 @@ class GetPatientDataState extends State<GetPatientData> {
                       ],
                     ),
                     for (int i = 0; i < 3; i++)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 18.92, left: 30),
-                          child: Text(
-                            i == 0 ? 'Prior Illness' : i == 1 ? 'Current Illness' : 'Allergy',
-                            style: TextStyle(
-                              color: Color(0xFF7B7B7B),
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: 18.92, left: 30),
+                            child: Text(
+                              i == 0
+                                  ? 'Prior Illness'
+                                  : i == 1
+                                      ? 'Current Illness'
+                                      : 'Allergy',
+                              style: TextStyle(
+                                color: Color(0xFF7B7B7B),
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 18.92, right: 111),
-                          child: Text(
-                            i == 0 ? '${_patient.prevIllness}' : i == 1 ? '${_patient.currIllness}' : '${_patient.allergies}',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
+                          Padding(
+                            padding: EdgeInsets.only(top: 18.92, right: 111),
+                            child: Text(
+                              i == 0
+                                  ? '${_patient.prevIllness}'
+                                  : i == 1
+                                      ? '${_patient.currIllness}'
+                                      : '${_patient.allergies}',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    // SizedBox(height: 25.91),   
+                        ],
+                      ),
+                    // SizedBox(height: 25.91),
                     // Row(
                     //   children: [
                     //     Padding(
@@ -340,7 +389,7 @@ class GetPatientDataState extends State<GetPatientData> {
                     //     ),
                     //   ],
                     // ),
-                    SizedBox(height: 25.91), 
+                    SizedBox(height: 25.91),
                     Row(
                       children: [
                         Padding(
@@ -357,34 +406,34 @@ class GetPatientDataState extends State<GetPatientData> {
                       ],
                     ),
                     for (int i = 0; i < 2; i++)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 18.92, left: 30),
-                          child: Text(
-                            i == 0 ? 'Blood tests' : 'X-Rays',
-                            style: TextStyle(
-                              color: Color(0xFF7B7B7B),
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: 18.92, left: 30),
+                            child: Text(
+                              i == 0 ? 'Blood tests' : 'X-Rays',
+                              style: TextStyle(
+                                color: Color(0xFF7B7B7B),
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 18.92, right: 111),
-                          child: Text(
-                            i == 0 ? 'RH testing' : 'Spinal scan',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
+                          Padding(
+                            padding: EdgeInsets.only(top: 18.92, right: 111),
+                            child: Text(
+                              i == 0 ? 'RH testing' : 'Spinal scan',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 25.91), 
+                        ],
+                      ),
+                    SizedBox(height: 25.91),
                   ],
                 ),
               ),
