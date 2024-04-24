@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 class Patient {
   // VARTIABLES
   File? imageFile;
+  List<File>? files;
   // personal info
   String? id;
   // name
