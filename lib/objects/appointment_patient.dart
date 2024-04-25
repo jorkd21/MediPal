@@ -7,6 +7,8 @@ class Patient {
   String? middleName;
   String? lastName;
   String? dob;
+  String? email;
+  List<PhoneData>? phone = [PhoneData()];
   var dateTime;
 
   // CONSTRUCTOR
@@ -19,6 +21,8 @@ class Patient {
       'middleName': middleName,
       'lastName': lastName,
       'dob': dob,
+      'email': email,
+      'phone': phone?.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -38,6 +42,16 @@ class Patient {
     p.dob = jsonMap['dob'] != null
         ? "${DateTime.parse(jsonMap['dob']).year}-${DateTime.parse(jsonMap['dob']).month}-${DateTime.parse(jsonMap['dob']).day}"
         : null;
+    p.email = jsonMap['email'];
+    // Check if phone list is not null before mapping
+    if (jsonMap['phone'] != null && jsonMap['phone'] is List<dynamic>) {
+      p.phone = (jsonMap["phone"] as List<dynamic>)
+          .map((phoneMap) => PhoneData(
+                phoneNumber: phoneMap["phoneNumber"] as String,
+                type: phoneMap["type"] as String,
+              ))
+          .toList();
+    }
     return p;
   }
 
@@ -46,6 +60,31 @@ class Patient {
     String str = '';
     str += "$firstName $middleName $lastName\n";
     str += "dob: $dob";
+    return str;
+  }
+}
+
+class PhoneData {
+  String? type;
+  String? phoneNumber;
+
+  PhoneData({
+    this.phoneNumber,
+    this.type,
+  });
+
+  // convert phone data to a map
+  Map<String, dynamic> toJson() {
+    return {
+      'type': type,
+      'phoneNumber': phoneNumber,
+    };
+  }
+
+  @override
+  String toString() {
+    String str = '';
+    str += "$phoneNumber";
     return str;
   }
 }

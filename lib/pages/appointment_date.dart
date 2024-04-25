@@ -16,8 +16,9 @@ class _AppointmentDateState extends State<AppointmentDate> {
   DateTime today = DateTime.now();
   bool _isWeekend = false;
   bool _timeselected = false;
-  bool _isButtonDisabled = true;
+  bool _dropDownActive = false;
   int? _currentIndex;
+  Patient? patientSelected;
 
   late List<Patient> _patients = [];
 
@@ -47,10 +48,19 @@ class _AppointmentDateState extends State<AppointmentDate> {
     }
   }
 
-  Future<void> addAppointment(String name) async {
+  Future<void> addAppointment(
+      Patient? patientSelected, int selectedTime, DateTime today) async {
     try {
-      await FirebaseFirestore.instance.collection('appointments').add({
-        'name': name,
+      DatabaseReference appointmentRef =
+          FirebaseDatabase.instance.ref().child('appointments');
+      await appointmentRef.push().set({
+        'name':
+            '${patientSelected!.firstName!} ${patientSelected.middleName!} ${patientSelected.lastName!}',
+        'dob': patientSelected.dob,
+        'email': patientSelected.email,
+        'phone_number': patientSelected.phone.toString(),
+        'time': _currentIndex! + 9,
+        'dateSelected': today.toString(),
         // Add additional fields as needed
       });
       print('Appointment added successfully');
@@ -188,9 +198,7 @@ class _AppointmentDateState extends State<AppointmentDate> {
                               labelText: "Select a Patient",
                             ),
                           ),
-                          onChanged: (Patient? newValue) {
-                            // Handle when a new value is selected
-                          },
+                          onChanged: itemSelected,
                           selectedItem: null,
                         ),
                       ),
@@ -201,7 +209,7 @@ class _AppointmentDateState extends State<AppointmentDate> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              TextButton(
+                              ElevatedButton(
                                 onPressed: () => {
                                   Navigator.of(context).pop(),
                                 },
@@ -220,16 +228,22 @@ class _AppointmentDateState extends State<AppointmentDate> {
                                   ),
                                 ),
                               ),
-                              TextButton(
+                              ElevatedButton(
                                 onPressed: //disables button if time is not picked or the day is not available
-                                    _isButtonDisabled && _timeselected
-                                        ? () => {}
+                                    _timeselected && _dropDownActive
+                                        ? () {
+                                            int selectedTime =
+                                                _currentIndex! + 9;
+                                            // Call the method to add the appointment
+                                            addAppointment(patientSelected,
+                                                selectedTime, today);
+                                          }
                                         : null,
-                                style: const ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll(
-                                    Color.fromARGB(
-                                        197, 29, 53, 161), //button color
-                                  ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      const Color.fromARGB(197, 29, 53, 161),
+                                  disabledBackgroundColor: const Color.fromARGB(
+                                      59, 29, 53, 161), //button color
                                 ),
                                 child: const Text(
                                   'Submit',
@@ -273,16 +287,17 @@ class _AppointmentDateState extends State<AppointmentDate> {
             //can change to other days that the clinic is closed
             if (today.weekday == 6 || today.weekday == 7) {
               _isWeekend = true;
-              _timeselected = false;
-              _currentIndex = null;
-              _isButtonDisabled = false;
             } else {
               _isWeekend = false;
-              _isButtonDisabled = true;
             }
           });
         },
       ),
     );
+  }
+
+  void itemSelected(Patient? s) {
+    patientSelected = s;
+    _dropDownActive = true;
   }
 }
