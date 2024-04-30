@@ -2,79 +2,111 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:medipal/forms/input_template.dart';
 import 'package:medipal/objects/patient.dart';
 
 class FileForm extends StatefulWidget {
   final Patient patient;
-  final Function(List<File>, List<String>) onFilesSelected;
+  final GlobalKey<FormState> formKey;
+
   const FileForm({
-    Key? key,
+    super.key,
     required this.patient,
-    required this.onFilesSelected,
-  }) : super(key: key);
+    required this.formKey,
+  });
 
   @override
-  _FileFormState createState() => _FileFormState();
+  FileFormState createState() {
+    return FileFormState();
+  }
 }
 
-class _FileFormState extends State<FileForm> {
-  List<File> selectedFiles = [];
-  List<String> fileNames = [];
-
-  Future<void> pickImage() async {
-    final image =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+class FileFormState extends State<FileForm> {
+  Future<void> pickFile(FileData f) async {
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
-        selectedFiles.add(File(image.path)); // Store the actual picked image path
-        fileNames.add(""); // Add an empty string as a placeholder for the file name
-        widget.onFilesSelected(selectedFiles, fileNames);
+        f.file = File(image.path);
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: <Widget>[
-          ElevatedButton(
-            onPressed: pickImage,
-            child: Text('Select Image'),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: selectedFiles.length,
-              itemBuilder: (context, index) {
-                File file = selectedFiles[index];
-                String fileName = fileNames[index];
-                String filePath = file.path;
-                return ListTile(
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'File Name: $fileName',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'File Path: $filePath',
-                      ),
-                    ],
+    return ListView(
+      children: [
+        Form(
+          key: widget.formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Files'),
+              Column(
+                children: [
+                  ...List.generate(widget.patient.files?.length ?? 0, (index) {
+                    FileData file = widget.patient.files![index];
+                    return Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: buildTextFormField(
+                                labelText: 'file name ${index + 1}',
+                                value: file.name,
+                                onChanged: (value) {
+                                  file.name = value!;
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter some text';
+                                  }
+                                  return null;
+                                },
+                                onSuffixIconTap: index == 0
+                                    ? null
+                                    : () => _removeField(
+                                        widget.patient.files, index),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () => pickFile(file),
+                              child: Text('Select Image'),
+                            ),
+                          ],
+                        ),
+                        if (file.file != null)
+                          Text('File Path: ${file.file!.path}')
+                      ],
+                    );
+                  }),
+                  //Add more button
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: TextButton(
+                      onPressed: () {
+                        _addField(widget.patient.files, FileData());
+                      },
+                      child: Text("Add More"),
+                    ),
                   ),
-                  subtitle: TextFormField(
-                    decoration: InputDecoration(labelText: 'File Name'),
-                    onChanged: (value) {
-                      fileNames[index] = value; // Update file name list
-                      widget.onFilesSelected(selectedFiles, fileNames);
-                    },
-                  ),
-                );
-              },
-            ),
+                ],
+              ),
+            ],
           ),
-        ],
-      ),
+        )
+      ],
     );
+  }
+
+  _addField(List<dynamic>? list, dynamic value) {
+    list!.add(value);
+    setState(() {});
+  }
+
+  _removeField(List<dynamic>? list, int index) {
+    if (list != null && index < list.length) {
+      list.removeAt(index);
+      setState(() {});
+    }
   }
 }

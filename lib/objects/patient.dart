@@ -5,7 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 class Patient {
   // VARTIABLES
   File? imageFile;
-  List<File>? files;
+  List<FileData> files = [];
   // personal info
   String? id;
   // name
@@ -22,17 +22,17 @@ class Patient {
   String? maritalStatus;
   // contact
   String? email;
-  List<PhoneData>? phone = [PhoneData()];
-  List<EmergancyData>? emergency = [EmergancyData()];
+  List<PhoneData> phone = [PhoneData()];
+  List<EmergancyData> emergency = [EmergancyData()];
   // illnesses/allergies
-  List<String>? currIllness = [];
-  List<String>? prevIllness = [];
-  List<String>? allergies = [];
+  List<String> currIllness = [];
+  List<String> prevIllness = [];
+  List<String> allergies = [];
   // medications
-  List<String>? currMedications = [];
-  List<String>? prevMedications = [];
+  List<String> currMedications = [];
+  List<String> prevMedications = [];
   // family
-  List<String>? family = [];
+  List<String> family = [];
 
   // CONSTRUCTOR
   Patient(
@@ -225,4 +225,14 @@ class EmergancyData extends PhoneData {
     str += super.toString();
     return str;
   }
+}
+
+class FileData {
+  File? file;
+  String? name;
+
+  FileData({
+    this.file,
+    this.name,
+  });
 }

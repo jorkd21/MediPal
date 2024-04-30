@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -31,8 +29,7 @@ class _PatientFormState extends State<PatientForm> {
   final GlobalKey<FormState> _medicationsFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _familyFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _fileFormKey = GlobalKey<FormState>();
-  List<File> _selectedFiles = [];
-  List<String> _fileNames = [];
+  //
   double uploadProgress = 0;
   String? uploadStatus;
 
@@ -40,7 +37,6 @@ class _PatientFormState extends State<PatientForm> {
   @override
   void initState() {
     super.initState();
-    //_patientKey = UniqueKey().toString(); // Generate unique patient key
     _patient = widget.patient; // Create patient object
     _pages = [
       GeneralInfoForm(
@@ -61,13 +57,7 @@ class _PatientFormState extends State<PatientForm> {
       ),
       FileForm(
         patient: _patient,
-        //formKey: _fileFormKey,
-        onFilesSelected: (files, names) {
-          setState(() {
-            _selectedFiles = files;
-            _fileNames = names;
-          });
-        },
+        formKey: _fileFormKey,
       ),
     ];
   }
@@ -97,39 +87,43 @@ class _PatientFormState extends State<PatientForm> {
       }
     });
   }
+
   Future<void> uploadFiles() async {
-  if (_selectedFiles.isEmpty) return;
+    if (_patient.files == null || _patient.files!.isEmpty) return;
 
-  final storageRef = FirebaseStorage.instance.ref();
+    final storageRef = FirebaseStorage.instance.ref();
 
-  for (int i = 0; i < _selectedFiles.length; i++) {
-    File file = _selectedFiles[i];
-    String fileName = _fileNames[i];
-    final metadata = SettableMetadata(contentType: "image/jpeg");
+    for (int i = 0; i < _patient.files!.length; i++) {
+      FileData fileData = _patient.files![i];
+      String fileName =
+          fileData.name ?? 'file_$i'; // Use a default file name if not provided
+      if (fileData.file == null) continue; // Skip if file is null
+      final metadata = SettableMetadata(contentType: "image/jpeg");
 
-    final uploadTask = storageRef
-        .child("patients/$_patientKey/$fileName")
-        .putFile(file, metadata);
+      final uploadTask = storageRef
+          .child("patients/$_patientKey/$fileName")
+          .putFile(fileData.file!, metadata); // Use ! to assert non-nullability
 
-    uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
-      setState(() {
-        uploadProgress =
-            100.0 * (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
-        uploadStatus = taskSnapshot.state == TaskState.running
-            ? "Uploading..."
-            : "Upload complete";  
+      uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
+        setState(() {
+          uploadProgress =
+              100.0 * (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
+          uploadStatus = taskSnapshot.state == TaskState.running
+              ? "Uploading..."
+              : "Upload complete";
+        });
+
+        if (taskSnapshot.state == TaskState.success) {
+          // Handle successful upload
+          print("Upload of $fileName successful!");
+        } else if (taskSnapshot.state == TaskState.error) {
+          // Handle unsuccessful upload
+          print("Upload of $fileName failed!");
+        }
       });
-
-      if (taskSnapshot.state == TaskState.success) {
-        // Handle successful upload
-        print("Upload of $fileName successful!");
-      } else if (taskSnapshot.state == TaskState.error) {
-        // Handle unsuccessful upload
-        print("Upload of $fileName failed!");
-      }
-    });
+    }
   }
-}
+
   Future<void> uploadID() async {
     if (_patient.imageFile == null) return;
 
@@ -159,6 +153,7 @@ class _PatientFormState extends State<PatientForm> {
       }
     });
   }
+
   Future<void> _submitForm() async {
     // Validate forms as before
     if (_generalInfoFormKey.currentState!
