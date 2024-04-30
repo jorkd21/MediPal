@@ -69,7 +69,7 @@ class Patient {
       'maritalStatus': maritalStatus,
       'email': email,
       'phone': phone?.map((e) => e.toJson()).toList(),
-      'emergancy': emergency?.map((e) => e.toJson()).toList(),
+      'emergency': emergency?.map((e) => e.toJson()).toList(),
       'illnessCurr': currIllness ?? [],
       'illnessPrev': prevIllness ?? [],
       'allergies': allergies ?? [],
@@ -141,7 +141,9 @@ class Patient {
     }
     List<dynamic>? family = jsonMap['family'];
     if (family is List<dynamic>) {
-      p.family = family.cast<String>();
+      //p.family = family.cast<String>();
+      p.family = List<String>.from(family);
+
     }
     return p;
   }
