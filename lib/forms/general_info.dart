@@ -34,7 +34,8 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
-        widget.patient.imageFile = File(image.path); // Store the actual picked image path
+        widget.patient.imageFile =
+            File(image.path); // Store the actual picked image path
       });
     }
   }
@@ -52,7 +53,8 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
               Column(
                 children: [
                   if (widget.patient.imageFile != null)
-                    Image.file(widget.patient.imageFile!, height: 200, width: 200),
+                    Image.file(widget.patient.imageFile!,
+                        height: 200, width: 200),
                   Row(
                     children: <Widget>[
                       ElevatedButton(
