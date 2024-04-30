@@ -230,9 +230,11 @@ class EmergancyData extends PhoneData {
 class FileData {
   File? file;
   String? name;
+  String? url;
 
   FileData({
     this.file,
     this.name,
+    this.url,
   });
 }

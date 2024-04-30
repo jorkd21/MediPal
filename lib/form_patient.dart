@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/forms/family.dart';
 import 'package:medipal/forms/files.dart';
+import 'package:medipal/forms/files_list.dart';
 import 'package:medipal/forms/general_info.dart';
 import 'package:medipal/forms/health_conditions.dart';
 import 'package:medipal/forms/medications.dart';
@@ -58,6 +59,9 @@ class _PatientFormState extends State<PatientForm> {
       FileForm(
         patient: _patient,
         formKey: _fileFormKey,
+      ),
+      FilesListPage(
+        patientId: _patient.id!,
       ),
     ];
   }
