@@ -1,11 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:medipal/forms/input_template.dart';
 import 'package:medipal/objects/patient.dart';
 
 class GeneralInfoForm extends StatefulWidget {
   final Patient patient;
   final GlobalKey<FormState> formKey;
-
   const GeneralInfoForm({
     super.key,
     required this.patient,
@@ -28,6 +30,16 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
   List<String> rhFactors = ['+', '-'];
   List<String> phoneTypes = ['home', 'work', 'mobile'];
 
+  Future<void> pickImage() async {
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        widget.patient.imageFile =
+            File(image.path); // Store the actual picked image path
+      });
+    }
+  }
+
   // build
   @override
   Widget build(BuildContext context) {
@@ -38,6 +50,21 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Column(
+                children: [
+                  if (widget.patient.imageFile != null)
+                    Image.file(widget.patient.imageFile!,
+                        height: 200, width: 200),
+                  Row(
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: pickImage,
+                        child: Text('Select Image'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
               buildTextFormField(
                 labelText: 'First Name',
                 value: widget.patient.firstName,
@@ -114,7 +141,6 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
               ),
               const Text('Date of Birth'),
-              
               Row(
                 children: [
                   // Dropdown for Year
@@ -285,7 +311,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                         SizedBox(width: 10),
                         Expanded(
                           child: buildTextFormField(
-                            labelText: 'Phone Number ${index+1}',
+                            labelText: 'Phone Number ${index + 1}',
                             value: contact.phoneNumber?.toString(),
                             onChanged: (value) {
                               contact.phoneNumber = value;
@@ -296,8 +322,10 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                               }
                               return null;
                             },
-                            onSuffixIconTap:
-                                index == 0 ? null : () => _removeField(widget.patient.phone,index),
+                            onSuffixIconTap: index == 0
+                                ? null
+                                : () =>
+                                    _removeField(widget.patient.phone, index),
                           ),
                         ),
                       ],
@@ -318,13 +346,14 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
               Text('Emergancy Contacts'),
               Column(
                 children: [
-                  ...List.generate(widget.patient.emergency?.length ?? 0, (index) {
+                  ...List.generate(widget.patient.emergency?.length ?? 0,
+                      (index) {
                     EmergancyData contact = widget.patient.emergency![index];
                     return Row(
                       children: [
                         Expanded(
                           child: buildTextFormField(
-                            labelText: 'Name ${index+1}',
+                            labelText: 'Name ${index + 1}',
                             value: contact.name?.toString(),
                             onChanged: (value) {
                               contact.name = value;
@@ -359,7 +388,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                         SizedBox(width: 10),
                         Expanded(
                           child: buildTextFormField(
-                            labelText: 'Phone Number ${index+1}',
+                            labelText: 'Phone Number ${index + 1}',
                             value: contact.phoneNumber?.toString(),
                             onChanged: (value) {
                               contact.phoneNumber = value;
@@ -370,8 +399,10 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                               }
                               return null;
                             },
-                            onSuffixIconTap:
-                                index == 0 ? null : () => _removeField(widget.patient.emergency,index),
+                            onSuffixIconTap: index == 0
+                                ? null
+                                : () => _removeField(
+                                    widget.patient.emergency, index),
                           ),
                         ),
                       ],

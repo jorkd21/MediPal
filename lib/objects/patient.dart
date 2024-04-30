@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:firebase_database/firebase_database.dart';
 
 class Patient {
   // VARTIABLES
+  File? imageFile;
+  List<FileData> files = [];
   // personal info
   String? id;
   // name
@@ -18,17 +22,17 @@ class Patient {
   String? maritalStatus;
   // contact
   String? email;
-  List<PhoneData>? phone = [PhoneData()];
-  List<EmergancyData>? emergency = [EmergancyData()];
+  List<PhoneData> phone = [PhoneData()];
+  List<EmergancyData> emergency = [EmergancyData()];
   // illnesses/allergies
-  List<String>? currIllness = [];
-  List<String>? prevIllness = [];
-  List<String>? allergies = [];
+  List<String> currIllness = [];
+  List<String> prevIllness = [];
+  List<String> allergies = [];
   // medications
-  List<String>? currMedications = [];
-  List<String>? prevMedications = [];
+  List<String> currMedications = [];
+  List<String> prevMedications = [];
   // family
-  List<Patient>? family = [];
+  List<String> family = [];
 
   // CONSTRUCTOR
   Patient(
@@ -64,14 +68,15 @@ class Patient {
       'rhFactor': rhFactor,
       'maritalStatus': maritalStatus,
       'email': email,
-      'phone': phone?.map((e) => e.toJson()).toList(),
-      'emergancy': emergency?.map((e) => e.toJson()).toList(),
-      'illnessCurr': currIllness ?? [],
-      'illnessPrev': prevIllness ?? [],
-      'allergies': allergies ?? [],
-      'medicationsCurr': currMedications ?? [],
-      'medicationsPrev': prevMedications ?? [],
-      'family': family?.map((patient) => patient.id).toList(),
+      'phone': phone.map((e) => e.toJson()).toList(),
+      'emergency': emergency.map((e) => e.toJson()).toList(),
+      'illnessCurr': currIllness,
+      'illnessPrev': prevIllness,
+      'allergies': allergies,
+      'medicationsCurr': currMedications,
+      'medicationsPrev': prevMedications,
+      //'family': family?.map((patient) => patient.id).toList(),
+      'family': family,
     };
   }
   
@@ -93,6 +98,7 @@ class Patient {
     p.dob = jsonMap['dob'] != null ? DateTime.parse(jsonMap['dob']) : null;
     p.bloodGroup = jsonMap['bloodGroup'];
     p.rhFactor = jsonMap['rhFactor'];
+    p.maritalStatus = jsonMap['maritalStatus'];
     p.email = jsonMap['email'];
     // Check if phone list is not null before mapping
     if (jsonMap['phone'] != null && jsonMap['phone'] is List<dynamic>) {
@@ -115,23 +121,34 @@ class Patient {
     }
     List<dynamic>? allergiesList = jsonMap['allergies'];
     if (allergiesList is List<dynamic>) {
-      p.allergies = allergiesList.cast<String>();
+      //p.allergies = allergiesList.cast<String>();
+      p.allergies = List<String>.from(allergiesList);
     }
     List<dynamic>? currList = jsonMap['illnessCurr'];
     if (currList is List<dynamic>) {
       p.currIllness = currList.cast<String>();
+      p.currIllness = List<String>.from(currList);
     }
     List<dynamic>? prevList = jsonMap['illnessPrev'];
     if (prevList is List<dynamic>) {
-      p.prevIllness = prevList.cast<String>();
+      //p.prevIllness = prevList.cast<String>();
+      p.prevIllness = List<String>.from(prevList);
     }
     List<dynamic>? currMed = jsonMap['medicationsCurr'];
     if (currMed is List<dynamic>) {
-      p.currMedications = currMed.cast<String>();
+      //p.currMedications = currMed.cast<String>();
+      p.currMedications = List<String>.from(currMed);
     }
     List<dynamic>? prevMed = jsonMap['medicationsPrev'];
     if (prevMed is List<dynamic>) {
-      p.prevMedications = prevMed.cast<String>();
+      //p.prevMedications = prevMed.cast<String>();
+      p.prevMedications = List<String>.from(prevMed);
+    }
+    List<dynamic>? family = jsonMap['family'];
+    if (family is List<dynamic>) {
+      //p.family = family.cast<String>();
+      p.family = List<String>.from(family);
+
     }
     return p;
   }
@@ -213,4 +230,16 @@ class EmergancyData extends PhoneData {
     str += super.toString();
     return str;
   }
+}
+
+class FileData {
+  File? file;
+  String? name;
+  String? url;
+
+  FileData({
+    this.file,
+    this.name,
+    this.url,
+  });
 }
