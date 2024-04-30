@@ -190,6 +190,7 @@ class GetPatientDataState extends State<GetPatientData> {
                 ),
                 child: Column(
                   children: [
+                    // General info
                     Row(
                       children: [
                         Padding(
@@ -207,7 +208,6 @@ class GetPatientDataState extends State<GetPatientData> {
                     ),
                     for (int i = 0; i < 5; i++)
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
                             padding: EdgeInsets.only(top: 18.92, left: 30),
@@ -228,28 +228,276 @@ class GetPatientDataState extends State<GetPatientData> {
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 18.92, right: 111),
-                            child: Text(
-                              i == 0
-                                  ? '${_patient.dob?.day}/${_patient.dob?.month}/${_patient.dob?.year}'
-                                  : i == 1
-                                      ? '${_patient.location}'
-                                      : i == 2
-                                          ? ''
-                                          : i == 3
-                                              ? '${_patient.bloodGroup}${_patient.rhFactor}'
-                                              : 'Married',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 16,
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 18.92, right: 30),
+                              child: Text(
+                                i == 0
+                                    ? '${_patient.dob?.day}/${_patient.dob?.month}/${_patient.dob?.year}'
+                                    : i == 1
+                                        ? '${_patient.location}'
+                                        : i == 2
+                                            ? ''
+                                            : i == 3
+                                                ? '${_patient.bloodGroup}${_patient.rhFactor}'
+                                                : 'Married',
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
                           ),
                         ],
                       ),
                     SizedBox(height: 23.01),
+                    // Contact Display Section
+                    Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 21.82, left: 27),
+                          child: Text(
+                            'Contact Information',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Phone
+                    for (int i = 0; i < _patient.phone.length; i++)
+                      if (_patient.phone[i].phoneNumber != null)
+                        Row(
+                          children: [
+                            if (i == 0)
+                              Padding(
+                                padding: EdgeInsets.only(top: 18.92, left: 30),
+                                child: Text(
+                                  'Phone', // You can customize this text if needed
+                                  style: TextStyle(
+                                    color: Color(0xFF7B7B7B),
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 18.92, right: 30),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .end, // Align widgets to the end
+                                  children: [
+                                    Text(
+                                      _patient.phone[i].type ?? 'N/A',
+                                      style: TextStyle(
+                                        color: Color(0xFF7B7B7B),
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                        width:
+                                            10), // Add space between phone type and number
+                                    Text(
+                                      _patient.phone[i].phoneNumber!,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                    // Emergancy Contact Information
+                    Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 21.82, left: 27),
+                          child: Text(
+                            'Emergancy Contact Information',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Emergency
+                    for (int i = 0; i < _patient.emergency.length; i++)
+                      if (_patient.emergency[i].phoneNumber != null)
+                        Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 18.92, left: 30),
+                              child: Text(
+                                _patient.emergency[i].name ?? 'N/A',
+                                style: TextStyle(
+                                  color: Color(0xFF7B7B7B),
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 18.92, right: 30),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .end, // Align widgets to the end
+                                  children: [
+                                    Text(
+                                      _patient.emergency[i].type ?? 'N/A',
+                                      style: TextStyle(
+                                        color: Color(0xFF7B7B7B),
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                        width:
+                                            10), // Add space between phone type and number
+                                    Text(
+                                      _patient.emergency[i].phoneNumber!,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                    // Health Conditions
+                    SizedBox(height: 23.01),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 21.82, left: 27),
+                          child: Text(
+                            'Health Conditions',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Current Illnesses
+                    for (int i = 0; i < _patient.currIllness.length; i++)
+                      Row(
+                        children: [
+                          if (i == 0)
+                            Padding(
+                              padding: EdgeInsets.only(top: 18.92, left: 30),
+                              child: Text(
+                                'Current Illness', // You can customize this text if needed
+                                style: TextStyle(
+                                  color: Color(0xFF7B7B7B),
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 18.92, right: 30),
+                              child: Text(
+                                _patient.currIllness[i],
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    SizedBox(height: 23.01),
+                    // Previous Illnesses
+                    for (int i = 0; i < _patient.prevIllness.length; i++)
+                      Row(
+                        children: [
+                          if (i == 0)
+                            Padding(
+                              padding: EdgeInsets.only(top: 18.92, left: 30),
+                              child: Text(
+                                'Previous Illness', // You can customize this text if needed
+                                style: TextStyle(
+                                  color: Color(0xFF7B7B7B),
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 18.92, right: 30),
+                              child: Text(
+                                _patient.prevIllness[i],
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    // Allergies
+                    for (int i = 0; i < _patient.allergies.length; i++)
+                      Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: 18.92, left: 30),
+                            child: Text(
+                              'Allergies', // You can customize this text if needed
+                              style: TextStyle(
+                                color: Color(0xFF7B7B7B),
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 18.92, right: 30),
+                              child: Text(
+                                _patient.allergies[i],
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    SizedBox(height: 23.01),
+                    // Medications
                     Row(
                       children: [
                         Padding(
@@ -265,14 +513,14 @@ class GetPatientDataState extends State<GetPatientData> {
                         ),
                       ],
                     ),
-                    for (int i = 0; i < 2; i++)
+                    // Current Medications
+                    for (int i = 0; i < _patient.currMedications.length; i++)
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
                             padding: EdgeInsets.only(top: 18.92, left: 30),
                             child: Text(
-                              i == 0 ? 'Prescription' : 'Prescription',
+                              'Current Medications', // You can customize this text if needed
                               style: TextStyle(
                                 color: Color(0xFF7B7B7B),
                                 fontWeight: FontWeight.normal,
@@ -280,47 +528,30 @@ class GetPatientDataState extends State<GetPatientData> {
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 18.92, right: 111),
-                            child: Text(
-                              i == 0 ? 'lorem ipsum' : 'lorem ipsum',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 16,
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 18.92, right: 30),
+                              child: Text(
+                                _patient.currMedications[i],
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
                           ),
                         ],
                       ),
-                    SizedBox(height: 25.91),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 21.82, left: 27),
-                          child: Text(
-                            'Disorders',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    for (int i = 0; i < 3; i++)
+                    // Previous Medications
+                    for (int i = 0; i < _patient.prevMedications.length; i++)
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
                             padding: EdgeInsets.only(top: 18.92, left: 30),
                             child: Text(
-                              i == 0
-                                  ? 'Prior Illness'
-                                  : i == 1
-                                      ? 'Current Illness'
-                                      : 'Allergy',
+                              'Previous Medications', // You can customize this text if needed
                               style: TextStyle(
                                 color: Color(0xFF7B7B7B),
                                 fontWeight: FontWeight.normal,
@@ -328,112 +559,22 @@ class GetPatientDataState extends State<GetPatientData> {
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 18.92, right: 111),
-                            child: Text(
-                              i == 0
-                                  ? '${_patient.prevIllness}'
-                                  : i == 1
-                                      ? '${_patient.currIllness}'
-                                      : '${_patient.allergies}',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 16,
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 18.92, right: 30),
+                              child: Text(
+                                _patient.prevMedications[i],
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
                           ),
                         ],
                       ),
-                    // SizedBox(height: 25.91),
-                    // Row(
-                    //   children: [
-                    //     Padding(
-                    //       padding: EdgeInsets.only(top: 21.82, left: 27),
-                    //       child: Text(
-                    //         'Immunizations',
-                    //         style: TextStyle(
-                    //           fontSize: 16,
-                    //           color: Colors.black,
-                    //           fontWeight: FontWeight.bold,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                    // for (int i = 0; i < 4; i++)
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     Padding(
-                    //       padding: EdgeInsets.only(top: 18.92, left: 30),
-                    //       child: Text(
-                    //         i == 0 ? 'Tuberculosis' : i == 1 ? 'Influenza' : i == 2 ? 'Malaria' : 'Dengue',
-                    //         style: TextStyle(
-                    //           color: Color(0xFF7B7B7B),
-                    //           fontWeight: FontWeight.normal,
-                    //           fontSize: 16,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //     Padding(
-                    //       padding: EdgeInsets.only(top: 18.92, right: 111),
-                    //       child: Text(
-                    //         i == 0 ? 'Updated' : i == 1 ? 'Updated' : i == 2 ? 'Updated' : 'Booster needed',
-                    //         style: TextStyle(
-                    //           color: Colors.black,
-                    //           fontWeight: FontWeight.normal,
-                    //           fontSize: 16,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                    SizedBox(height: 25.91),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 21.82, left: 27),
-                          child: Text(
-                            'Lab Work',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    for (int i = 0; i < 2; i++)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: 18.92, left: 30),
-                            child: Text(
-                              i == 0 ? 'Blood tests' : 'X-Rays',
-                              style: TextStyle(
-                                color: Color(0xFF7B7B7B),
-                                fontWeight: FontWeight.normal,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 18.92, right: 111),
-                            child: Text(
-                              i == 0 ? 'RH testing' : 'Spinal scan',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    SizedBox(height: 25.91),
                   ],
                 ),
               ),

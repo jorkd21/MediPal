@@ -68,15 +68,15 @@ class Patient {
       'rhFactor': rhFactor,
       'maritalStatus': maritalStatus,
       'email': email,
-      'phone': phone?.map((e) => e.toJson()).toList(),
-      'emergency': emergency?.map((e) => e.toJson()).toList(),
-      'illnessCurr': currIllness ?? [],
-      'illnessPrev': prevIllness ?? [],
-      'allergies': allergies ?? [],
-      'medicationsCurr': currMedications ?? [],
-      'medicationsPrev': prevMedications ?? [],
+      'phone': phone.map((e) => e.toJson()).toList(),
+      'emergency': emergency.map((e) => e.toJson()).toList(),
+      'illnessCurr': currIllness,
+      'illnessPrev': prevIllness,
+      'allergies': allergies,
+      'medicationsCurr': currMedications,
+      'medicationsPrev': prevMedications,
       //'family': family?.map((patient) => patient.id).toList(),
-      'family': family ?? [],
+      'family': family,
     };
   }
   
@@ -121,23 +121,28 @@ class Patient {
     }
     List<dynamic>? allergiesList = jsonMap['allergies'];
     if (allergiesList is List<dynamic>) {
-      p.allergies = allergiesList.cast<String>();
+      //p.allergies = allergiesList.cast<String>();
+      p.allergies = List<String>.from(allergiesList);
     }
     List<dynamic>? currList = jsonMap['illnessCurr'];
     if (currList is List<dynamic>) {
       p.currIllness = currList.cast<String>();
+      p.currIllness = List<String>.from(currList);
     }
     List<dynamic>? prevList = jsonMap['illnessPrev'];
     if (prevList is List<dynamic>) {
-      p.prevIllness = prevList.cast<String>();
+      //p.prevIllness = prevList.cast<String>();
+      p.prevIllness = List<String>.from(prevList);
     }
     List<dynamic>? currMed = jsonMap['medicationsCurr'];
     if (currMed is List<dynamic>) {
-      p.currMedications = currMed.cast<String>();
+      //p.currMedications = currMed.cast<String>();
+      p.currMedications = List<String>.from(currMed);
     }
     List<dynamic>? prevMed = jsonMap['medicationsPrev'];
     if (prevMed is List<dynamic>) {
-      p.prevMedications = prevMed.cast<String>();
+      //p.prevMedications = prevMed.cast<String>();
+      p.prevMedications = List<String>.from(prevMed);
     }
     List<dynamic>? family = jsonMap['family'];
     if (family is List<dynamic>) {
