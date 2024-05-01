@@ -113,7 +113,7 @@ class UserPatientsState extends State<UserPatients> {
             _addToFamily(patient);
           }
         },
-        child: Text(isInFamily ? 'Remove from Family' : 'Add to Family'),
+        child: Text(isInFamily ? 'Remove Patient' : 'Add Patients'),
       ),
     );
   }
