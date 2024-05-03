@@ -124,8 +124,32 @@ class FamilyFormState extends State<FamilyForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text( _isAddMode ? 'All Patients' : 'Family Information' ),
+        actions: [
+          // Delete toggle button
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _isDeleteMode = !_isDeleteMode;
+              });
+            },
+            icon: Icon(_isDeleteMode ? Icons.cancel : Icons.delete),
+          ),
+          // Add patient button
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _isAddMode = !_isAddMode;
+              });
+            },
+            icon: Icon(_isAddMode ? Icons.cancel : Icons.add),
+          ),
+        ],
+      ),
+      body:
         ListView(
           children: [
             Form(
@@ -133,15 +157,6 @@ class FamilyFormState extends State<FamilyForm> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (!_isAddMode)
-                    Container(
-                      height: 50, // Match the height of buttons
-                      alignment: Alignment.topLeft,
-                      child: const Text(
-                        'Family Information',
-                        style: TextStyle(fontSize: 20), // Set font size
-                      ),
-                    ),
                   if (!_isAddMode)
                     Column(
                       children: [
@@ -156,15 +171,6 @@ class FamilyFormState extends State<FamilyForm> {
                           },
                         ),
                       ],
-                    ),
-                  if (_isAddMode)
-                    Container(
-                      height: 50, // Match the height of buttons
-                      alignment: Alignment.topLeft,
-                      child: const Text(
-                        'All Patients',
-                        style: TextStyle(fontSize: 20), // Set font size
-                      ),
                     ),
                   if (_isAddMode)
                     Column(
@@ -186,32 +192,6 @@ class FamilyFormState extends State<FamilyForm> {
             ),
           ],
         ),
-        Positioned(
-          right: 0,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    _isDeleteMode = !_isDeleteMode;
-                  });
-                },
-                icon: Icon(_isDeleteMode ? Icons.cancel : Icons.delete),
-              ),
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    _isAddMode =
-                        !_isAddMode; // Change state variable name to _isEditMode
-                  });
-                },
-                icon: Icon(_isAddMode ? Icons.cancel : Icons.add),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }
