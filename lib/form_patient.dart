@@ -279,14 +279,3 @@ class _PatientFormState extends State<PatientForm> {
     );
   }
 }
-
-class NextForm extends StatelessWidget {
-  const NextForm({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Next Form'),
-    );
-  }
-}
