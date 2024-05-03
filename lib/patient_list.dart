@@ -15,9 +15,9 @@ class _PatientListState extends State<PatientList> {
   late final List<String> _patientKeys = [];
   late List<Patient> _patients = [];
   late List<Patient> _originalPatients = [];
-  late int _currentPageIndex = 0;
-  final PageController _pageController = PageController();
   final TextEditingController _searchController = TextEditingController();
+  bool _isDeleteMode = false;
+  bool _isEditMode = false;
 
   @override
   void initState() {
@@ -40,14 +40,23 @@ class _PatientListState extends State<PatientList> {
         //print(p);
         pl.add(p);
         setState(() {
-          _currentPageIndex++;
           _patientKeys.add(key);
         });
       });
       setState(() {
         _patients = pl;
         _originalPatients = pl;
-      }); // Trigger rebuild to load patient data
+      });
+      // Sort the patient list before assigning to _originalPatients
+      _originalPatients.sort((a, b) {
+        // Implement your sorting logic here (e.g., by name)
+        String nameA = '${a.firstName ?? ""}';
+        String nameB = '${b.firstName ?? ""}';
+        return nameA.compareTo(nameB);
+      });
+      setState(() {
+        
+      });
     }
   }
 
@@ -85,7 +94,7 @@ class _PatientListState extends State<PatientList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, //remove back arrow from appbar
+        //automaticallyImplyLeading: false, //remove back arrow from appbar
         title: const Text('Patient List'),
         flexibleSpace: Container(
           //appbar container
@@ -102,10 +111,29 @@ class _PatientListState extends State<PatientList> {
           ),
         ),
         actions: [
-          Padding(
+          // Delete toggle button
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _isDeleteMode = !_isDeleteMode;
+              });
+            },
+            icon: Icon(_isDeleteMode ? Icons.cancel : Icons.delete),
+          ),
+          // Add patient button
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _isEditMode = !_isEditMode;
+              });
+            },
+            icon: Icon(_isEditMode ? Icons.cancel : Icons.add),
+          ),
+        ],
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(kToolbarHeight),
+          child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: SizedBox(
-              width: 200, // Adjust the width as needed
               child: TextField(
                 controller: _searchController,
                 onChanged: (value) {
@@ -119,9 +147,8 @@ class _PatientListState extends State<PatientList> {
                   border: OutlineInputBorder(),
                 ),
               ),
-            ),
           ),
-        ],
+        ),
       ),
       body: _patients.isNotEmpty
           ? Container(
@@ -164,7 +191,7 @@ class _PatientListState extends State<PatientList> {
                                     fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                'Patient ID: ${_patientKeys[index]}',
+                                'Patient ID: ${_patients[index].id}',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -178,33 +205,35 @@ class _PatientListState extends State<PatientList> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => GetPatientData(
-                                  patientId: _patientKeys[index],
+                                  patientId: _patients[index].id!,
                                 ),
                               ),
                             );
                           },
                           icon: const Icon(Icons.arrow_forward),
                         ),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => PatientForm(
-                                  patient: _patients[index],
+                        if (_isEditMode)
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PatientForm(
+                                    patient: _patients[index],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          icon: Icon(Icons.add),
-                        ),
+                              );
+                            },
+                            icon: Icon(Icons.add),
+                          ),
                         // delete patient
-                        IconButton(
-                          onPressed: () async {
-                            await _deletePatient(_patientKeys[index]);
-                          },
-                          icon: Icon(Icons.delete),
-                        ),
+                        if (_isDeleteMode)
+                          IconButton(
+                            onPressed: () async {
+                              await _deletePatient(_patientKeys[index]);
+                            },
+                            icon: Icon(Icons.delete),
+                          ),
                       ],
                     ),
                   );
