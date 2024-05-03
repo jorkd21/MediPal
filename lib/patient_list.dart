@@ -54,9 +54,7 @@ class _PatientListState extends State<PatientList> {
         String nameB = '${b.firstName ?? ""}';
         return nameA.compareTo(nameB);
       });
-      setState(() {
-        
-      });
+      setState(() {});
     }
   }
 
@@ -134,19 +132,19 @@ class _PatientListState extends State<PatientList> {
           preferredSize: Size.fromHeight(kToolbarHeight),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: TextField(
-                controller: _searchController,
-                onChanged: (value) {
-                  setState(() {
-                    // Update the UI based on the new search term
-                    _patients = _filterPatients(value);
-                  });
-                },
-                decoration: const InputDecoration(
-                  hintText: 'Search by name...',
-                  border: OutlineInputBorder(),
-                ),
+            child: TextField(
+              controller: _searchController,
+              onChanged: (value) {
+                setState(() {
+                  // Update the UI based on the new search term
+                  _patients = _filterPatients(value);
+                });
+              },
+              decoration: const InputDecoration(
+                hintText: 'Search by name...',
+                border: OutlineInputBorder(),
               ),
+            ),
           ),
         ),
       ),

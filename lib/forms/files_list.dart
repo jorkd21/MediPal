@@ -2,13 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:medipal/forms/file_display.dart';
-import 'package:medipal/objects/patient.dart'; // Import Firebase Storage
-import 'package:path_provider/path_provider.dart';
+import 'package:medipal/objects/patient.dart';
 
 class FilesListPage extends StatefulWidget {
   final String patientId;
 
-  FilesListPage({required this.patientId});
+  const FilesListPage({required this.patientId});
 
   @override
   _FilesListPageState createState() => _FilesListPageState();
@@ -44,15 +43,12 @@ class _FilesListPageState extends State<FilesListPage> {
     }
   }
 
-  Future<void> openFile(File file) async {
-    print('Opening file: ${file.path}');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Files List'),
+        automaticallyImplyLeading: false,
+        title: const Text('Files List'),
       ),
       body: ListView.builder(
         itemCount: files.length,

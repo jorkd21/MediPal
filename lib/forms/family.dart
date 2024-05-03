@@ -28,28 +28,23 @@ class FamilyFormState extends State<FamilyForm> {
   void initState() {
     super.initState();
     _fetchPatientData();
-    //_fetchFamilyData();
+    _fetchFamilyData();
     _sortLists();
   }
 
   void _sortLists() {
     _patients.sort((a, b) {
-      // Implement your sorting logic here (e.g., by name)
-      String nameA = '${a.firstName ?? ""}';
-      String nameB = '${b.firstName ?? ""}';
-      return nameA.compareTo(nameB);
+      return a.firstName!.compareTo(b.firstName!);
     });
     _family.sort((a, b) {
-      // Implement your sorting logic here (e.g., by name)
-      String nameA = '${a.firstName ?? ""}';
-      String nameB = '${b.firstName ?? ""}';
-      return nameA.compareTo(nameB);
+      return a.firstName!.compareTo(b.firstName!);
     });
+    setState(() {});
   }
 
   void _fetchFamilyData() {
     List<Patient> patientsCopy = List.of(_patients);
-    for (String s in widget.patient.family!) {
+    for (String s in widget.patient.family) {
       for (Patient p in patientsCopy) {
         if (p.id == s) {
           setState(() {
@@ -76,8 +71,7 @@ class FamilyFormState extends State<FamilyForm> {
       });
       setState(() {
         _patients = pl;
-      }); // Trigger rebuild to load patient data
-      _fetchFamilyData();
+      });
     }
   }
 
@@ -87,8 +81,8 @@ class FamilyFormState extends State<FamilyForm> {
       widget.patient.family!.add(patient.id!); // Add patient ID to family list
       _family.add(patient);
       _patients.remove(patient);
-      _sortLists();
     });
+    _sortLists();
   }
 
   // Function to remove a patient from the family list and add them back to the patients list
@@ -97,8 +91,8 @@ class FamilyFormState extends State<FamilyForm> {
       widget.patient.family!.remove(patient.id);
       _family.remove(patient);
       _patients.add(patient);
-      _sortLists();
     });
+    _sortLists();
   }
 
   // Function to create a widget for displaying a patient's information
@@ -127,17 +121,18 @@ class FamilyFormState extends State<FamilyForm> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text( _isAddMode ? 'All Patients' : 'Family Information' ),
+        title: Text(_isAddMode ? 'All Patients' : 'Family Information'),
         actions: [
           // Delete toggle button
-          IconButton(
-            onPressed: () {
-              setState(() {
-                _isDeleteMode = !_isDeleteMode;
-              });
-            },
-            icon: Icon(_isDeleteMode ? Icons.cancel : Icons.delete),
-          ),
+          if (!_isAddMode)
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  _isDeleteMode = !_isDeleteMode;
+                });
+              },
+              icon: Icon(_isDeleteMode ? Icons.cancel : Icons.delete),
+            ),
           // Add patient button
           IconButton(
             onPressed: () {
@@ -149,49 +144,48 @@ class FamilyFormState extends State<FamilyForm> {
           ),
         ],
       ),
-      body:
-        ListView(
-          children: [
-            Form(
-              key: widget.formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (!_isAddMode)
-                    Column(
-                      children: [
-                        // Display the family list
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: _family.length,
-                          itemBuilder: (context, index) {
-                            Patient familyPatient = _family[index];
-                            return buildPatientInfo(familyPatient, true);
-                          },
-                        ),
-                      ],
-                    ),
-                  if (_isAddMode)
-                    Column(
-                      children: [
-                        // Display all patients with "Add to Family" button
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: _patients.length,
-                          itemBuilder: (context, index) {
-                            Patient patient = _patients[index];
-                            return buildPatientInfo(patient, false);
-                          },
-                        ),
-                      ],
-                    ),
-                ],
-              ),
+      body: ListView(
+        children: [
+          Form(
+            key: widget.formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (!_isAddMode)
+                  Column(
+                    children: [
+                      // Display the family list
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: _family.length,
+                        itemBuilder: (context, index) {
+                          Patient familyPatient = _family[index];
+                          return buildPatientInfo(familyPatient, true);
+                        },
+                      ),
+                    ],
+                  ),
+                if (_isAddMode)
+                  Column(
+                    children: [
+                      // Display all patients with "Add to Family" button
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: _patients.length,
+                        itemBuilder: (context, index) {
+                          Patient patient = _patients[index];
+                          return buildPatientInfo(patient, false);
+                        },
+                      ),
+                    ],
+                  ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
     );
   }
 }
