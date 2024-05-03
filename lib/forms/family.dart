@@ -21,12 +21,30 @@ class FamilyForm extends StatefulWidget {
 class FamilyFormState extends State<FamilyForm> {
   late List<Patient> _patients = [];
   late List<Patient> _family = [];
+  bool _isDeleteMode = false;
+  bool _isAddMode = false;
 
   @override
   void initState() {
     super.initState();
     _fetchPatientData();
     //_fetchFamilyData();
+    _sortLists();
+  }
+
+  void _sortLists() {
+    _patients.sort((a, b) {
+      // Implement your sorting logic here (e.g., by name)
+      String nameA = '${a.firstName ?? ""}';
+      String nameB = '${b.firstName ?? ""}';
+      return nameA.compareTo(nameB);
+    });
+    _family.sort((a, b) {
+      // Implement your sorting logic here (e.g., by name)
+      String nameA = '${a.firstName ?? ""}';
+      String nameB = '${b.firstName ?? ""}';
+      return nameA.compareTo(nameB);
+    });
   }
 
   void _fetchFamilyData() {
@@ -69,6 +87,7 @@ class FamilyFormState extends State<FamilyForm> {
       widget.patient.family!.add(patient.id!); // Add patient ID to family list
       _family.add(patient);
       _patients.remove(patient);
+      _sortLists();
     });
   }
 
@@ -78,6 +97,7 @@ class FamilyFormState extends State<FamilyForm> {
       widget.patient.family!.remove(patient.id);
       _family.remove(patient);
       _patients.add(patient);
+      _sortLists();
     });
   }
 
@@ -88,56 +108,105 @@ class FamilyFormState extends State<FamilyForm> {
           '${patient.firstName} ${patient.middleName} ${patient.lastName}'),
       subtitle: Text('DOB: ${patient.dob.toString()}'),
       trailing: ElevatedButton(
-        onPressed: () {
-          if (isInFamily) {
-            _removeFromFamily(patient);
-          } else {
-            _addToFamily(patient);
-          }
-        },
-        child: Text(isInFamily ? 'Remove from Family' : 'Add to Family'),
+        onPressed: (_isDeleteMode || _isAddMode)
+            ? () {
+                if (isInFamily) {
+                  _removeFromFamily(patient);
+                } else {
+                  _addToFamily(patient);
+                }
+              }
+            : null,
+        child: Icon(isInFamily ? Icons.delete : Icons.add),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return Stack(
       children: [
-        Form(
-          key: widget.formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Family Information'),
-              Column(
+        ListView(
+          children: [
+            Form(
+              key: widget.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Display the family list
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: _family.length,
-                    itemBuilder: (context, index) {
-                      Patient familyPatient = _family[index];
-                      return buildPatientInfo(familyPatient, true);
-                    },
-                  ),
+                  if (!_isAddMode)
+                    Container(
+                      height: 50, // Match the height of buttons
+                      alignment: Alignment.topLeft,
+                      child: const Text(
+                        'Family Information',
+                        style: TextStyle(fontSize: 20), // Set font size
+                      ),
+                    ),
+                  if (!_isAddMode)
+                    Column(
+                      children: [
+                        // Display the family list
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: _family.length,
+                          itemBuilder: (context, index) {
+                            Patient familyPatient = _family[index];
+                            return buildPatientInfo(familyPatient, true);
+                          },
+                        ),
+                      ],
+                    ),
+                  if (_isAddMode)
+                    Container(
+                      height: 50, // Match the height of buttons
+                      alignment: Alignment.topLeft,
+                      child: const Text(
+                        'All Patients',
+                        style: TextStyle(fontSize: 20), // Set font size
+                      ),
+                    ),
+                  if (_isAddMode)
+                    Column(
+                      children: [
+                        // Display all patients with "Add to Family" button
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: _patients.length,
+                          itemBuilder: (context, index) {
+                            Patient patient = _patients[index];
+                            return buildPatientInfo(patient, false);
+                          },
+                        ),
+                      ],
+                    ),
                 ],
               ),
-              const Text('All Patients'),
-              Column(
-                children: [
-                  // Display all patients with "Add to Family" button
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: _patients.length,
-                    itemBuilder: (context, index) {
-                      Patient patient = _patients[index];
-                      return buildPatientInfo(patient, false);
-                    },
-                  ),
-                ],
+            ),
+          ],
+        ),
+        Positioned(
+          right: 0,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    _isDeleteMode = !_isDeleteMode;
+                  });
+                },
+                icon: Icon(_isDeleteMode ? Icons.cancel : Icons.delete),
+              ),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    _isAddMode =
+                        !_isAddMode; // Change state variable name to _isEditMode
+                  });
+                },
+                icon: Icon(_isAddMode ? Icons.cancel : Icons.add),
               ),
             ],
           ),
