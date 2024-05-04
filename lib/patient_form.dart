@@ -7,7 +7,7 @@ import 'package:medipal/forms/files_list.dart';
 import 'package:medipal/forms/general_info.dart';
 import 'package:medipal/forms/health_conditions.dart';
 import 'package:medipal/forms/medications.dart';
-import 'package:medipal/forms/patient_data.dart';
+import 'package:medipal/patient_data.dart';
 import 'package:medipal/objects/patient.dart';
 
 class PatientForm extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 // firebase
 import 'package:firebase_core/firebase_core.dart'; // firebase core
-import 'package:medipal/forms/chat_list.dart';
+import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/forms/patients.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/pages/appointment.dart';
@@ -19,7 +19,7 @@ import 'package:firebase_auth/firebase_auth.dart'; // authentication
 import 'package:firebase_analytics/firebase_analytics.dart'; // analytics
 import 'package:firebase_ui_auth/firebase_ui_auth.dart'; //
 // pages
-import 'package:medipal/form_patient.dart';
+import 'package:medipal/patient_form.dart';
 import 'package:medipal/pages/forgotpasswd.dart';
 import 'package:medipal/pages/signup.dart';
 import 'package:medipal/pages/login.dart';
