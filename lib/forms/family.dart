@@ -28,8 +28,8 @@ class FamilyFormState extends State<FamilyForm> {
   void initState() {
     super.initState();
     _fetchPatientData();
-    _fetchFamilyData();
-    _sortLists();
+    //_fetchFamilyData();
+    //_sortLists();
   }
 
   void _sortLists() {
@@ -72,6 +72,8 @@ class FamilyFormState extends State<FamilyForm> {
       setState(() {
         _patients = pl;
       });
+      _fetchFamilyData();
+      _sortLists();
     }
   }
 
