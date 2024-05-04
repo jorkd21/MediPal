@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 class Practitioner {
   // VARIABLES
+  String? id;
   String? email;
   List<String> patients = [];
 
@@ -28,7 +29,6 @@ class Practitioner {
     u.email = jsonMap['email'];
     List<dynamic>? patients = jsonMap['patients'];
     if (patients is List<dynamic>) {
-      //p.family = family.cast<String>();
       u.patients = List<String>.from(patients);
     }
     return u;

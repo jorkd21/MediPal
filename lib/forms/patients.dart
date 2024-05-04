@@ -23,18 +23,49 @@ class UserPatientsState extends State<UserPatients> {
   late Practitioner _practitioner;
   late List<Patient> _patients = [];
   late List<Patient> _family = [];
+  bool _isDeleteMode = false;
+  bool _isAddMode = false;
 
   @override
   void initState() {
     super.initState();
     _getPractitioner();
     _fetchPatientData();
-    //_fetchFamilyData();
+    //_fetchFamilyData(); //?
+    //_sortLists();
+  }
+
+  Future<void> _submitForm() async {
+    DatabaseReference ref =
+        FirebaseDatabase.instance.ref('users/${widget.user!.uid}');
+    ref.update(_practitioner.toJson()).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Patient data updated'),
+        ),
+      );
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error updating patient: $error'),
+        ),
+      );
+    });
+  }
+
+  void _sortLists() {
+    _patients.sort((a, b) {
+      return a.firstName!.compareTo(b.firstName!);
+    });
+    _family.sort((a, b) {
+      return a.firstName!.compareTo(b.firstName!);
+    });
+    setState(() {});
   }
 
   void _fetchFamilyData() {
     List<Patient> patientsCopy = List.of(_patients);
-    for (String s in _practitioner.patients!) {
+    for (String s in _practitioner.patients) {
       for (Patient p in patientsCopy) {
         if (p.id == s) {
           setState(() {
@@ -75,19 +106,20 @@ class UserPatientsState extends State<UserPatients> {
       });
       setState(() {
         _patients = pl;
-      }); // Trigger rebuild to load patient data
-      //_fetchFamilyData();
+      });
+      _fetchFamilyData();
+      _sortLists();
     }
   }
 
   // Function to add a patient to the family list
   void _addToFamily(Patient patient) {
     setState(() {
-      _practitioner.patients!
-          .add(patient.id!); // Add patient ID to family list
+      _practitioner.patients!.add(patient.id!); // Add patient ID to family list
       _family.add(patient);
       _patients.remove(patient);
     });
+    _sortLists();
   }
 
   // Function to remove a patient from the family list and add them back to the patients list
@@ -97,6 +129,7 @@ class UserPatientsState extends State<UserPatients> {
       _family.remove(patient);
       _patients.add(patient);
     });
+    _sortLists();
   }
 
   // Function to create a widget for displaying a patient's information
@@ -106,59 +139,92 @@ class UserPatientsState extends State<UserPatients> {
           '${patient.firstName} ${patient.middleName} ${patient.lastName}'),
       subtitle: Text('DOB: ${patient.dob.toString()}'),
       trailing: ElevatedButton(
-        onPressed: () {
-          if (isInFamily) {
-            _removeFromFamily(patient);
-          } else {
-            _addToFamily(patient);
-          }
-        },
-        child: Text(isInFamily ? 'Remove Patient' : 'Add Patients'),
+        onPressed: (_isDeleteMode || _isAddMode)
+            ? () {
+                if (isInFamily) {
+                  _removeFromFamily(patient);
+                } else {
+                  _addToFamily(patient);
+                }
+              }
+            : null,
+        child: Icon(isInFamily ? Icons.delete : Icons.add),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: ListView(
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(_isAddMode ? 'All Patients' : 'Patient List'),
+        actions: [
+          // Delete toggle button
+          if (!_isAddMode)
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  _isDeleteMode = !_isDeleteMode;
+                });
+              },
+              icon: Icon(_isDeleteMode ? Icons.cancel : Icons.delete),
+            ),
+          // Add patient button
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _isAddMode = !_isAddMode;
+              });
+            },
+            icon: Icon(_isAddMode ? Icons.cancel : Icons.add),
+          ),
+        ],
+        bottom: PreferredSize(
+          preferredSize: Size(50,50),
+          child: ElevatedButton(
+            onPressed: _submitForm,
+            child: const Text('Submit'),
+          ),
+        ),
+      ),
+      body: ListView(
         children: [
           Form(
             key: widget.formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('User Patients'),
-                Text('${widget.user!.uid}'),
-                Column(
-                  children: [
-                    // Display the family list
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: _family.length,
-                      itemBuilder: (context, index) {
-                        Patient familyPatient = _family[index];
-                        return buildPatientInfo(familyPatient, true);
-                      },
-                    ),
-                  ],
-                ),
-                const Text('All Patients'),
-                Column(
-                  children: [
-                    // Display all patients with "Add to Family" button
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: _patients.length,
-                      itemBuilder: (context, index) {
-                        Patient patient = _patients[index];
-                        return buildPatientInfo(patient, false);
-                      },
-                    ),
-                  ],
-                ),
+                if (!_isAddMode)
+                  Column(
+                    children: [
+                      // Display the family list
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: _family.length,
+                        itemBuilder: (context, index) {
+                          Patient familyPatient = _family[index];
+                          return buildPatientInfo(familyPatient, true);
+                        },
+                      ),
+                    ],
+                  ),
+                if (_isAddMode)
+                  Column(
+                    children: [
+                      // Display all patients with "Add to Family" button
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: _patients.length,
+                        itemBuilder: (context, index) {
+                          Patient patient = _patients[index];
+                          return buildPatientInfo(patient, false);
+                        },
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),
