@@ -1,24 +1,26 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/objects/patient.dart';
+import 'package:medipal/objects/practitioner.dart';
 
-class FamilyForm extends StatefulWidget {
-  final GlobalKey<FormState> formKey;
-  final Patient patient;
+class UserPatients extends StatefulWidget {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final User? user;
 
-  const FamilyForm({
+  UserPatients({
     super.key,
-    required this.formKey,
-    required this.patient,
+    required this.user,
   });
 
   @override
-  FamilyFormState createState() {
-    return FamilyFormState();
+  UserPatientsState createState() {
+    return UserPatientsState();
   }
 }
 
-class FamilyFormState extends State<FamilyForm> {
+class UserPatientsState extends State<UserPatients> {
+  late Practitioner _practitioner;
   late List<Patient> _patients = [];
   late List<Patient> _family = [];
   bool _isDeleteMode = false;
@@ -27,9 +29,28 @@ class FamilyFormState extends State<FamilyForm> {
   @override
   void initState() {
     super.initState();
+    _getPractitioner();
     _fetchPatientData();
-    _fetchFamilyData();
-    _sortLists();
+    //_fetchFamilyData(); //?
+    //_sortLists();
+  }
+
+  Future<void> _submitForm() async {
+    DatabaseReference ref =
+        FirebaseDatabase.instance.ref('users/${widget.user!.uid}');
+    ref.update(_practitioner.toJson()).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Patient data updated'),
+        ),
+      );
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error updating patient: $error'),
+        ),
+      );
+    });
   }
 
   void _sortLists() {
@@ -44,7 +65,7 @@ class FamilyFormState extends State<FamilyForm> {
 
   void _fetchFamilyData() {
     List<Patient> patientsCopy = List.of(_patients);
-    for (String s in widget.patient.family) {
+    for (String s in _practitioner.patients) {
       for (Patient p in patientsCopy) {
         if (p.id == s) {
           setState(() {
@@ -53,6 +74,20 @@ class FamilyFormState extends State<FamilyForm> {
           });
         }
       }
+    }
+  }
+
+  void _getPractitioner() async {
+    // initialize database
+    DatabaseReference ref = FirebaseDatabase.instance.ref('users');
+    // get snapshot
+    DataSnapshot snapshot = await ref.child(widget.user!.uid).get();
+    // set state
+    if (snapshot.exists) {
+      Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
+      setState(() {
+        _practitioner = Practitioner.fromMap(value.cast<String, dynamic>());
+      });
     }
   }
 
@@ -72,13 +107,15 @@ class FamilyFormState extends State<FamilyForm> {
       setState(() {
         _patients = pl;
       });
+      _fetchFamilyData();
+      _sortLists();
     }
   }
 
   // Function to add a patient to the family list
   void _addToFamily(Patient patient) {
     setState(() {
-      widget.patient.family!.add(patient.id!); // Add patient ID to family list
+      _practitioner.patients!.add(patient.id!); // Add patient ID to family list
       _family.add(patient);
       _patients.remove(patient);
     });
@@ -88,7 +125,7 @@ class FamilyFormState extends State<FamilyForm> {
   // Function to remove a patient from the family list and add them back to the patients list
   void _removeFromFamily(Patient patient) {
     setState(() {
-      widget.patient.family!.remove(patient.id);
+      _practitioner.patients!.remove(patient.id);
       _family.remove(patient);
       _patients.add(patient);
     });
@@ -121,7 +158,7 @@ class FamilyFormState extends State<FamilyForm> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(_isAddMode ? 'All Patients' : 'Family Information'),
+        title: Text(_isAddMode ? 'All Patients' : 'Patient List'),
         actions: [
           // Delete toggle button
           if (!_isAddMode)
@@ -143,6 +180,13 @@ class FamilyFormState extends State<FamilyForm> {
             icon: Icon(_isAddMode ? Icons.cancel : Icons.add),
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: Size(50,50),
+          child: ElevatedButton(
+            onPressed: _submitForm,
+            child: const Text('Submit'),
+          ),
+        ),
       ),
       body: ListView(
         children: [

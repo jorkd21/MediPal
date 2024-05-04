@@ -56,13 +56,15 @@ class _PatientFormState extends State<PatientForm> {
         patient: _patient,
         formKey: _familyFormKey,
       ),
-      FileForm(
-        patient: _patient,
-        formKey: _fileFormKey,
-      ),
-      FilesListPage(
-        patientId: _patient.id!,
-      ),
+      if (_patient.id == null)
+        FileForm(
+          patient: _patient,
+          formKey: _fileFormKey,
+        ),
+      if (_patient.id != null)
+        FilesListPage(
+          patientId: _patient.id!,
+        ),
     ];
   }
 
@@ -274,17 +276,6 @@ class _PatientFormState extends State<PatientForm> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class NextForm extends StatelessWidget {
-  const NextForm({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Next Form'),
     );
   }
 }
