@@ -1,9 +1,11 @@
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // For date formatting
 import 'package:medipal/objects/appointment.dart';
-import 'package:medipal/objects/patient.dart'; // For date picker
+import 'package:medipal/objects/patient.dart';
+import 'package:medipal/objects/practitioner.dart'; // For date picker
 
 class AppointmentForm extends StatefulWidget {
   @override
@@ -11,7 +13,9 @@ class AppointmentForm extends StatefulWidget {
 }
 
 class _AppointmentFormState extends State<AppointmentForm> {
+  late Practitioner _practitioner;
   late List<Patient> _patients = [];
+  final User? user = FirebaseAuth.instance.currentUser;
   // Variables to hold user input
   String? _topic;
   String? _patient;
@@ -21,6 +25,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
   void initState() {
     super.initState();
     _fetchPatientData();
+    _getPractitioner();
   }
 
   void _sortLists() {
@@ -63,6 +68,37 @@ class _AppointmentFormState extends State<AppointmentForm> {
         _startTime = pickedDate;
       });
     }
+  }
+
+  void _getPractitioner() async {
+    // initialize database
+    DatabaseReference ref = FirebaseDatabase.instance.ref('users');
+    // get snapshot
+    DataSnapshot snapshot = await ref.child(user!.uid).get();
+    // set state
+    if (snapshot.exists) {
+      Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
+      setState(() {
+        _practitioner = Practitioner.fromMap(value.cast<String, dynamic>());
+      });
+    }
+  }
+
+  Future<void> _submitForm() async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref('users/${user!.uid}');
+    ref.update(_practitioner.toJson()).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Patient data updated'),
+        ),
+      );
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error updating patient: $error'),
+        ),
+      );
+    });
   }
 
   // Function to show date picker for end time
@@ -233,7 +269,8 @@ class _AppointmentFormState extends State<AppointmentForm> {
                   });
                 },
                 selectedItem: null,
-                itemAsString: (Patient patient) => '${patient.firstName} ${patient.middleName} ${patient.lastName}',
+                itemAsString: (Patient patient) =>
+                    '${patient.firstName} ${patient.middleName} ${patient.lastName}',
               ),
             ),
             SizedBox(height: 20.0),
@@ -284,13 +321,18 @@ class _AppointmentFormState extends State<AppointmentForm> {
                     _patient != null &&
                     _startTime != null &&
                     _endTime != null) {
+                  setState(() {
+                    _practitioner.appointments.add(
+                      Appointment(
+                        topic: _topic,
+                        patient: _patient,
+                        time: DateTimeRange(start: _startTime!, end: _endTime!),
+                      ),
+                    );
+                  });
+                  _submitForm();
                   Navigator.pop(
                     context,
-                    Appointment(
-                      topic: _topic,
-                      patient: _patient,
-                      time: DateTimeRange(start: _startTime!, end: _endTime!),
-                    ),
                   );
                 } else {
                   // Show error message if any field is missing
