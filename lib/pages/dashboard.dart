@@ -6,13 +6,34 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/patient_list.dart';
 import 'package:flutter/material.dart';
-import 'package:medipal/form_patient.dart';
+import 'package:medipal/patient_form.dart';
 import 'package:medipal/objects/patient.dart';
-import 'package:medipal/forms/patient_data.dart';
+import 'package:medipal/patient_data.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:medipal/pages/appointment_date.dart';
 import 'package:medipal/pages/appointment.dart';
+
+// from appointment_data.dart will be replaced with object/appointment.dart
+class Appointment {
+  final String id;
+  final String title;
+  final DateTime dateTime;
+
+  Appointment({
+    required this.id,
+    required this.title,
+    required this.dateTime,
+  });
+
+  factory Appointment.fromMap(Map<String, dynamic> map) {
+    return Appointment(
+      id: map['id'],
+      title: map['title'],
+      dateTime: DateTime.parse(map['dateTime']),
+    );
+  }
+}
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key});

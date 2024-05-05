@@ -1,62 +1,129 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:medipal/objects/appointment_patient.dart';
+import 'package:medipal/objects/appointment.dart';
+import 'package:medipal/objects/patient.dart';
+import 'package:medipal/objects/practitioner.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AppointmentDate extends StatefulWidget {
-  const AppointmentDate({super.key});
+  final Function refreshCallback; // Receive callback function
+  const AppointmentDate({super.key, required this.refreshCallback});
 
   @override
   State<AppointmentDate> createState() => _AppointmentDateState();
 }
 
 class _AppointmentDateState extends State<AppointmentDate> {
+  late Practitioner _practitioner;
+  late List<Patient> _patients = [];
+  final User? user = FirebaseAuth.instance.currentUser;
+
   DateTime today = DateTime.now();
   bool _isWeekend = false;
   bool _timeselected = false;
   bool _isButtonDisabled = true;
   int? _currentIndex;
-
-  late List<Patient> _patients = [];
+  String? _topic;
+  String? _patient;
 
   @override
   void initState() {
     super.initState();
     _fetchPatientData();
+    _getPractitioner();
+  }
+
+  void _sortLists() {
+    _patients.sort((a, b) {
+      return a.firstName!.compareTo(b.firstName!);
+    });
+    setState(() {});
   }
 
   void _fetchPatientData() async {
-    // initialize database
+    // Initialize database
     DatabaseReference ref = FirebaseDatabase.instance.ref();
-    // get snapshot
+    // Get snapshot
     DataSnapshot snapshot = await ref.child('patient').get();
     if (snapshot.value != null) {
       Map<dynamic, dynamic>? jsonMap = snapshot.value as Map<dynamic, dynamic>;
       List<Patient> pl = [];
       jsonMap.forEach((key, value) {
-        //print(key);
         Patient p = Patient.fromMap(value.cast<String, dynamic>());
-        //print(p);
+        p.id = key;
         pl.add(p);
       });
       setState(() {
         _patients = pl;
-      }); // Trigger rebuild to load patient data
+      });
+      _sortLists();
     }
   }
 
-  Future<void> addAppointment(String name) async {
-    try {
-      await FirebaseFirestore.instance.collection('appointments').add({
-        'name': name,
-        // Add additional fields as needed
+  void _submitAppointment(String patientId) {
+    if (_currentIndex != null && !_isWeekend) {
+      // Calculate the start and end times based on the selected index
+      DateTime startTime =
+          DateTime(today.year, today.month, today.day, _currentIndex! + 9, 0);
+      DateTime endTime =
+          DateTime(today.year, today.month, today.day, _currentIndex! + 10, 0);
+      setState(() {
+        _practitioner.appointments.add(
+          Appointment(
+            topic: _topic, // You can set the topic as needed
+            patient: patientId,
+            time: DateTimeRange(start: startTime, end: endTime),
+          ),
+        );
       });
-      print('Appointment added successfully');
-    } catch (error) {
-      print('Error: $error');
+      _submitForm();
+      
+      // Show a confirmation message or navigate to another screen if needed
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+            'Appointment added for $patientId at ${_currentIndex! + 9}:00'),
+      ));
+      // Clear the selected index
+      setState(() {
+        _currentIndex = null;
+        _timeselected = false;
+      });
+      widget.refreshCallback(); // Call the refresh callback
+      Navigator.pop(context); // pop back / not working
     }
+  }
+
+  void _getPractitioner() async {
+    // initialize database
+    DatabaseReference ref = FirebaseDatabase.instance.ref('users');
+    // get snapshot
+    DataSnapshot snapshot = await ref.child(user!.uid).get();
+    // set state
+    if (snapshot.exists) {
+      Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
+      setState(() {
+        _practitioner = Practitioner.fromMap(value.cast<String, dynamic>());
+      });
+    }
+  }
+
+  Future<void> _submitForm() async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref('users/${user!.uid}');
+    ref.update(_practitioner.toJson()).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Patient data updated'),
+        ),
+      );
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error updating patient: $error'),
+        ),
+      );
+    });
   }
 
   @override
@@ -189,10 +256,22 @@ class _AppointmentDateState extends State<AppointmentDate> {
                             ),
                           ),
                           onChanged: (Patient? newValue) {
-                            // Handle when a new value is selected
+                            setState(() {
+                              _patient = newValue!.id;
+                            });
                           },
                           selectedItem: null,
+                          itemAsString: (Patient patient) =>
+                              '${patient.firstName} ${patient.middleName} ${patient.lastName}',
                         ),
+                      ),
+                      TextField(
+                        decoration: InputDecoration(labelText: 'Topic'),
+                        onChanged: (value) {
+                          setState(() {
+                            _topic = value;
+                          });
+                        },
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -223,7 +302,7 @@ class _AppointmentDateState extends State<AppointmentDate> {
                               TextButton(
                                 onPressed: //disables button if time is not picked or the day is not available
                                     _isButtonDisabled && _timeselected
-                                        ? () => {}
+                                        ? () => {_submitAppointment(_patient!)}
                                         : null,
                                 style: const ButtonStyle(
                                   backgroundColor: MaterialStatePropertyAll(

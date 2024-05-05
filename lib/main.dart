@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 // firebase
 import 'package:firebase_core/firebase_core.dart'; // firebase core
+import 'package:medipal/chat/chat_list.dart';
+import 'package:medipal/forms/appointment.dart';
 import 'package:medipal/forms/patients.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/pages/appointment.dart';
@@ -18,7 +20,7 @@ import 'package:firebase_auth/firebase_auth.dart'; // authentication
 import 'package:firebase_analytics/firebase_analytics.dart'; // analytics
 import 'package:firebase_ui_auth/firebase_ui_auth.dart'; //
 // pages
-import 'package:medipal/form_patient.dart';
+import 'package:medipal/patient_form.dart';
 import 'package:medipal/pages/forgotpasswd.dart';
 import 'package:medipal/pages/signup.dart';
 import 'package:medipal/pages/login.dart';
@@ -59,6 +61,8 @@ class MyApp extends StatelessWidget {
         '/Dashboard': (context) => Dashboard(),
         '/chat': (context) => ChatScreen(receiverUserEmail: '',),
         '/UserPatients': (context) => UserPatients(user: FirebaseAuth.instance.currentUser),
+        '/ChatListTest': (context) => ChatList(),
+        '/AppointmentForm': (context) => AppointmentForm(),
       },
     );
   }
@@ -100,6 +104,8 @@ class HomePage extends StatelessWidget {
             ButtonWidget('ChatListPage', '/ChatListPage'),
             ButtonWidget('Dashboard', '/Dashboard'),
             ButtonWidget('UserPatients', '/UserPatients'),
+            ButtonWidget('ChatListTest', '/ChatListTest'),
+            ButtonWidget('AppointmentForm', '/AppointmentForm'),
             /* FirebaseAuth.instance.currentUser != null
                 ? Align(
                     alignment: Alignment.bottomCenter,

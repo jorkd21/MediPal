@@ -1,8 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:medipal/form_patient.dart';
+import 'package:medipal/patient_form.dart';
 import 'package:medipal/objects/patient.dart';
-import 'package:medipal/forms/patient_data.dart';
+import 'package:medipal/patient_data.dart';
 
 class PatientList extends StatefulWidget {
   const PatientList({super.key});
