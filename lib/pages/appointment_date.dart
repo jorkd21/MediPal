@@ -8,7 +8,8 @@ import 'package:medipal/objects/practitioner.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AppointmentDate extends StatefulWidget {
-  const AppointmentDate({super.key});
+  final Function refreshCallback; // Receive callback function
+  const AppointmentDate({super.key, required this.refreshCallback});
 
   @override
   State<AppointmentDate> createState() => _AppointmentDateState();
@@ -78,17 +79,19 @@ class _AppointmentDateState extends State<AppointmentDate> {
         );
       });
       _submitForm();
-      // Clear the selected index
-      setState(() {
-        _currentIndex = null;
-        _timeselected = false;
-      });
-
+      
       // Show a confirmation message or navigate to another screen if needed
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
             'Appointment added for $patientId at ${_currentIndex! + 9}:00'),
       ));
+      // Clear the selected index
+      setState(() {
+        _currentIndex = null;
+        _timeselected = false;
+      });
+      widget.refreshCallback(); // Call the refresh callback
+      Navigator.pop(context); // pop back / not working
     }
   }
 

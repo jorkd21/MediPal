@@ -98,7 +98,7 @@ Widget _buildMessageList() {
         IconButton(
           onPressed: sendMessage,
           icon: const Icon(
-            Icons.arrow_upward, 
+            Icons.send, 
             size: 40,
           )
         )

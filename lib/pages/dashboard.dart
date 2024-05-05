@@ -14,6 +14,27 @@ import 'package:medipal/constant/images.dart';
 import 'package:medipal/pages/appointment_date.dart';
 import 'package:medipal/pages/appointment.dart';
 
+// from appointment_data.dart will be replaced with object/appointment.dart
+class Appointment {
+  final String id;
+  final String title;
+  final DateTime dateTime;
+
+  Appointment({
+    required this.id,
+    required this.title,
+    required this.dateTime,
+  });
+
+  factory Appointment.fromMap(Map<String, dynamic> map) {
+    return Appointment(
+      id: map['id'],
+      title: map['title'],
+      dateTime: DateTime.parse(map['dateTime']),
+    );
+  }
+}
+
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key});
 
