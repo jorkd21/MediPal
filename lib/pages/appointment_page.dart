@@ -1,10 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:medipal/objects/appointment.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/appointment_date.dart';
+import 'package:medipal/pages/patient_list.dart';
+import 'package:medipal/pages/patientpage.dart';
+
 
 class AppointmentPage extends StatefulWidget {
   const AppointmentPage({Key? key}) : super(key: key);
@@ -37,6 +41,24 @@ class _AppointmentPageState extends State<AppointmentPage> {
     setState(() {
       _practitionerFuture = fetchPractitionerData(); // Refetch data
     });
+  }
+
+  int _selectedIndex = 3; // Set to 3 for the "Appointments" button
+  final List<Widget> _pages = [
+    //Dashboard(),
+    PatientList(),
+    PatientList(),
+    PatientPage(),
+    AppointmentPage(),
+    ChatList(),
+    // Add other pages here
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => _pages[index]),);
   }
 
   @override
@@ -169,7 +191,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        backgroundColor: Colors.blue, // Text color
+                        backgroundColor: Color(0xFF1F56DE), // Text color
                         padding: const EdgeInsets.symmetric(
                             vertical: 15, horizontal: 20), // Button padding
                         shape: RoundedRectangleBorder(
@@ -265,7 +287,37 @@ class _AppointmentPageState extends State<AppointmentPage> {
                   ],
                 ),
               ),
+                          bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.people),
+                label: 'Patients',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person_add),
+                label: 'Add Patient',
+              ),   
+              BottomNavigationBarItem(
+                icon: Icon(Icons.calendar_today), 
+                label: 'Appntments'),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.chat_bubble),
+                label: 'Chat',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: Colors.blue,
+            unselectedItemColor: Colors.grey,
+            showUnselectedLabels: true,
+            onTap: _onItemTapped,
             ),
+            ),
+
           );
         }
       },

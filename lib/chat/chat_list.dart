@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:medipal/chat/chat_page.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/dashboard.dart';
-import 'package:medipal/patient_list.dart';
+import 'package:medipal/pages/patient_list.dart';
 
 
 class ChatList extends StatefulWidget {
@@ -23,7 +23,7 @@ class _ChatListState extends State<ChatList> {
     _fetchPractitioners();
   }
 
-  int _selectedIndex = 0;
+  int _selectedIndex = 4;
   final List<Widget> _pages = [
     Dashboard(),
     PatientList(),
