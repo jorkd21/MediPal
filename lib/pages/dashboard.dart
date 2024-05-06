@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:medipal/chat/chat_list.dart';
+import 'package:medipal/chat/chat_page.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:medipal/main.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:medipal/objects/patient.dart';
+import 'package:medipal/pages/patientpage.dart';
 import 'package:medipal/patient_list.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/patient_form.dart';
@@ -57,7 +59,8 @@ class _DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
   final List<Widget> _pages = [
     Dashboard(),
-    PatientList(), // Your existing DashboardPage widget
+    PatientList(),
+    PatientPage(), // Your existing DashboardPage widget
     ChatList(),
     // Add other pages here
   ];
