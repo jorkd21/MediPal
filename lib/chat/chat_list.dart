@@ -44,7 +44,7 @@ class _ChatListState extends State<ChatList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat List'),
+        title: const Text('Practitioners'),
       ),
       body: practitioners.isEmpty
           ? Center(child: CircularProgressIndicator())
@@ -56,13 +56,26 @@ class _ChatListState extends State<ChatList> {
                 // Exclude current user from the chat list
                 if (practitioner.id == _auth.currentUser!.uid) return Container();
 
-                return ListTile(
-                  title: Text(practitioner.email!), // Assuming email is present
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatPage(receiverUid: practitioner.id!),
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.black,
+                        width: 0.5,
+                      ),
                     ),
+                  ),
+                  child: ListTile(
+                    leading: Icon(Icons.person),
+                    trailing: Icon(Icons.arrow_forward_ios),
+                    title: Text(practitioner.email!), // Assuming email is present
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatPage(receiverUid: practitioner.id!),
+                      ),
+                    ),
+                    tileColor: Color(0xFFDADFEC),
                   ),
                 );
               },
