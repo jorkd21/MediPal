@@ -25,6 +25,7 @@ import 'package:medipal/pages/forgotpasswd.dart';
 import 'package:medipal/pages/signup.dart';
 import 'package:medipal/pages/login.dart';
 import 'package:medipal/objects/appointment.dart';
+import 'package:medipal/pages/appointment_page.dart';
 
 void main() async {
   // initialize firebase

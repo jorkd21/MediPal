@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/chat/chat_page.dart';
 import 'package:medipal/constant/images.dart';
+import 'package:medipal/forms/general_info.dart';
 import 'package:medipal/main.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:medipal/objects/patient.dart';
@@ -60,7 +61,7 @@ class _DashboardState extends State<Dashboard> {
   final List<Widget> _pages = [
     Dashboard(),
     PatientList(),
-    PatientPage(),
+    GeneralInfoForm(patient: Patient(), formKey: GlobalKey<FormState>()),
     AppointmentPage(),
     ChatList(),
     // Add other pages here
