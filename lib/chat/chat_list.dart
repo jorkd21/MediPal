@@ -27,6 +27,7 @@ class _ChatListState extends State<ChatList> {
   final List<Widget> _pages = [
     Dashboard(),
     PatientList(),
+    ChatList(),
     // Add other pages here
   ];
 

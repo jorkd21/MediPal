@@ -60,7 +60,8 @@ class _DashboardState extends State<Dashboard> {
   final List<Widget> _pages = [
     Dashboard(),
     PatientList(),
-    PatientPage(), // Your existing DashboardPage widget
+    PatientPage(),
+    AppointmentPage(),
     ChatList(),
     // Add other pages here
   ];
