@@ -1,12 +1,16 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/forms/family.dart';
 import 'package:medipal/forms/files.dart';
 import 'package:medipal/forms/files_list.dart';
 import 'package:medipal/forms/general_info.dart';
 import 'package:medipal/forms/health_conditions.dart';
 import 'package:medipal/forms/medications.dart';
+import 'package:medipal/pages/appointment_page.dart';
+import 'package:medipal/pages/dashboard.dart';
+import 'package:medipal/pages/patient_list.dart';
 import 'package:medipal/patient_data.dart';
 import 'package:medipal/objects/patient.dart';
 
@@ -33,6 +37,23 @@ class _PatientFormState extends State<PatientForm> {
   //
   double uploadProgress = 0;
   String? uploadStatus;
+
+  int _selectedIndex = 2;
+  final List<Widget> _pagesNav = [
+    Dashboard(),
+    PatientList(),
+    PatientForm(patient: Patient()),
+    AppointmentPage(),
+    ChatList(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => _pagesNav[index]),);
+  }
+
 
   // initialize state
   @override
@@ -276,6 +297,35 @@ class _PatientFormState extends State<PatientForm> {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people),
+              label: 'Patients',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_add),
+              label: 'Add Patient',
+            ),   
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today), 
+              label: 'Appntments'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat_bubble),
+              label: 'Chat',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.blue,
+          unselectedItemColor: Colors.grey,
+          showUnselectedLabels: true,
+          onTap: _onItemTapped,
+        ),
     );
   }
 }
