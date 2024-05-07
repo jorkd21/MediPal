@@ -18,6 +18,7 @@ import 'package:medipal/constant/images.dart';
 import 'package:medipal/pages/appointment_date.dart';
 import 'package:medipal/pages/appointment_page.dart';
 
+
 // from appointment_data.dart will be replaced with object/appointment.dart
 class Appointment {
   final String id;
@@ -61,10 +62,13 @@ class _DashboardState extends State<Dashboard> {
   final List<Widget> _pages = [
     Dashboard(),
     PatientList(),
-    GeneralInfoForm(patient: Patient(), formKey: GlobalKey<FormState>()),
+    GeneralInfoForm(
+      patient: Patient(), 
+      formKey: GlobalKey<FormState>()
+    ),
     AppointmentPage(),
     ChatList(),
-    // Add other pages here
+    // Add other pages here need to add other pages.
   ];
 
   void _onItemTapped(int index) {
