@@ -3,8 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/chat/chat_page.dart';
 import 'package:medipal/objects/practitioner.dart';
+import 'package:medipal/pages/appointment_page.dart';
 import 'package:medipal/pages/dashboard.dart';
 import 'package:medipal/pages/patient_list.dart';
+import 'package:medipal/patient_form.dart';
+import '../objects/patient.dart';
 
 
 class ChatList extends StatefulWidget {
@@ -27,8 +30,9 @@ class _ChatListState extends State<ChatList> {
   final List<Widget> _pages = [
     Dashboard(),
     PatientList(),
+    PatientForm(patient: Patient()),
+    AppointmentPage(),
     ChatList(),
-    // Add other pages here
   ];
 
   void _onItemTapped(int index) {
