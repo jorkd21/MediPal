@@ -4,10 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:medipal/objects/appointment.dart';
+//import 'package:medipal/objects/appointment_patient.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/appointment_date.dart';
+import 'package:medipal/pages/dashboard.dart' as dash;
 import 'package:medipal/pages/patient_list.dart';
 import 'package:medipal/pages/patientpage.dart';
+import 'package:medipal/patient_form.dart';
+
+import '../objects/patient.dart';
 
 
 class AppointmentPage extends StatefulWidget {
@@ -43,15 +48,13 @@ class _AppointmentPageState extends State<AppointmentPage> {
     });
   }
 
-  int _selectedIndex = 3; // Set to 3 for the "Appointments" button
+  int _selectedIndex = 3;
   final List<Widget> _pages = [
-    //Dashboard(),
+    dash.Dashboard(),
     PatientList(),
-    PatientList(),
-    PatientPage(),
+    PatientForm(patient: Patient()),
     AppointmentPage(),
     ChatList(),
-    // Add other pages here
   ];
 
   void _onItemTapped(int index) {

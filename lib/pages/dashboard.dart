@@ -56,7 +56,7 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     _fetchPatientData();
-    _fetchAppointmentData(); // Add this line
+    _fetchAppointmentData();
   }
 
   int _selectedIndex = 0;
@@ -66,7 +66,6 @@ class _DashboardState extends State<Dashboard> {
     PatientForm(patient: Patient()),
     AppointmentPage(),
     ChatList(),
-    // Add other pages here need to add other pages.
   ];
 
   void _onItemTapped(int index) {
