@@ -33,7 +33,7 @@ class _PatientListState extends State<PatientList> {
   final List<Widget> _pages = [
     Dashboard(),
     PatientList(),
-    PatientPage(),
+    PatientForm(patient: Patient()),
     AppointmentPage(),
     ChatList(),
   ];

@@ -6,6 +6,7 @@ import 'package:medipal/constant/images.dart';
 import 'package:medipal/forms/general_info.dart';
 import 'package:medipal/main.dart';
 import 'package:firebase_database/firebase_database.dart';
+//import 'package:medipal/objects/appointment_patient.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/pages/patientpage.dart';
 import 'package:medipal/pages/patient_list.dart';
@@ -17,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:medipal/pages/appointment_date.dart';
 import 'package:medipal/pages/appointment_page.dart';
+
 
 // from appointment_data.dart will be replaced with object/appointment.dart
 class Appointment {
@@ -54,17 +56,16 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     _fetchPatientData();
-    _fetchAppointmentData(); // Add this line
+    _fetchAppointmentData();
   }
 
   int _selectedIndex = 0;
   final List<Widget> _pages = [
     Dashboard(),
     PatientList(),
-    GeneralInfoForm(patient: Patient(), formKey: GlobalKey<FormState>()),
+    PatientForm(patient: Patient()),
     AppointmentPage(),
     ChatList(),
-    // Add other pages here
   ];
 
   void _onItemTapped(int index) {
@@ -74,7 +75,6 @@ class _DashboardState extends State<Dashboard> {
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => _pages[index]),);
   }
 
-  
 
   Future<void> _fetchAppointmentData() async {
     try {
