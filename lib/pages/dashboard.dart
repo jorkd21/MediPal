@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:medipal/chat/chat_list.dart';
+import 'package:medipal/chat/chat_page.dart';
 import 'package:medipal/constant/images.dart';
+import 'package:medipal/forms/general_info.dart';
 import 'package:medipal/main.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:medipal/objects/patient.dart';
-import 'package:medipal/patient_list.dart';
+import 'package:medipal/pages/patientpage.dart';
+import 'package:medipal/pages/patient_list.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/patient_form.dart';
 import 'package:medipal/objects/patient.dart';
@@ -12,7 +16,7 @@ import 'package:medipal/patient_data.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:medipal/pages/appointment_date.dart';
-import 'package:medipal/pages/appointment.dart';
+import 'package:medipal/pages/appointment_page.dart';
 
 // from appointment_data.dart will be replaced with object/appointment.dart
 class Appointment {
@@ -52,6 +56,25 @@ class _DashboardState extends State<Dashboard> {
     _fetchPatientData();
     _fetchAppointmentData(); // Add this line
   }
+
+  int _selectedIndex = 0;
+  final List<Widget> _pages = [
+    Dashboard(),
+    PatientList(),
+    GeneralInfoForm(patient: Patient(), formKey: GlobalKey<FormState>()),
+    AppointmentPage(),
+    ChatList(),
+    // Add other pages here
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => _pages[index]),);
+  }
+
+  
 
   Future<void> _fetchAppointmentData() async {
     try {
@@ -301,6 +324,38 @@ class _DashboardState extends State<Dashboard> {
           ),
         ),
       ),
-    ));
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people),
+              label: 'Patients',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_add),
+              label: 'Add Patient',
+            ),   
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today), 
+              label: 'Appntments'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat_bubble),
+              label: 'Chat',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.blue,
+          unselectedItemColor: Colors.grey,
+          showUnselectedLabels: true,
+          onTap: _onItemTapped,
+        ),
+      ),
+    );
+    
   }
+  
 }

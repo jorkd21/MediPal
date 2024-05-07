@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/chat/chat_page.dart';
 import 'package:medipal/objects/practitioner.dart';
+import 'package:medipal/pages/dashboard.dart';
+import 'package:medipal/pages/patient_list.dart';
 
 
 class ChatList extends StatefulWidget {
@@ -19,6 +21,21 @@ class _ChatListState extends State<ChatList> {
   void initState() {
     super.initState();
     _fetchPractitioners();
+  }
+
+  int _selectedIndex = 4;
+  final List<Widget> _pages = [
+    Dashboard(),
+    PatientList(),
+    ChatList(),
+    // Add other pages here
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => _pages[index]),);
   }
 
   void _fetchPractitioners() async {
@@ -44,7 +61,7 @@ class _ChatListState extends State<ChatList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat List'),
+        title: const Text('Practitioners'),
       ),
       body: practitioners.isEmpty
           ? Center(child: CircularProgressIndicator())
@@ -56,17 +73,59 @@ class _ChatListState extends State<ChatList> {
                 // Exclude current user from the chat list
                 if (practitioner.id == _auth.currentUser!.uid) return Container();
 
-                return ListTile(
-                  title: Text(practitioner.email!), // Assuming email is present
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatPage(receiverUid: practitioner.id!),
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.black,
+                        width: 0.5,
+                      ),
                     ),
+                  ),
+                  child: ListTile(
+                    leading: Icon(Icons.person),
+                    trailing: Icon(Icons.arrow_forward_ios),
+                    title: Text(practitioner.email!), // Assuming email is present
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatPage(receiverUid: practitioner.id!),
+                      ),
+                    ),
+                    tileColor: Color(0xFFDADFEC),
                   ),
                 );
               },
             ),
+            bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.people),
+                label: 'Patients',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person_add),
+                label: 'Add Patient',
+              ),   
+              BottomNavigationBarItem(
+                icon: Icon(Icons.calendar_today), 
+                label: 'Appntments'),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.chat_bubble),
+                label: 'Chat',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: Colors.blue,
+            unselectedItemColor: Colors.grey,
+            showUnselectedLabels: true,
+            onTap: _onItemTapped,
+        ),
     );
   }
 }

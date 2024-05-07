@@ -27,7 +27,9 @@ class _ChatListState extends State<ChatListPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          title: Text('Chats'),
         ),
+        backgroundColor: Colors.grey,
         body: StreamBuilder(
           // ignore: deprecated_member_use
           stream: FirebaseDatabase.instance.reference().child('users').onValue, 

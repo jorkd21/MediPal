@@ -5,14 +5,14 @@ import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/forms/appointment.dart';
 import 'package:medipal/forms/patients.dart';
 import 'package:medipal/objects/patient.dart';
-import 'package:medipal/pages/appointment.dart';
+import 'package:medipal/pages/appointment_page.dart';
 import 'package:medipal/pages/chat.dart';
 import 'package:medipal/pages/chat_list.dart';
 import 'package:medipal/pages/dashboard.dart';
 import 'package:medipal/pages/signup.dart';
 import 'package:medipal/pages/patientpage.dart';
 import 'package:medipal/pages/login.dart';
-import 'package:medipal/patient_list.dart';
+import 'package:medipal/pages/patient_list.dart';
 import 'firebase_options.dart'; // firebase api keys
 import 'package:firebase_database/firebase_database.dart'; // realtime database
 import 'package:cloud_firestore/cloud_firestore.dart'; // cloud firestore
@@ -24,6 +24,8 @@ import 'package:medipal/patient_form.dart';
 import 'package:medipal/pages/forgotpasswd.dart';
 import 'package:medipal/pages/signup.dart';
 import 'package:medipal/pages/login.dart';
+import 'package:medipal/objects/appointment.dart';
+import 'package:medipal/pages/appointment_page.dart';
 
 void main() async {
   // initialize firebase
