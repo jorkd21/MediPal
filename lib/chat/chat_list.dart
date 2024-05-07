@@ -116,11 +116,11 @@ class _ChatListState extends State<ChatList> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person_add),
-                label: 'Add Patient',
+                label: '+Patient',
               ),   
               BottomNavigationBarItem(
                 icon: Icon(Icons.calendar_today), 
-                label: 'Appntments'),
+                label: 'Schedule'),
               BottomNavigationBarItem(
                 icon: Icon(Icons.chat_bubble),
                 label: 'Chat',

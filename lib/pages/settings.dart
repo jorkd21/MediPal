@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/constant/images.dart';
@@ -34,6 +35,12 @@ class _SettingsPageState extends State<SettingsPage> {
     });
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => _pages[index]),);
   }
+
+  //Signs out the user and sends them back to the login page. 
+  Future<void> _signOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushNamed(context, '/Login');
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -57,7 +64,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(5),
+              padding: EdgeInsets.only(top: 20, left: 5, right: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -88,11 +95,14 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: Row(
                       children: [
                         SizedBox(width: 25),
-                        Image.asset(
-                          'assets/cog.png',
-                          fit: BoxFit.contain,
-                          width: 50,
-                          height: 50,
+                        Padding(
+                          padding: EdgeInsets.only(top: 13),
+                          child: Image.asset(
+                            'assets/bettercog.png',
+                            fit: BoxFit.contain,
+                            width: 50,
+                            height: 50,
+                          ),
                         ),
                         SizedBox(
                           width: 7,
@@ -121,7 +131,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       children: [
                         Padding(
                           padding: EdgeInsets.only(
-                            top: 5.0,
+                            top: 0,
                           ),
                           child: ListView(
                             shrinkWrap: true,
@@ -132,7 +142,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                   margin: EdgeInsets.all(10.0),
                                   padding: EdgeInsets.all(10.0),
                                   child: Container(
-                                    height: 541.0,
+                                    height: 539.0,
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(30.0),
@@ -155,7 +165,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 child: Padding(
                                                   padding: EdgeInsets.only(
                                                       left:
-                                                          10.0), // Add 10 pixels of padding to the left side
+                                                          20.0), // Add 20 pixels of padding to the left side
                                                   child: Text(
                                                     'Preferences',
                                                     style: TextStyle(
@@ -284,20 +294,16 @@ class _SettingsPageState extends State<SettingsPage> {
                                             ],
                                           ),
                                         ),
-                                        SizedBox(
-                                            height:
-                                                1), // Added space between boxes
-                                        Container(
-                                          width: double.infinity,
-                                          margin: EdgeInsets.symmetric(
-                                              horizontal: 20),
-                                          decoration: BoxDecoration(
-                                            color: Color(0xFF1f56de),
-                                            borderRadius:
-                                                BorderRadius.circular(30.0),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Color(0xFF1F56DE),
+                                            minimumSize: Size(300.0, 50.0),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30.0),
+                                            ),
                                           ),
-                                          child: ListTile(
-                                            title: Text(
+                                            child: Text(
                                               'Logout',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
@@ -305,10 +311,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 fontSize: 30.0,
                                               ),
                                             ),
-                                            onTap: () {
-                                              // Handle logout action
-                                            },
-                                          ),
+                                          
+                                          onPressed: () {
+                                            _signOut();
+                                          },
                                         ),
                                       ],
                                     ),
