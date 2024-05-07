@@ -11,6 +11,7 @@ import 'package:medipal/objects/patient.dart';
 import 'package:medipal/pages/patientpage.dart';
 import 'package:medipal/pages/patient_list.dart';
 import 'package:flutter/material.dart';
+import 'package:medipal/pages/settings.dart';
 import 'package:medipal/patient_form.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/patient_data.dart';
@@ -66,6 +67,7 @@ class _DashboardState extends State<Dashboard> {
     PatientForm(patient: Patient()),
     AppointmentPage(),
     ChatList(),
+    SettingsPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -337,14 +339,18 @@ class _DashboardState extends State<Dashboard> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person_add),
-              label: 'Add Patient',
+              label: '+Patient',
             ),   
             BottomNavigationBarItem(
               icon: Icon(Icons.calendar_today), 
-              label: 'Appntments'),
+              label: 'Schedule'),
             BottomNavigationBarItem(
               icon: Icon(Icons.chat_bubble),
               label: 'Chat',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Settings',
             ),
           ],
           currentIndex: _selectedIndex,

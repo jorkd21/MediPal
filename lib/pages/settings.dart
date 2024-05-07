@@ -1,7 +1,47 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/constant/images.dart';
+//import 'package:medipal/objects/appointment_patient.dart';
+import 'package:medipal/pages/appointment_page.dart';
+import 'package:medipal/pages/dashboard.dart';
+import 'package:medipal/pages/patient_list.dart';
+import 'package:medipal/patient_form.dart';
+import '../objects/patient.dart';
 
-class SettingsPage extends StatelessWidget {
+
+class SettingsPage extends StatefulWidget {
+
+  @override
+  _SettingsPageState createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+
+
+  int _selectedIndex = 5;
+  final List<Widget> _pages = [
+    Dashboard(),
+    PatientList(),
+    PatientForm(patient: Patient()),
+    AppointmentPage(),
+    ChatList(),
+    SettingsPage(),
+  ];
+
+ void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => _pages[index]),);
+  }
+
+  //Signs out the user and sends them back to the login page. 
+  Future<void> _signOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushNamed(context, '/Login');
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +64,7 @@ class SettingsPage extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(5),
+              padding: EdgeInsets.only(top: 20, left: 5, right: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -55,11 +95,14 @@ class SettingsPage extends StatelessWidget {
                     child: Row(
                       children: [
                         SizedBox(width: 25),
-                        Image.asset(
-                          'assets/cog.png',
-                          fit: BoxFit.contain,
-                          width: 50,
-                          height: 50,
+                        Padding(
+                          padding: EdgeInsets.only(top: 13),
+                          child: Image.asset(
+                            'assets/bettercog.png',
+                            fit: BoxFit.contain,
+                            width: 50,
+                            height: 50,
+                          ),
                         ),
                         SizedBox(
                           width: 7,
@@ -88,7 +131,7 @@ class SettingsPage extends StatelessWidget {
                       children: [
                         Padding(
                           padding: EdgeInsets.only(
-                            top: 5.0,
+                            top: 0,
                           ),
                           child: ListView(
                             shrinkWrap: true,
@@ -99,7 +142,7 @@ class SettingsPage extends StatelessWidget {
                                   margin: EdgeInsets.all(10.0),
                                   padding: EdgeInsets.all(10.0),
                                   child: Container(
-                                    height: 684.0,
+                                    height: 539.0,
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(30.0),
@@ -122,7 +165,7 @@ class SettingsPage extends StatelessWidget {
                                                 child: Padding(
                                                   padding: EdgeInsets.only(
                                                       left:
-                                                          10.0), // Add 10 pixels of padding to the left side
+                                                          20.0), // Add 20 pixels of padding to the left side
                                                   child: Text(
                                                     'Preferences',
                                                     style: TextStyle(
@@ -251,20 +294,16 @@ class SettingsPage extends StatelessWidget {
                                             ],
                                           ),
                                         ),
-                                        SizedBox(
-                                            height:
-                                                65), // Added space between boxes
-                                        Container(
-                                          width: double.infinity,
-                                          margin: EdgeInsets.symmetric(
-                                              horizontal: 20),
-                                          decoration: BoxDecoration(
-                                            color: Color(0xFF1f56de),
-                                            borderRadius:
-                                                BorderRadius.circular(30.0),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Color(0xFF1F56DE),
+                                            minimumSize: Size(300.0, 50.0),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30.0),
+                                            ),
                                           ),
-                                          child: ListTile(
-                                            title: Text(
+                                            child: Text(
                                               'Logout',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
@@ -272,10 +311,10 @@ class SettingsPage extends StatelessWidget {
                                                 fontSize: 30.0,
                                               ),
                                             ),
-                                            onTap: () {
-                                              // Handle logout action
-                                            },
-                                          ),
+                                          
+                                          onPressed: () {
+                                            _signOut();
+                                          },
                                         ),
                                       ],
                                     ),
@@ -294,6 +333,39 @@ class SettingsPage extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people),
+              label: 'Patients',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_add),
+              label: '+Patient',
+            ),   
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today), 
+              label: 'Schedule'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat_bubble),
+              label: 'Chat',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Settings',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.blue,
+          unselectedItemColor: Colors.grey,
+          showUnselectedLabels: true,
+          onTap: _onItemTapped,
+        ),
     );
   }
 }
