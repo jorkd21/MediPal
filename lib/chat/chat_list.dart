@@ -6,6 +6,7 @@ import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/appointment_page.dart';
 import 'package:medipal/pages/dashboard.dart';
 import 'package:medipal/pages/patient_list.dart';
+import 'package:medipal/pages/settings.dart';
 import 'package:medipal/patient_form.dart';
 import '../objects/patient.dart';
 
@@ -33,6 +34,7 @@ class _ChatListState extends State<ChatList> {
     PatientForm(patient: Patient()),
     AppointmentPage(),
     ChatList(),
+    SettingsPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -122,6 +124,10 @@ class _ChatListState extends State<ChatList> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.chat_bubble),
                 label: 'Chat',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.settings),
+                label: 'Settings',
               ),
             ],
             currentIndex: _selectedIndex,
