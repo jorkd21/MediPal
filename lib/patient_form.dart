@@ -248,8 +248,8 @@ class _PatientFormState extends State<PatientForm> {
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
               colors: [
-                Color(0xFFBAA2DA), // Light blue at the bottom
-                Color.fromARGB(255, 228, 192, 248), // White at top
+                Color(0xFFBAD2FF), // Light blue at the bottom
+                Color(0xFFBAD2FF), // White at top
               ],
             ),
           ),
@@ -283,16 +283,40 @@ class _PatientFormState extends State<PatientForm> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF1F56DE),
+                  ),
                   onPressed: _previousPage,
-                  child: const Text('Back'),
+                  child: const Text(
+                    'Back',
+                    style: TextStyle(
+                      color: Colors.white
+                    ),
+                  ),
                 ),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF1F56DE),
+                  ),
                   onPressed: _submitForm,
-                  child: const Text('Submit'),
+                  child: const Text(
+                    'Submit',
+                    style: TextStyle(
+                      color: Colors.white
+                    ),
+                  ),
                 ),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF1F56DE),
+                  ),
                   onPressed: _nextPage,
-                  child: const Text('Next'),
+                  child: const Text(
+                    'Next',
+                    style: TextStyle(
+                      color: Colors.white
+                    ),
+                  ),
                 ),
               ],
             ),
