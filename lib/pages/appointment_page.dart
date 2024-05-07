@@ -140,7 +140,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text(
-                                    'Next Appointments',
+                                    'Next Appointment',
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
@@ -167,8 +167,8 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                       color: Colors.red, // Red background color
                                       borderRadius: BorderRadius.circular(10),
                                     ),
-                                    child: const Text(
-                                      'April 10, 2024 - 10:00 AM',
+                                    child: Text(
+                                      '${practitioner.appointments[0].topic} on ${practitioner.appointments[0].time!.start}',
                                       style: TextStyle(
                                         fontSize: 18,
                                         color: Colors.white,
@@ -183,29 +183,33 @@ class _AppointmentPageState extends State<AppointmentPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        // goes to appointment_date.dart
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AppointmentDate(refreshCallback: _refreshData)),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Color(0xFF1F56DE), // Text color
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 20), // Button padding
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(10), // Button border radius
+                    Container(
+                      width: 350,
+                      height: 57,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // goes to appointment_date.dart
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AppointmentDate(refreshCallback: _refreshData)),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Color(0xFF1F56DE), // Text color
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 20), // Button padding
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(20), // Button border radius
+                          ),
                         ),
-                      ),
-                      child: const Text(
-                        'Create Appointment',
-                        style: TextStyle(
-                          fontSize: 18,
+                        child: const Text(
+                          'Create Appointment',
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
                         ),
                       ),
                     ),
@@ -267,6 +271,14 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.blue,
+                                        ),
+                                      ),
+                                      Text(
+                                        appointment.patient!, // Display appointment title
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black,
                                         ),
                                       ),
                                       SizedBox(height: 10),
