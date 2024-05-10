@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/forms/family.dart';
 import 'package:medipal/forms/files.dart';
-import 'package:medipal/forms/files_list.dart';
 import 'package:medipal/forms/general_info.dart';
 import 'package:medipal/forms/health_conditions.dart';
 import 'package:medipal/forms/medications.dart';
@@ -53,15 +52,16 @@ class _PatientFormState extends State<PatientForm> {
     setState(() {
       _selectedIndex = index;
     });
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => _pagesNav[index]),);
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => _pagesNav[index]),
+    );
   }
-
 
   // initialize state
   @override
   void initState() {
     super.initState();
-    _patient = widget.patient; // Create patient object
+    _patient = widget.patient;
     _pages = [
       GeneralInfoForm(
         patient: _patient,
@@ -79,15 +79,10 @@ class _PatientFormState extends State<PatientForm> {
         patient: _patient,
         formKey: _familyFormKey,
       ),
-      if (_patient.id == null)
-        FileForm(
-          patient: _patient,
-          formKey: _fileFormKey,
-        ),
-      if (_patient.id != null)
-        FilesListPage(
-          patientId: _patient.id!,
-        ),
+      FileForm(
+        patient: _patient,
+        formKey: _fileFormKey,
+      ),
     ];
   }
 
@@ -118,7 +113,7 @@ class _PatientFormState extends State<PatientForm> {
   }
 
   Future<void> uploadFiles() async {
-    if (_patient.files == null || _patient.files!.isEmpty) return;
+    if (_patient.files.isEmpty) return;
 
     final storageRef = FirebaseStorage.instance.ref();
 
@@ -129,9 +124,14 @@ class _PatientFormState extends State<PatientForm> {
       if (fileData.file == null) continue; // Skip if file is null
       final metadata = SettableMetadata(contentType: "image/jpeg");
 
-      final uploadTask = storageRef
-          .child("patients/$_patientKey/$fileName")
-          .putFile(fileData.file!, metadata); // Use ! to assert non-nullability
+      String path = 'patients/';
+      if (_patient.id != null && _patient.id!.isNotEmpty) {
+        // Existing patient, use ID in path
+        path += '${_patient.id}/';
+      }
+
+      final uploadTask =
+          storageRef.child(path + fileName).putFile(fileData.file!, metadata);
 
       uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
         setState(() {
@@ -185,11 +185,7 @@ class _PatientFormState extends State<PatientForm> {
 
   Future<void> _submitForm() async {
     // Validate forms as before
-    if (_generalInfoFormKey.currentState!
-            .validate() /*&&
-        _healthConditionsFormKey.currentState!.validate() &&
-        _medicationsFormKey.currentState!.validate() */
-        ) {
+    if (_generalInfoFormKey.currentState!.validate()) {
       // Check if patient ID is present (widget.patient.id)
       if (widget.patient.id != null && widget.patient.id!.isNotEmpty) {
         // Update existing patient data
@@ -289,9 +285,7 @@ class _PatientFormState extends State<PatientForm> {
                   onPressed: _previousPage,
                   child: const Text(
                     'Back',
-                    style: TextStyle(
-                      color: Colors.white
-                    ),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
                 ElevatedButton(
@@ -301,9 +295,7 @@ class _PatientFormState extends State<PatientForm> {
                   onPressed: _submitForm,
                   child: const Text(
                     'Submit',
-                    style: TextStyle(
-                      color: Colors.white
-                    ),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
                 ElevatedButton(
@@ -313,9 +305,7 @@ class _PatientFormState extends State<PatientForm> {
                   onPressed: _nextPage,
                   child: const Text(
                     'Next',
-                    style: TextStyle(
-                      color: Colors.white
-                    ),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],
@@ -325,37 +315,36 @@ class _PatientFormState extends State<PatientForm> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people),
-              label: 'Patients',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_add),
-              label: '+Patient',
-            ),   
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today), 
-              label: 'Schedule'),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat_bubble),
-              label: 'Chat',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Settings',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.blue,
-          unselectedItemColor: Colors.grey,
-          showUnselectedLabels: true,
-          onTap: _onItemTapped,
-        ),
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: 'Patients',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_add),
+            label: '+Patient',
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today), label: 'Schedule'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat_bubble),
+            label: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        showUnselectedLabels: true,
+        onTap: _onItemTapped,
+      ),
     );
   }
 }
