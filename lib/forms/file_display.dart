@@ -12,25 +12,34 @@ class ImageDisplayPage extends StatelessWidget {
         title: Text('Image Display'),
       ),
       body: Center(
-        child: Image.network(
-          imageUrl,
-          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-            if (loadingProgress == null) {
-              return child;
-            } else {
-              return CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                    : null,
-              );
-            }
-          },
-          errorBuilder: (context, error, stackTrace) {
-            return Text('Error loading image');
-          },
+        child: GestureDetector(
+          child: InteractiveViewer(
+            /*panEnabled: false,
+            boundaryMargin: EdgeInsets.all(100),
+            minScale: 0.5,
+            maxScale: 2,*/
+            child: Image.network(
+              imageUrl,
+              loadingBuilder: (BuildContext context, Widget child,
+                  ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                } else {
+                  return CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes!
+                        : null,
+                  );
+                }
+              },
+              errorBuilder: (context, error, stackTrace) {
+                return Text('Error loading image');
+              },
+            ),
+          ),
         ),
       ),
     );
   }
 }
-
