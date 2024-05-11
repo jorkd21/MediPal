@@ -65,7 +65,7 @@ class GetPatientDataState extends State<GetPatientData> {
             children: [
               Container(
                 width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
@@ -76,7 +76,7 @@ class GetPatientDataState extends State<GetPatientData> {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(20.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -84,13 +84,13 @@ class GetPatientDataState extends State<GetPatientData> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           IconButton(
-                            icon: Icon(Icons.arrow_back,
+                            icon: const Icon(Icons.arrow_back,
                                 color: Colors.black, size: 40),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
                           ),
-                          Container(
+                          SizedBox(
                             height: 100,
                             width: 100,
                             child: Image.asset(
@@ -105,7 +105,7 @@ class GetPatientDataState extends State<GetPatientData> {
                             myCal,
                           ),
                           Padding(
-                            padding: EdgeInsets.all(10.25),
+                            padding: const EdgeInsets.all(10.25),
                             child: Text(
                               'Patient Record',
                               style: TextStyle(
@@ -115,7 +115,7 @@ class GetPatientDataState extends State<GetPatientData> {
                                 shadows: [
                                   Shadow(
                                     color: Colors.black.withOpacity(0.5),
-                                    offset: Offset(0, 3),
+                                    offset: const Offset(0, 3),
                                     blurRadius: 5,
                                   ),
                                 ],
@@ -128,7 +128,7 @@ class GetPatientDataState extends State<GetPatientData> {
                   ),
                 ),
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               SizedBox(
                 width: 200, // Set the desired width here
                 child: Center(
@@ -146,7 +146,7 @@ class GetPatientDataState extends State<GetPatientData> {
                         ), // Placeholder while loading
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8.47,
               ),
               Row(
@@ -154,14 +154,14 @@ class GetPatientDataState extends State<GetPatientData> {
                 children: [
                   Text(
                     '${_patient.firstName ?? ''} ${_patient.middleName ?? ''} ${_patient.lastName ?? ''}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 21.64,
               ),
               Row(
@@ -169,7 +169,7 @@ class GetPatientDataState extends State<GetPatientData> {
                 children: [
                   Text(
                     '${_patient.sex}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.normal,
                       color: Color(0xFF7B7B7B),
@@ -177,11 +177,11 @@ class GetPatientDataState extends State<GetPatientData> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 23.24,
               ),
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color(0xFFDADFEC),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20.0),
@@ -191,7 +191,7 @@ class GetPatientDataState extends State<GetPatientData> {
                 child: Column(
                   children: [
                     // General info
-                    Row(
+                    const Row(
                       children: [
                         Padding(
                           padding: EdgeInsets.only(top: 21.82, left: 27),
@@ -210,7 +210,7 @@ class GetPatientDataState extends State<GetPatientData> {
                       Row(
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(top: 18.92, left: 30),
+                            padding: const EdgeInsets.only(top: 18.92, left: 30),
                             child: Text(
                               i == 0
                                   ? 'Date of birth'
@@ -221,7 +221,7 @@ class GetPatientDataState extends State<GetPatientData> {
                                           : i == 3
                                               ? 'Blood type'
                                               : 'Marital status',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Color(0xFF7B7B7B),
                                 fontWeight: FontWeight.normal,
                                 fontSize: 16,
@@ -230,7 +230,8 @@ class GetPatientDataState extends State<GetPatientData> {
                           ),
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsets.only(top: 18.92, right: 30),
+                              padding:
+                                  const EdgeInsets.only(top: 18.92, right: 30),
                               child: Text(
                                 i == 0
                                     ? '${_patient.dob?.day}/${_patient.dob?.month}/${_patient.dob?.year}'
@@ -242,7 +243,7 @@ class GetPatientDataState extends State<GetPatientData> {
                                                 ? '${_patient.bloodGroup}${_patient.rhFactor}'
                                                 : 'Married',
                                 textAlign: TextAlign.right,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.normal,
                                   fontSize: 16,
@@ -252,9 +253,9 @@ class GetPatientDataState extends State<GetPatientData> {
                           ),
                         ],
                       ),
-                    SizedBox(height: 23.01),
+                    const SizedBox(height: 23.01),
                     // Contact Display Section
-                    Row(
+                    const Row(
                       children: [
                         Padding(
                           padding: EdgeInsets.only(top: 21.82, left: 27),
@@ -275,7 +276,7 @@ class GetPatientDataState extends State<GetPatientData> {
                         Row(
                           children: [
                             if (i == 0)
-                              Padding(
+                              const Padding(
                                 padding: EdgeInsets.only(top: 18.92, left: 30),
                                 child: Text(
                                   'Phone', // You can customize this text if needed
@@ -288,25 +289,25 @@ class GetPatientDataState extends State<GetPatientData> {
                               ),
                             Expanded(
                               child: Padding(
-                                padding: EdgeInsets.only(top: 18.92, right: 30),
+                                padding: const EdgeInsets.only(top: 18.92, right: 30),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment
                                       .end, // Align widgets to the end
                                   children: [
                                     Text(
                                       _patient.phone[i].type ?? 'N/A',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Color(0xFF7B7B7B),
                                         fontWeight: FontWeight.normal,
                                         fontSize: 16,
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                         width:
                                             10), // Add space between phone type and number
                                     Text(
                                       _patient.phone[i].phoneNumber!,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
                                         fontSize: 16,
@@ -319,7 +320,7 @@ class GetPatientDataState extends State<GetPatientData> {
                           ],
                         ),
                     // Emergancy Contact Information
-                    Row(
+                    const Row(
                       children: [
                         Padding(
                           padding: EdgeInsets.only(top: 21.82, left: 27),
@@ -340,10 +341,10 @@ class GetPatientDataState extends State<GetPatientData> {
                         Row(
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(top: 18.92, left: 30),
+                              padding: const EdgeInsets.only(top: 18.92, left: 30),
                               child: Text(
                                 _patient.emergency[i].name ?? 'N/A',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Color(0xFF7B7B7B),
                                   fontWeight: FontWeight.normal,
                                   fontSize: 16,
@@ -352,25 +353,25 @@ class GetPatientDataState extends State<GetPatientData> {
                             ),
                             Expanded(
                               child: Padding(
-                                padding: EdgeInsets.only(top: 18.92, right: 30),
+                                padding: const EdgeInsets.only(top: 18.92, right: 30),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment
                                       .end, // Align widgets to the end
                                   children: [
                                     Text(
                                       _patient.emergency[i].type ?? 'N/A',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Color(0xFF7B7B7B),
                                         fontWeight: FontWeight.normal,
                                         fontSize: 16,
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                         width:
                                             10), // Add space between phone type and number
                                     Text(
                                       _patient.emergency[i].phoneNumber!,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
                                         fontSize: 16,
@@ -384,8 +385,8 @@ class GetPatientDataState extends State<GetPatientData> {
                         ),
 
                     // Health Conditions
-                    SizedBox(height: 23.01),
-                    Row(
+                    const SizedBox(height: 23.01),
+                    const Row(
                       children: [
                         Padding(
                           padding: EdgeInsets.only(top: 21.82, left: 27),
@@ -405,7 +406,7 @@ class GetPatientDataState extends State<GetPatientData> {
                       Row(
                         children: [
                           if (i == 0)
-                            Padding(
+                            const Padding(
                               padding: EdgeInsets.only(top: 18.92, left: 30),
                               child: Text(
                                 'Current Illness', // You can customize this text if needed
@@ -418,11 +419,11 @@ class GetPatientDataState extends State<GetPatientData> {
                             ),
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsets.only(top: 18.92, right: 30),
+                              padding: const EdgeInsets.only(top: 18.92, right: 30),
                               child: Text(
                                 _patient.currIllness[i],
                                 textAlign: TextAlign.right,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.normal,
                                   fontSize: 16,
@@ -432,13 +433,13 @@ class GetPatientDataState extends State<GetPatientData> {
                           ),
                         ],
                       ),
-                    SizedBox(height: 23.01),
+                    const SizedBox(height: 23.01),
                     // Previous Illnesses
                     for (int i = 0; i < _patient.prevIllness.length; i++)
                       Row(
                         children: [
                           if (i == 0)
-                            Padding(
+                            const Padding(
                               padding: EdgeInsets.only(top: 18.92, left: 30),
                               child: Text(
                                 'Previous Illness', // You can customize this text if needed
@@ -451,11 +452,11 @@ class GetPatientDataState extends State<GetPatientData> {
                             ),
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsets.only(top: 18.92, right: 30),
+                              padding: const EdgeInsets.only(top: 18.92, right: 30),
                               child: Text(
                                 _patient.prevIllness[i],
                                 textAlign: TextAlign.right,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.normal,
                                   fontSize: 16,
@@ -469,7 +470,7 @@ class GetPatientDataState extends State<GetPatientData> {
                     for (int i = 0; i < _patient.allergies.length; i++)
                       Row(
                         children: [
-                          Padding(
+                          const Padding(
                             padding: EdgeInsets.only(top: 18.92, left: 30),
                             child: Text(
                               'Allergies', // You can customize this text if needed
@@ -482,11 +483,11 @@ class GetPatientDataState extends State<GetPatientData> {
                           ),
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsets.only(top: 18.92, right: 30),
+                              padding: const EdgeInsets.only(top: 18.92, right: 30),
                               child: Text(
                                 _patient.allergies[i],
                                 textAlign: TextAlign.right,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.normal,
                                   fontSize: 16,
@@ -496,9 +497,9 @@ class GetPatientDataState extends State<GetPatientData> {
                           ),
                         ],
                       ),
-                    SizedBox(height: 23.01),
+                    const SizedBox(height: 23.01),
                     // Medications
-                    Row(
+                    const Row(
                       children: [
                         Padding(
                           padding: EdgeInsets.only(top: 21.82, left: 27),
@@ -517,7 +518,7 @@ class GetPatientDataState extends State<GetPatientData> {
                     for (int i = 0; i < _patient.currMedications.length; i++)
                       Row(
                         children: [
-                          Padding(
+                          const Padding(
                             padding: EdgeInsets.only(top: 18.92, left: 30),
                             child: Text(
                               'Current Medications', // You can customize this text if needed
@@ -530,11 +531,11 @@ class GetPatientDataState extends State<GetPatientData> {
                           ),
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsets.only(top: 18.92, right: 30),
+                              padding: const EdgeInsets.only(top: 18.92, right: 30),
                               child: Text(
                                 _patient.currMedications[i],
                                 textAlign: TextAlign.right,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.normal,
                                   fontSize: 16,
@@ -548,7 +549,7 @@ class GetPatientDataState extends State<GetPatientData> {
                     for (int i = 0; i < _patient.prevMedications.length; i++)
                       Row(
                         children: [
-                          Padding(
+                          const Padding(
                             padding: EdgeInsets.only(top: 18.92, left: 30),
                             child: Text(
                               'Previous Medications', // You can customize this text if needed
@@ -561,11 +562,11 @@ class GetPatientDataState extends State<GetPatientData> {
                           ),
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsets.only(top: 18.92, right: 30),
+                              padding: const EdgeInsets.only(top: 18.92, right: 30),
                               child: Text(
                                 _patient.prevMedications[i],
                                 textAlign: TextAlign.right,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.normal,
                                   fontSize: 16,

@@ -6,7 +6,7 @@ import 'package:medipal/constant/images.dart';
 import 'package:medipal/pages/appointment_page.dart';
 import 'package:medipal/pages/dashboard.dart';
 import 'package:medipal/pages/patient_list.dart';
-import 'package:medipal/patient_form.dart';
+import 'package:medipal/pages/patient_form.dart';
 import '../objects/patient.dart';
 
 

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/forms/family.dart';
 import 'package:medipal/forms/files.dart';
-import 'package:medipal/forms/files_list.dart';
 import 'package:medipal/forms/general_info.dart';
 import 'package:medipal/forms/health_conditions.dart';
 import 'package:medipal/forms/medications.dart';
@@ -12,7 +11,7 @@ import 'package:medipal/pages/appointment_page.dart';
 import 'package:medipal/pages/dashboard.dart';
 import 'package:medipal/pages/patient_list.dart';
 import 'package:medipal/pages/settings.dart';
-import 'package:medipal/patient_data.dart';
+import 'package:medipal/pages/patient_data.dart';
 import 'package:medipal/objects/patient.dart';
 
 class PatientForm extends StatefulWidget {
@@ -20,25 +19,30 @@ class PatientForm extends StatefulWidget {
   const PatientForm({super.key, required this.patient});
 
   @override
-  _PatientFormState createState() => _PatientFormState();
+  PatientFormState createState() {
+    return PatientFormState();
+  }
 }
 
-class _PatientFormState extends State<PatientForm> {
+class PatientFormState extends State<PatientForm> {
+  // VARIABLES
+  // page
   int _pageIndex = 0;
   final PageController _pageController = PageController();
   late List<Widget> _pages;
+  // patient
   String _patientKey = '';
   late Patient _patient;
-  // Create separate global keys for each form
+  // form golobal keys
   final GlobalKey<FormState> _generalInfoFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _healthConditionsFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _medicationsFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _familyFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _fileFormKey = GlobalKey<FormState>();
-  //
+  // upload progress
   double uploadProgress = 0;
   String? uploadStatus;
-
+  // nav bar
   int _selectedIndex = 2;
   final List<Widget> _pagesNav = [
     Dashboard(),
@@ -49,19 +53,11 @@ class _PatientFormState extends State<PatientForm> {
     SettingsPage(),
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => _pagesNav[index]),);
-  }
-
-
   // initialize state
   @override
   void initState() {
     super.initState();
-    _patient = widget.patient; // Create patient object
+    _patient = widget.patient;
     _pages = [
       GeneralInfoForm(
         patient: _patient,
@@ -79,59 +75,109 @@ class _PatientFormState extends State<PatientForm> {
         patient: _patient,
         formKey: _familyFormKey,
       ),
-      if (_patient.id == null)
-        FileForm(
-          patient: _patient,
-          formKey: _fileFormKey,
-        ),
-      if (_patient.id != null)
-        FilesListPage(
-          patientId: _patient.id!,
-        ),
+      FileForm(
+        patient: _patient,
+        formKey: _fileFormKey,
+        edit: true,
+      ),
     ];
   }
 
+  // FUNCTIONS
+  // nav bar
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => _pagesNav[index]),
+    );
+  }
+
+  // next
   void _nextPage() {
-    setState(() {
-      if (_pageIndex < _pages.length - 1) {
-        _pageIndex++;
-        _pageController.animateToPage(
-          _pageIndex,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
+    if (_pageIndex < _pages.length - 1) {
+      // validation check
+      if (_currentPageIsValid()) {
+        setState(() {
+          _pageIndex++;
+          _pageController.animateToPage(
+            _pageIndex,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        });
+      } else {
+        // display error
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please fix errors before proceeding'),
+          ),
         );
       }
-    });
+    }
   }
 
+  // prev
   void _previousPage() {
-    setState(() {
-      if (_pageIndex > 0) {
-        _pageIndex--;
-        _pageController.animateToPage(
-          _pageIndex,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
+    if (_pageIndex < _pages.length - 1) {
+      // validation check
+      if (_currentPageIsValid()) {
+        setState(() {
+          if (_pageIndex > 0) {
+            _pageIndex--;
+            _pageController.animateToPage(
+              _pageIndex,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          }
+        });
+      } else {
+        // display error
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please fix errors before proceeding'),
+          ),
         );
       }
-    });
+    }
   }
 
+  // page validation check
+  bool _currentPageIsValid() {
+    switch (_pageIndex) {
+      case 0: // GeneralInfoForm
+        return _generalInfoFormKey.currentState!.validate();
+      case 1: // HealthConditionsForm
+        return _healthConditionsFormKey.currentState!.validate();
+      // ...
+      default:
+        return true;
+    }
+  }
+
+  // submission
   Future<void> uploadFiles() async {
-    if (_patient.files == null || _patient.files!.isEmpty) return;
+    if (_patient.files.isEmpty) return;
 
     final storageRef = FirebaseStorage.instance.ref();
 
-    for (int i = 0; i < _patient.files!.length; i++) {
-      FileData fileData = _patient.files![i];
+    for (int i = 0; i < _patient.files.length; i++) {
+      FileData fileData = _patient.files[i];
       String fileName =
           fileData.name ?? 'file_$i'; // Use a default file name if not provided
       if (fileData.file == null) continue; // Skip if file is null
       final metadata = SettableMetadata(contentType: "image/jpeg");
 
-      final uploadTask = storageRef
-          .child("patients/$_patientKey/$fileName")
-          .putFile(fileData.file!, metadata); // Use ! to assert non-nullability
+      String path = 'patients/';
+      if (_patient.id != null && _patient.id!.isNotEmpty) {
+        // Existing patient, use ID in path
+        path += '${_patient.id}/';
+      }
+
+      final uploadTask =
+          storageRef.child(path + fileName).putFile(fileData.file!, metadata);
 
       uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
         setState(() {
@@ -185,14 +231,9 @@ class _PatientFormState extends State<PatientForm> {
 
   Future<void> _submitForm() async {
     // Validate forms as before
-    if (_generalInfoFormKey.currentState!
-            .validate() /*&&
-        _healthConditionsFormKey.currentState!.validate() &&
-        _medicationsFormKey.currentState!.validate() */
-        ) {
-      // Check if patient ID is present (widget.patient.id)
+    if (_generalInfoFormKey.currentState!.validate()) {
+      // Check if patient ID is present
       if (widget.patient.id != null && widget.patient.id!.isNotEmpty) {
-        // Update existing patient data
         DatabaseReference ref =
             FirebaseDatabase.instance.ref('patient/${widget.patient.id}');
         ref.update(_patient.toJson()).then((_) {
@@ -209,7 +250,7 @@ class _PatientFormState extends State<PatientForm> {
           );
         });
       } else {
-        // Create new patient data (existing functionality)
+        // create new patient data
         DatabaseReference ref = FirebaseDatabase.instance.ref('patient');
         DatabaseReference newPatientRef = ref.push();
         setState(() {
@@ -235,127 +276,120 @@ class _PatientFormState extends State<PatientForm> {
     }
   }
 
+  // build
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Patient Form'),
         flexibleSpace: Container(
-          //appbar container
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
               colors: [
-                Color(0xFFBAD2FF), // Light blue at the bottom
-                Color(0xFFBAD2FF), // White at top
+                Color(0xFFBAD2FF),
+                Color(0xFFBAD2FF),
               ],
             ),
           ),
         ),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
-            colors: [
-              Color(0xFF6D98EB), // Light blue at the bottom
-              Color(0xFFBAA2DA), // Purple at the top
-            ],
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: PageView(
+              controller: _pageController,
+              onPageChanged: (index) {
+                setState(() {
+                  _pageIndex = index;
+                });
+              },
+              children: _pages,
+            ),
           ),
-        ),
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: (index) {
-                  setState(() {
-                    _pageIndex = index;
-                  });
-                },
-                children: _pages,
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [
+                  Color(0xFFBAD2FF),
+                  Color(0xFFBAD2FF),
+                ],
               ),
             ),
-            Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF1F56DE),
+                    backgroundColor: const Color(0xFF1F56DE),
                   ),
                   onPressed: _previousPage,
                   child: const Text(
                     'Back',
-                    style: TextStyle(
-                      color: Colors.white
-                    ),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF1F56DE),
+                    backgroundColor: const Color(0xFF1F56DE),
                   ),
                   onPressed: _submitForm,
                   child: const Text(
                     'Submit',
-                    style: TextStyle(
-                      color: Colors.white
-                    ),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF1F56DE),
+                    backgroundColor: const Color(0xFF1F56DE),
                   ),
                   onPressed: _nextPage,
                   child: const Text(
                     'Next',
-                    style: TextStyle(
-                      color: Colors.white
-                    ),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people),
-              label: 'Patients',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_add),
-              label: '+Patient',
-            ),   
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today), 
-              label: 'Schedule'),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat_bubble),
-              label: 'Chat',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Settings',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.blue,
-          unselectedItemColor: Colors.grey,
-          showUnselectedLabels: true,
-          onTap: _onItemTapped,
-        ),
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: 'Patients',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_add),
+            label: '+Patient',
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today), label: 'Schedule'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat_bubble),
+            label: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        showUnselectedLabels: true,
+        onTap: _onItemTapped,
+      ),
     );
   }
 }

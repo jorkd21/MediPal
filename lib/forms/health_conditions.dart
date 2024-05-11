@@ -31,17 +31,17 @@ class HealthConditionsFormState extends State<HealthConditionsForm> {
               const Text('Current Illness'),
               Column(
                 children: [
-                  ...List.generate(widget.patient.currIllness!.length, (index) {
-                    String? illness = widget.patient.currIllness![index];
+                  ...List.generate(widget.patient.currIllness.length, (index) {
+                    String? illness = widget.patient.currIllness[index];
                     return buildTextFormField(
                       labelText: 'illness ${index + 1}',
                       value: illness,
                       onChanged: (value) {
-                        widget.patient.currIllness![index] = value!;
+                        widget.patient.currIllness[index] = value!;
                       },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
+                          return 'Required';
                         }
                         return null;
                       },
@@ -64,17 +64,17 @@ class HealthConditionsFormState extends State<HealthConditionsForm> {
               const Text('Previous Illness'),
               Column(
                 children: [
-                  ...List.generate(widget.patient.prevIllness!.length, (index) {
-                    String? illness = widget.patient.prevIllness![index];
+                  ...List.generate(widget.patient.prevIllness.length, (index) {
+                    String? illness = widget.patient.prevIllness[index];
                     return buildTextFormField(
                       labelText: 'illness ${index + 1}',
                       value: illness,
                       onChanged: (value) {
-                        widget.patient.prevIllness![index] = value!;
+                        widget.patient.prevIllness[index] = value!;
                       },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
+                          return 'Required';
                         }
                         return null;
                       },
@@ -97,17 +97,17 @@ class HealthConditionsFormState extends State<HealthConditionsForm> {
               const Text('Specific allergies'),
               Column(
                 children: [
-                  ...List.generate(widget.patient.allergies!.length, (index) {
-                    String? illness = widget.patient.allergies![index];
+                  ...List.generate(widget.patient.allergies.length, (index) {
+                    String? illness = widget.patient.allergies[index];
                     return buildTextFormField(
                       labelText: 'allergy ${index + 1}',
                       value: illness,
                       onChanged: (value) {
-                        widget.patient.allergies![index] = value!;
+                        widget.patient.allergies[index] = value!;
                       },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
+                          return 'Required';
                         }
                         return null;
                       },

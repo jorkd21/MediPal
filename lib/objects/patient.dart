@@ -152,7 +152,33 @@ class Patient {
     }
     return p;
   }
+  // Get patient from database
+  static Future<Patient?> getPatient(String uid) async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref('patient');
+    DataSnapshot snapshot = await ref.child(uid).get();
+    if (snapshot.exists) {
+      Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
+      return Patient.fromMap(value.cast<String, dynamic>());
+    }
+    return null;
+  }
 
+  // Fetch list of patients
+  static Future<List<Patient>> getPatients() async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref('patient');
+    DataSnapshot snapshot = await ref.get();
+    if (snapshot.exists) {
+      Map<dynamic, dynamic>? jsonMap = snapshot.value as Map<dynamic, dynamic>;
+      List<Patient> patients = [];
+      jsonMap.forEach((key, value) {
+        Patient p = Patient.fromMap(value.cast<String, dynamic>());
+        p.id = key;
+        patients.add(p);
+      });
+      return patients;
+    }
+    return [];
+  }
   @override
   String toString() {
     String str = '';

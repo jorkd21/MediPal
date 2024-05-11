@@ -1,26 +1,29 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/objects/patient.dart';
+import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/patient_data.dart';
 
-class FamilyForm extends StatefulWidget {
-  final GlobalKey<FormState> formKey;
-  final Patient patient;
+class UserPatients extends StatefulWidget {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final User? user;
 
-  const FamilyForm({
+  UserPatients({
     super.key,
-    required this.formKey,
-    required this.patient,
+    required this.user,
   });
 
   @override
-  FamilyFormState createState() {
-    return FamilyFormState();
+  UserPatientsState createState() {
+    return UserPatientsState();
   }
 }
 
-class FamilyFormState extends State<FamilyForm> {
-  late List<Patient> _patients = [];
-  late final List<Patient> _family = [];
+class UserPatientsState extends State<UserPatients> {
+  late Practitioner _practitioner;
+  late List<Patient> _allPatients = [];
+  late final List<Patient> _myPatients = [];
   bool _isDeleteMode = false;
   bool _isAddMode = false;
   String _searchQuery = '';
@@ -28,26 +31,37 @@ class FamilyFormState extends State<FamilyForm> {
   @override
   void initState() {
     super.initState();
+    _fetchPractitioner();
     _fetchPatients();
+  }
+
+  void _fetchPractitioner() async {
+    Practitioner? practitioner =
+        await Practitioner.getPractitioner(widget.user!.uid);
+    if (practitioner != null) {
+      setState(() {
+        _practitioner = practitioner;
+      });
+    }
   }
 
   void _fetchPatients() async {
     List<Patient> patients = await Patient.getPatients();
     setState(() {
-      _patients = patients;
+      _allPatients = patients;
     });
-    _separateFamily();
+    _separateMyPatients();
     _sortLists();
   }
 
-  void _separateFamily() {
-    List<Patient> patientsCopy = List.of(_patients);
-    for (String s in widget.patient.family) {
+  void _separateMyPatients() {
+    List<Patient> patientsCopy = List.of(_allPatients);
+    for (String s in _practitioner.patients) {
       for (Patient p in patientsCopy) {
         if (p.id == s) {
           setState(() {
-            _family.add(p);
-            _patients.remove(p);
+            _myPatients.add(p);
+            _allPatients.remove(p);
           });
         }
       }
@@ -55,34 +69,52 @@ class FamilyFormState extends State<FamilyForm> {
   }
 
   void _sortLists() {
-    _patients.sort((a, b) {
+    _allPatients.sort((a, b) {
       return a.firstName!.toLowerCase().compareTo(b.firstName!.toLowerCase());
     });
-    _family.sort((a, b) {
+    _myPatients.sort((a, b) {
       return a.firstName!.toLowerCase().compareTo(b.firstName!.toLowerCase());
     });
     setState(() {});
   }
 
-  void _addToFamily(Patient patient) {
+  void _addToPatients(Patient patient) {
     setState(() {
-      widget.patient.family.add(patient.id!);
-      _family.add(patient);
-      _patients.remove(patient);
+      _practitioner.patients.add(patient.id!);
+      _myPatients.add(patient);
+      _allPatients.remove(patient);
     });
     _sortLists();
   }
 
-  void _removeFromFamily(Patient patient) {
+  void _removeFromPatients(Patient patient) {
     setState(() {
-      widget.patient.family.remove(patient.id);
-      _family.remove(patient);
-      _patients.add(patient);
+      _practitioner.patients.remove(patient.id);
+      _myPatients.remove(patient);
+      _allPatients.add(patient);
     });
     _sortLists();
   }
 
-  Widget _buildPatientInfo(Patient patient, bool isInFamily) {
+  Future<void> _updatePatients() async {
+    DatabaseReference ref =
+        FirebaseDatabase.instance.ref('users/${widget.user!.uid}');
+    ref.update(_practitioner.toJson()).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Patient list updated'),
+        ),
+      );
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error updating patient list: $error'),
+        ),
+      );
+    });
+  }
+
+  Widget _buildPatientInfo(Patient patient, bool isPatient) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -99,14 +131,14 @@ class FamilyFormState extends State<FamilyForm> {
         trailing: ElevatedButton(
           onPressed: (_isDeleteMode || _isAddMode)
               ? () {
-                  if (isInFamily) {
-                    _removeFromFamily(patient);
+                  if (isPatient) {
+                    _removeFromPatients(patient);
                   } else {
-                    _addToFamily(patient);
+                    _addToPatients(patient);
                   }
                 }
               : null,
-          child: Icon(isInFamily ? Icons.delete : Icons.add),
+          child: Icon(isPatient ? Icons.delete : Icons.add),
         ),
       ),
     );
@@ -130,9 +162,9 @@ class FamilyFormState extends State<FamilyForm> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(_isAddMode ? 'All Patients' : 'Family Information'),
+        title: Text(_isAddMode ? 'All Patients' : 'Patient List'),
         actions: [
-          // Delete toggle button
+          // delete toggle button
           if (!_isAddMode)
             IconButton(
               onPressed: () {
@@ -142,7 +174,7 @@ class FamilyFormState extends State<FamilyForm> {
               },
               icon: Icon(_isDeleteMode ? Icons.cancel : Icons.delete),
             ),
-          // Add patient button
+          // add toggle button
           IconButton(
             onPressed: () {
               setState(() {
@@ -153,26 +185,27 @@ class FamilyFormState extends State<FamilyForm> {
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(60.0),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    onChanged: (value) {
-                      setState(() {
-                        _searchQuery = value.toLowerCase();
-                      });
-                    },
-                    decoration: const InputDecoration(
-                      hintText: 'Search',
-                      border: OutlineInputBorder(),
-                    ),
+          preferredSize: const Size(50, 50),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value.toLowerCase();
+                    });
+                  },
+                  decoration: const InputDecoration(
+                    hintText: 'Search',
+                    border: OutlineInputBorder(),
                   ),
                 ),
-              ],
-            ),
+              ),
+              ElevatedButton(
+                onPressed: _updatePatients,
+                child: const Text('Update'),
+              ),
+            ],
           ),
         ),
       ),
@@ -186,14 +219,14 @@ class FamilyFormState extends State<FamilyForm> {
                 if (!_isAddMode)
                   Column(
                     children: [
-                      // Display the family list
+                      // display the patient list
                       ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _filterPatients(_family).length,
+                        itemCount: _filterPatients(_myPatients).length,
                         itemBuilder: (context, index) {
                           Patient familyPatient =
-                              _filterPatients(_family)[index];
+                              _filterPatients(_myPatients)[index];
                           return _buildPatientInfo(familyPatient, true);
                         },
                       ),
@@ -202,13 +235,14 @@ class FamilyFormState extends State<FamilyForm> {
                 if (_isAddMode)
                   Column(
                     children: [
-                      // Display all patients
+                      // display all patients
                       ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _filterPatients(_patients).length,
+                        itemCount: _filterPatients(_allPatients).length,
                         itemBuilder: (context, index) {
-                          Patient patient = _filterPatients(_patients)[index];
+                          Patient patient =
+                              _filterPatients(_allPatients)[index];
                           return _buildPatientInfo(patient, false);
                         },
                       ),

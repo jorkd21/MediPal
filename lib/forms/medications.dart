@@ -31,17 +31,17 @@ class MedicationsFormState extends State<MedicationsForm> {
               const Text('Current Medications'),
               Column(
                 children: [
-                  ...List.generate(widget.patient.currMedications!.length, (index) {
-                    String? medication = widget.patient.currMedications![index];
+                  ...List.generate(widget.patient.currMedications.length, (index) {
+                    String? medication = widget.patient.currMedications[index];
                     return buildTextFormField(
                       labelText: 'medication ${index+1}',
                       value: medication,
                       onChanged: (value) {
-                        widget.patient.currMedications![index] = value!;
+                        widget.patient.currMedications[index] = value!;
                       },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
+                          return 'Required';
                         }
                         return null;
                       },
@@ -64,17 +64,17 @@ class MedicationsFormState extends State<MedicationsForm> {
               const Text('Previous Medications'),
               Column(
                 children: [
-                  ...List.generate(widget.patient.prevMedications!.length, (index) {
-                    String? medication = widget.patient.prevMedications![index];
+                  ...List.generate(widget.patient.prevMedications.length, (index) {
+                    String? medication = widget.patient.prevMedications[index];
                     return buildTextFormField(
                       labelText: 'medication ${index+1}',
                       value: medication,
                       onChanged: (value) {
-                        widget.patient.prevMedications![index] = value!;
+                        widget.patient.prevMedications[index] = value!;
                       },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
+                          return 'Required';
                         }
                         return null;
                       },
