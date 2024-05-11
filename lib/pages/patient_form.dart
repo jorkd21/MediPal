@@ -13,6 +13,7 @@ import 'package:medipal/pages/patient_list.dart';
 import 'package:medipal/pages/settings.dart';
 import 'package:medipal/pages/patient_data.dart';
 import 'package:medipal/objects/patient.dart';
+import 'package:medipal/objects/navbar.dart';
 
 class PatientForm extends StatefulWidget {
   final Patient patient;
@@ -358,36 +359,8 @@ class PatientFormState extends State<PatientForm> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: 'Patients',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_add),
-            label: '+Patient',
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today), label: 'Schedule'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
+      bottomNavigationBar: MyNavBar(
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: true,
         onTap: _onItemTapped,
       ),
     );

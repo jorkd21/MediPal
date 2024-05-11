@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/chat/chat_list.dart';
+import 'package:medipal/objects/navbar.dart';
 import 'package:medipal/pages/appointment_page.dart';
 import 'package:medipal/pages/dashboard.dart';
 import 'package:medipal/pages/settings.dart';
@@ -122,7 +123,7 @@ class PatientListState extends State<PatientList> {
       child: Scaffold(
         appBar: AppBar(
           //automaticallyImplyLeading: false, //remove back arrow from appbar
-          title: const Text('Patient List'),
+          title: const Text('All Patients'),
           flexibleSpace: Container(
             //appbar container
             width: MediaQuery.of(context).size.width,
@@ -275,36 +276,8 @@ class PatientListState extends State<PatientList> {
             : const Center(
                 child: CircularProgressIndicator(),
               ),
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people),
-              label: 'Patients',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_add),
-              label: '+Patient',
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today), label: 'Schedule'),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat_bubble),
-              label: 'Chat',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Settings',
-            ),
-          ],
+        bottomNavigationBar: MyNavBar(
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.blue,
-          unselectedItemColor: Colors.grey,
-          showUnselectedLabels: true,
           onTap: _onItemTapped,
         ),
       ),
