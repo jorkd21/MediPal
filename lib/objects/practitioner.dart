@@ -13,17 +13,18 @@ class Practitioner {
   // CONSTRUCTOR
   Practitioner();
 
+  // convert to json
   Map<String, dynamic> toJson() {
     return {
       'email': email,
       'patients': patients,
       'name': name,
-      'appointments': appointments
-          .map((appointment) => appointment.toJson())
-          .toList(), // Serialize appointments
+      'appointments':
+          appointments.map((appointment) => appointment.toJson()).toList(),
     };
   }
 
+  // get practitioner from snapshot
   factory Practitioner.fromSnapshot(DataSnapshot snapshot) {
     if (snapshot.exists) {
       Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
@@ -32,50 +33,7 @@ class Practitioner {
     throw const FormatException('snapshot does not exist');
   }
 
-  /* factory Practitioner.fromMap(Map<String, dynamic> jsonMap) {
-    Practitioner u = Practitioner();
-    u.email = jsonMap['email'];
-    List<dynamic>? patients = jsonMap['patients'];
-    if (patients is List<dynamic>) {
-      u.patients = List<String>.from(patients);
-    }
-
-    List<dynamic>? appointments = jsonMap['appointments'];
-    if (appointments is List<dynamic>) {
-      u.appointments = appointments
-          .map((appointment) => Appointment.fromJson(appointment))
-          .toList();
-    }
-    if (jsonMap['appointments'] != null &&
-        jsonMap['appointments'] is List<dynamic>) {
-      u.appointments = (jsonMap["appointments"] as List<dynamic>)
-          .map((appointmentMap) => Appointment(
-                topic: appointmentMap["topic"] as String,
-                patient: appointmentMap["patient"] as String,
-                // map to time
-              ))
-          .toList();
-    }
-    return u;
-  } */
-  /*  factory Practitioner.fromMap(Map<String, dynamic> jsonMap) {
-  Practitioner u = Practitioner();
-  u.email = jsonMap['email'];
-  List<dynamic>? patients = jsonMap['patients'];
-  if (patients is List<dynamic>) {
-    u.patients = List<String>.from(patients);
-  }
-
-  List<dynamic>? appointments = jsonMap['appointments'];
-  if (appointments is List<dynamic>) {
-    u.appointments = appointments
-        .map((appointment) => Appointment.fromJson(appointment))
-        .toList();
-  }
-  return u;
-} */
-
-// Deserialize appointments including time mapping
+  // get practitioner from json map
   factory Practitioner.fromMap(Map<String, dynamic> jsonMap) {
     Practitioner u = Practitioner();
     u.email = jsonMap['email'];
@@ -84,11 +42,9 @@ class Practitioner {
     if (patients is List<dynamic>) {
       u.patients = List<String>.from(patients);
     }
-
     List<dynamic>? appointments = jsonMap['appointments'];
     if (appointments is List<dynamic>) {
       u.appointments = appointments.map((appointment) {
-        // Check if appointment has 'time' property
         if (appointment['time'] != null) {
           return Appointment(
             topic: appointment['topic'] as String?,
@@ -99,26 +55,24 @@ class Practitioner {
             ),
           );
         } else {
-          return Appointment.fromJson(appointment);
+          return Appointment.fromMap(appointment);
         }
       }).toList();
     }
     return u;
   }
 
-  // Get practitioner from database
+  // get practitioner from database
   static Future<Practitioner?> getPractitioner(String uid) async {
     DatabaseReference ref = FirebaseDatabase.instance.ref('users');
     DataSnapshot snapshot = await ref.child(uid).get();
-    if (snapshot.exists) {
-      Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
-      return Practitioner.fromMap(value.cast<String, dynamic>());
-    }
-    return null;
+    if (snapshot.exists) return null;
+    Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
+    return Practitioner.fromMap(value.cast<String, dynamic>());
   }
 
-  // Fetch list of practitioners
-  static Future<List<Practitioner>> getPractitioners() async {
+  // get list of all practitioners
+  static Future<List<Practitioner>> getAllPractitioners() async {
     DatabaseReference ref = FirebaseDatabase.instance.ref();
     DataSnapshot snapshot = await ref.child('users').get();
     if (snapshot.exists) {

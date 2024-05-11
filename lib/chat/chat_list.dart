@@ -7,7 +7,7 @@ import 'package:medipal/pages/dashboard.dart';
 import 'package:medipal/pages/patient_list.dart';
 import 'package:medipal/pages/settings.dart';
 import 'package:medipal/pages/patient_form.dart';
-import '../objects/patient.dart';
+import 'package:medipal/objects/patient.dart';
 
 class ChatList extends StatefulWidget {
   const ChatList({super.key});
@@ -19,7 +19,7 @@ class ChatList extends StatefulWidget {
 }
 
 class ChatListState extends State<ChatList> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   List<Practitioner> practitioners = [];
 
@@ -49,7 +49,7 @@ class ChatListState extends State<ChatList> {
   }
 
   void _fetchPractitioners() async {
-    List<Practitioner> practitioners = await Practitioner.getPractitioners();
+    List<Practitioner> practitioners = await Practitioner.getAllPractitioners();
     setState(() {
       this.practitioners = practitioners;
     });
@@ -67,9 +67,7 @@ class ChatListState extends State<ChatList> {
               itemCount: practitioners.length,
               itemBuilder: (context, index) {
                 final practitioner = practitioners[index];
-
-                // Exclude current user from the chat list
-                if (practitioner.id == _auth.currentUser!.uid) {
+                if (practitioner.id == _firebaseAuth.currentUser!.uid) {
                   return Container();
                 }
 
