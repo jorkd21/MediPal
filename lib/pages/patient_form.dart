@@ -11,7 +11,7 @@ import 'package:medipal/pages/appointment_page.dart';
 import 'package:medipal/pages/dashboard.dart';
 import 'package:medipal/pages/patient_list.dart';
 import 'package:medipal/pages/settings.dart';
-import 'package:medipal/patient_data.dart';
+import 'package:medipal/pages/patient_data.dart';
 import 'package:medipal/objects/patient.dart';
 
 class PatientForm extends StatefulWidget {
@@ -19,10 +19,12 @@ class PatientForm extends StatefulWidget {
   const PatientForm({super.key, required this.patient});
 
   @override
-  _PatientFormState createState() => _PatientFormState();
+  PatientFormState createState() {
+    return PatientFormState();
+  }
 }
 
-class _PatientFormState extends State<PatientForm> {
+class PatientFormState extends State<PatientForm> {
   // VARIABLES
   // page
   int _pageIndex = 0;
@@ -161,8 +163,8 @@ class _PatientFormState extends State<PatientForm> {
 
     final storageRef = FirebaseStorage.instance.ref();
 
-    for (int i = 0; i < _patient.files!.length; i++) {
-      FileData fileData = _patient.files![i];
+    for (int i = 0; i < _patient.files.length; i++) {
+      FileData fileData = _patient.files[i];
       String fileName =
           fileData.name ?? 'file_$i'; // Use a default file name if not provided
       if (fileData.file == null) continue; // Skip if file is null
@@ -323,7 +325,7 @@ class _PatientFormState extends State<PatientForm> {
               children: <Widget>[
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF1F56DE),
+                    backgroundColor: const Color(0xFF1F56DE),
                   ),
                   onPressed: _previousPage,
                   child: const Text(
@@ -333,7 +335,7 @@ class _PatientFormState extends State<PatientForm> {
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF1F56DE),
+                    backgroundColor: const Color(0xFF1F56DE),
                   ),
                   onPressed: _submitForm,
                   child: const Text(
@@ -343,7 +345,7 @@ class _PatientFormState extends State<PatientForm> {
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF1F56DE),
+                    backgroundColor: const Color(0xFF1F56DE),
                   ),
                   onPressed: _nextPage,
                   child: const Text(

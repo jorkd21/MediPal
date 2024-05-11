@@ -21,7 +21,7 @@ class GeneralInfoForm extends StatefulWidget {
 }
 
 class GeneralInfoFormState extends State<GeneralInfoForm> {
-  // List choices
+  // list choices
   List<int> years =
       List.generate(100, (int index) => DateTime.now().year - 100 + index);
   List<int> months = List.generate(12, (int index) => index + 1);
@@ -34,8 +34,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
-        widget.patient.imageFile =
-            File(image.path); // Store the actual picked image path
+        widget.patient.imageFile = File(image.path);
       });
     }
   }
@@ -59,7 +58,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                     children: <Widget>[
                       ElevatedButton(
                         onPressed: pickImage,
-                        child: Text('Select Image'),
+                        child: const Text('Select Image'),
                       ),
                     ],
                   ),
@@ -75,7 +74,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
+                    return 'Required';
                   }
                   return null;
                 },
@@ -90,7 +89,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
+                    return 'Required';
                   }
                   return null;
                 },
@@ -105,7 +104,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
+                    return 'Required';
                   }
                   return null;
                 },
@@ -120,7 +119,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
+                    return 'Required';
                   }
                   return null;
                 },
@@ -135,7 +134,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
+                    return 'Required';
                   }
                   return null;
                 },
@@ -159,7 +158,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                       items: years,
                       validator: (value) {
                         if (value == null) {
-                          return 'Please select a year';
+                          return 'Required';
                         }
                         return null;
                       },
@@ -181,7 +180,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                       items: months,
                       validator: (value) {
                         if (value == null) {
-                          return 'Please select a month';
+                          return 'Required';
                         }
                         return null;
                       },
@@ -203,7 +202,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                       items: days,
                       validator: (value) {
                         if (value == null) {
-                          return 'Please select a day';
+                          return 'Required';
                         }
                         return null;
                       },
@@ -213,7 +212,8 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
               ),
               Row(
                 children: [
-                  Text('Blood Group'),
+                  const Text('Blood Group'),
+                  const SizedBox(width: 10),
                   SizedBox(
                     width: 50,
                     child: buildDropdownFormField<String>(
@@ -225,14 +225,15 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                       },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please select a blood group';
+                          return 'Required';
                         }
                         return null;
                       },
                       items: bloodGroups,
                     ),
                   ),
-                  Text('RH Factor'),
+                  const Text('RH Factor'),
+                  const SizedBox(width: 10),
                   SizedBox(
                     width: 50,
                     child: buildDropdownFormField<String>(
@@ -244,7 +245,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                       },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please select an RH factor';
+                          return 'Required';
                         }
                         return null;
                       },
@@ -263,7 +264,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
+                    return 'Required';
                   }
                   return null;
                 },
@@ -278,16 +279,16 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
+                    return 'Required';
                   }
                   return null;
                 },
               ),
-              Text('Phone'),
+              const Text('Phone'),
               Column(
                 children: [
-                  ...List.generate(widget.patient.phone?.length ?? 0, (index) {
-                    PhoneData contact = widget.patient.phone![index];
+                  ...List.generate(widget.patient.phone.length, (index) {
+                    PhoneData contact = widget.patient.phone[index];
                     return Row(
                       children: [
                         SizedBox(
@@ -308,7 +309,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                             },
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: buildTextFormField(
                             labelText: 'Phone Number ${index + 1}',
@@ -318,7 +319,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                             },
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter some text';
+                                return 'Required';
                               }
                               return null;
                             },
@@ -338,17 +339,16 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                       onPressed: () {
                         _addField(widget.patient.phone, PhoneData());
                       },
-                      child: Text("Add More"),
+                      child: const Text("Add More"),
                     ),
                   ),
                 ],
               ),
-              Text('Emergancy Contacts'),
+              const Text('Emergancy Contacts'),
               Column(
                 children: [
-                  ...List.generate(widget.patient.emergency?.length ?? 0,
-                      (index) {
-                    EmergancyData contact = widget.patient.emergency![index];
+                  ...List.generate(widget.patient.emergency.length, (index) {
+                    EmergancyData contact = widget.patient.emergency[index];
                     return Row(
                       children: [
                         Expanded(
@@ -360,13 +360,13 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                             },
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter some text';
+                                return 'Required';
                               }
                               return null;
                             },
                           ),
                         ),
-                        SizedBox(width: 20),
+                        const SizedBox(width: 20),
                         SizedBox(
                           width: 100,
                           child: buildDropdownFormField<String>(
@@ -385,7 +385,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                             },
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: buildTextFormField(
                             labelText: 'Phone Number ${index + 1}',
@@ -395,7 +395,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                             },
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter some text';
+                                return 'Required';
                               }
                               return null;
                             },
@@ -415,7 +415,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                       onPressed: () {
                         _addField(widget.patient.emergency, EmergancyData());
                       },
-                      child: Text("Add More"),
+                      child: const Text("Add More"),
                     ),
                   ),
                 ],
@@ -438,11 +438,4 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
       setState(() {});
     }
   }
-}
-
-String? validateDropDown(String? value) {
-  if (value == null || value.isEmpty) {
-    return 'Please select an option';
-  }
-  return null;
 }

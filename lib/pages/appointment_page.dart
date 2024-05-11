@@ -9,9 +9,8 @@ import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/appointment_date.dart';
 import 'package:medipal/pages/dashboard.dart' as dash;
 import 'package:medipal/pages/patient_list.dart';
-import 'package:medipal/pages/patientpage.dart';
 import 'package:medipal/pages/settings.dart';
-import 'package:medipal/patient_form.dart';
+import 'package:medipal/pages/patient_form.dart';
 
 import '../objects/patient.dart';
 

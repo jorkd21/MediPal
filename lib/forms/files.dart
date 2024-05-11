@@ -10,11 +10,13 @@ import 'package:medipal/objects/patient.dart';
 class FileForm extends StatefulWidget {
   final Patient patient;
   final GlobalKey<FormState> formKey;
+  final bool edit;
 
   const FileForm({
     Key? key,
     required this.patient,
     required this.formKey,
+    required this.edit,
   }) : super(key: key);
 
   @override
@@ -116,7 +118,7 @@ class FileFormState extends State<FileForm> {
                           ),
                           ElevatedButton(
                             onPressed: () => pickFile(file),
-                            child: Text('Select Image'),
+                            child: const Text('Select Image'),
                           ),
                         ],
                       ),
@@ -132,7 +134,7 @@ class FileFormState extends State<FileForm> {
                     onPressed: () {
                       _addField(widget.patient.files, FileData());
                     },
-                    child: Text("Add More"),
+                    child: const Text("Add More"),
                   ),
                 ),
               ],

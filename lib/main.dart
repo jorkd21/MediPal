@@ -3,29 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart'; // firebase core
 import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/forms/appointment.dart';
-import 'package:medipal/forms/patients.dart';
+import 'package:medipal/pages/user_patients.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/pages/appointment_page.dart';
-import 'package:medipal/pages/chat.dart';
-import 'package:medipal/pages/chat_list.dart';
 import 'package:medipal/pages/dashboard.dart';
 import 'package:medipal/pages/signup.dart';
-import 'package:medipal/pages/patientpage.dart';
 import 'package:medipal/pages/login.dart';
 import 'package:medipal/pages/patient_list.dart';
 import 'firebase_options.dart'; // firebase api keys
-import 'package:firebase_database/firebase_database.dart'; // realtime database
-import 'package:cloud_firestore/cloud_firestore.dart'; // cloud firestore
 import 'package:firebase_auth/firebase_auth.dart'; // authentication
-import 'package:firebase_analytics/firebase_analytics.dart'; // analytics
 import 'package:firebase_ui_auth/firebase_ui_auth.dart'; //
 // pages
-import 'package:medipal/patient_form.dart';
-import 'package:medipal/pages/forgotpasswd.dart';
-import 'package:medipal/pages/signup.dart';
-import 'package:medipal/pages/login.dart';
-import 'package:medipal/objects/appointment.dart';
-import 'package:medipal/pages/appointment_page.dart';
+import 'package:medipal/pages/patient_form.dart';
 import 'package:medipal/pages/settings.dart';
 
 void main() async {
@@ -57,17 +46,12 @@ class MyApp extends StatelessWidget {
         '/Login': (context) => LoginPage(),
         '/SignUp': (context) => SignUpPage(),
         '/PatientForm': (context) => PatientForm(patient: Patient()),
-        '/PatientPage': (context) => PatientPage(),
         '/PatientList': (context) => PatientList(),
         '/AppointmentPage': (context) => AppointmentPage(),
-        '/ChatListPage': (context) => ChatListPage(),
         '/Dashboard': (context) => Dashboard(),
-        '/chat': (context) => ChatScreen(
-              receiverUserEmail: '',
-            ),
         '/UserPatients': (context) =>
             UserPatients(user: FirebaseAuth.instance.currentUser),
-        '/ChatListTest': (context) => ChatList(),
+        '/ChatList': (context) => ChatList(),
         '/AppointmentForm': (context) => AppointmentForm(),
         '/Settings': (context) => SettingsPage(),
       },
@@ -105,13 +89,11 @@ class HomePage extends StatelessWidget {
             ButtonWidget('Login', '/Login'),
             ButtonWidget('Sign Up', '/SignUp'),
             ButtonWidget('PatientForm', '/PatientForm'),
-            ButtonWidget('PatientPage', '/PatientPage'),
             ButtonWidget('PatientList', '/PatientList'),
             ButtonWidget('Appointmentpage', '/AppointmentPage'),
-            ButtonWidget('ChatListPage', '/ChatListPage'),
             ButtonWidget('Dashboard', '/Dashboard'),
             ButtonWidget('UserPatients', '/UserPatients'),
-            ButtonWidget('ChatListTest', '/ChatListTest'),
+            ButtonWidget('ChatList', '/ChatList'),
             ButtonWidget('AppointmentForm', '/AppointmentForm'),
             ButtonWidget('Settings', '/Settings'),
             /* FirebaseAuth.instance.currentUser != null

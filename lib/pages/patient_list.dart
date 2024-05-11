@@ -3,20 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/pages/appointment_page.dart';
 import 'package:medipal/pages/dashboard.dart';
-import 'package:medipal/pages/patientpage.dart';
 import 'package:medipal/pages/settings.dart';
-import 'package:medipal/patient_form.dart';
+import 'package:medipal/pages/patient_form.dart';
 import 'package:medipal/objects/patient.dart';
-import 'package:medipal/patient_data.dart';
+import 'package:medipal/pages/patient_data.dart';
 
 class PatientList extends StatefulWidget {
   const PatientList({super.key});
 
   @override
-  _PatientListState createState() => _PatientListState();
+  PatientListState createState() {
+    return PatientListState();
+  }
 }
 
-class _PatientListState extends State<PatientList> {
+class PatientListState extends State<PatientList> {
   late final List<String> _patientKeys = [];
   late List<Patient> _patients = [];
   late List<Patient> _originalPatients = [];
@@ -40,16 +41,18 @@ class _PatientListState extends State<PatientList> {
     SettingsPage(),
   ];
 
-void _onItemTapped(int index) {
+  void _onItemTapped(int index) {
+    if (_selectedIndex != index) {
+      setState(() {
+        _selectedIndex = index;
+      });
 
-  if (_selectedIndex != index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => _pages[index]),);
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => _pages[index]),
+      );
+    }
   }
-}
+
   void _fetchPatientData() async {
     // initialize database
     DatabaseReference ref = FirebaseDatabase.instance.ref();
@@ -75,8 +78,8 @@ void _onItemTapped(int index) {
       // Sort the patient list before assigning to _originalPatients
       _originalPatients.sort((a, b) {
         // Implement your sorting logic here (e.g., by name)
-        String nameA = '${a.firstName ?? ""}';
-        String nameB = '${b.firstName ?? ""}';
+        String nameA = a.firstName ?? "";
+        String nameB = b.firstName ?? "";
         return nameA.compareTo(nameB);
       });
       setState(() {});
@@ -155,7 +158,7 @@ void _onItemTapped(int index) {
             ),
           ],
           bottom: PreferredSize(
-            preferredSize: Size.fromHeight(kToolbarHeight),
+            preferredSize: const Size.fromHeight(kToolbarHeight),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: TextField(
@@ -188,8 +191,10 @@ void _onItemTapped(int index) {
                     ],
                   ),
                 ),
-                child: Container(
-                  height: MediaQuery.of(context).size.height - kToolbarHeight - kBottomNavigationBarHeight,
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height -
+                      kToolbarHeight -
+                      kBottomNavigationBarHeight,
                   child: ListView.builder(
                     itemCount: _patients.length,
                     itemBuilder: (context, index) {
@@ -250,7 +255,7 @@ void _onItemTapped(int index) {
                                     ),
                                   );
                                 },
-                                icon: Icon(Icons.add),
+                                icon: const Icon(Icons.add),
                               ),
                             // delete patient
                             if (_isDeleteMode)
@@ -258,7 +263,7 @@ void _onItemTapped(int index) {
                                 onPressed: () async {
                                   await _deletePatient(_patientKeys[index]);
                                 },
-                                icon: Icon(Icons.delete),
+                                icon: const Icon(Icons.delete),
                               ),
                           ],
                         ),
@@ -270,39 +275,38 @@ void _onItemTapped(int index) {
             : const Center(
                 child: CircularProgressIndicator(),
               ),
-                        bottomNavigationBar: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.people),
-                  label: 'Patients',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person_add),
-                  label: '+Patient',
-                ),   
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.calendar_today), 
-                  label: 'Schedule'),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.chat_bubble),
-                  label: 'Chat',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.settings),
-                  label: 'Settings',
-                ),
-              ],
-              currentIndex: _selectedIndex,
-              selectedItemColor: Colors.blue,
-              unselectedItemColor: Colors.grey,
-              showUnselectedLabels: true,
-              onTap: _onItemTapped,
-          ),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people),
+              label: 'Patients',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_add),
+              label: '+Patient',
+            ),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.calendar_today), label: 'Schedule'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat_bubble),
+              label: 'Chat',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Settings',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.blue,
+          unselectedItemColor: Colors.grey,
+          showUnselectedLabels: true,
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }
