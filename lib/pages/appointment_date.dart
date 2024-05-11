@@ -257,7 +257,7 @@ class _AppointmentDateState extends State<AppointmentDate> {
                           ),
                           onChanged: (Patient? newValue) {
                             setState(() {
-                              _patient = newValue!.id;
+                              _patient = '${newValue!.firstName} ${newValue.middleName} ${newValue.lastName}';
                             });
                           },
                           selectedItem: null,

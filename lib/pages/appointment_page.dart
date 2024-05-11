@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:medipal/objects/appointment.dart';
-//import 'package:medipal/objects/appointment_patient.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/appointment_date.dart';
 import 'package:medipal/pages/dashboard.dart' as dash;
@@ -13,7 +12,6 @@ import 'package:medipal/pages/settings.dart';
 import 'package:medipal/pages/patient_form.dart';
 
 import '../objects/patient.dart';
-
 
 class AppointmentPage extends StatefulWidget {
   const AppointmentPage({Key? key}) : super(key: key);
@@ -24,7 +22,7 @@ class AppointmentPage extends StatefulWidget {
 
 class _AppointmentPageState extends State<AppointmentPage> {
   late Future<Practitioner> _practitionerFuture = fetchPractitionerData();
-  final User? user = FirebaseAuth.instance.currentUser;
+  final User? _user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -32,16 +30,11 @@ class _AppointmentPageState extends State<AppointmentPage> {
   }
 
   Future<Practitioner> fetchPractitionerData() async {
-    //DatabaseReference practitionerRef = FirebaseDatabase.instance.ref('practitioners').child('your_practitioner_id');
-    //DataSnapshot snapshot = await practitionerRef.once();
-    // initialize database
     DatabaseReference ref = FirebaseDatabase.instance.ref('users');
-    // get snapshot
-    DataSnapshot snapshot = await ref.child(user!.uid).get();
+    DataSnapshot snapshot = await ref.child(_user!.uid).get();
     return Practitioner.fromSnapshot(snapshot);
   }
 
-  // Define the callback function
   void _refreshData() {
     setState(() {
       _practitionerFuture = fetchPractitionerData(); // Refetch data
@@ -62,7 +55,27 @@ class _AppointmentPageState extends State<AppointmentPage> {
     setState(() {
       _selectedIndex = index;
     });
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => _pages[index]),);
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => _pages[index]),
+    );
+  }
+
+  Future<void> _updatePractitioner(Practitioner p) async {
+    DatabaseReference ref =
+        FirebaseDatabase.instance.ref('users/${_user!.uid}');
+    ref.update(p.toJson()).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Appointment list updated'),
+        ),
+      );
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error updating appointment list: $error'),
+        ),
+      );
+    });
   }
 
   @override
@@ -76,6 +89,54 @@ class _AppointmentPageState extends State<AppointmentPage> {
           return Text('Error: ${snapshot.error}');
         } else {
           Practitioner practitioner = snapshot.data!;
+          if (practitioner.appointments.isEmpty) {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text('Appointments'),
+              ),
+              body: Column(
+                children: [
+                  Container(
+                    width: 350,
+                    height: 57,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // goes to appointment_date.dart
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AppointmentDate(
+                                  refreshCallback: _refreshData)),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Color(0xFF1F56DE), // Text color
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 20), // Button padding
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(20), // Button border radius
+                        ),
+                      ),
+                      child: const Text(
+                        'Create Appointment',
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Center(
+                    child: Text('No appointments found.'),
+                  ),
+                ],
+              ),
+            );
+          }
+          practitioner.appointments
+              .sort((a, b) => a.time!.start.compareTo(b.time!.start));
           return SafeArea(
             child: Scaffold(
               body: SingleChildScrollView(
@@ -130,7 +191,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                               ],
                             ),
                             const SizedBox(height: 15),
-                            Container(
+                            /* Container(
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: Colors.white, // White background color
@@ -178,7 +239,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                   ),
                                 ],
                               ),
-                            ),
+                            ), */
                           ],
                         ),
                       ),
@@ -193,7 +254,8 @@ class _AppointmentPageState extends State<AppointmentPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => AppointmentDate(refreshCallback: _refreshData)),
+                                builder: (context) => AppointmentDate(
+                                    refreshCallback: _refreshData)),
                           );
                         },
                         style: ElevatedButton.styleFrom(
@@ -202,8 +264,8 @@ class _AppointmentPageState extends State<AppointmentPage> {
                           padding: const EdgeInsets.symmetric(
                               vertical: 15, horizontal: 20), // Button padding
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(20), // Button border radius
+                            borderRadius: BorderRadius.circular(
+                                20), // Button border radius
                           ),
                         ),
                         child: const Text(
@@ -258,38 +320,57 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                 return Container(
                                   width: MediaQuery.of(context).size.width,
                                   decoration: BoxDecoration(
-                                    color: Colors.white, // White background color
+                                    color:
+                                        Colors.white, // White background color
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   padding: const EdgeInsets.all(10),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .spaceBetween, // Align content and button
                                     children: [
-                                      Text(
-                                        appointment
-                                            .topic!, // Display appointment title
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.blue,
-                                        ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            appointment
+                                                .topic!, // Display appointment title
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.blue,
+                                            ),
+                                          ),
+                                          Text(
+                                            appointment
+                                                .patient!, // Display appointment title
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Text(
+                                            appointment.time!.start
+                                                .toString(), // Display appointment date and time
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        appointment.patient!, // Display appointment title
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      SizedBox(height: 10),
-                                      Text(
-                                        appointment.time!.start
-                                            .toString(), // Display appointment date and time
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.black,
-                                        ),
+                                      IconButton(
+                                        icon: Icon(Icons.delete,
+                                            color: Colors.red),
+                                        onPressed: () async {
+                                          practitioner.appointments.remove(
+                                              practitioner.appointments[index]);
+                                          await _updatePractitioner(
+                                              practitioner);
+                                        },
                                       ),
                                     ],
                                   ),
@@ -303,41 +384,39 @@ class _AppointmentPageState extends State<AppointmentPage> {
                   ],
                 ),
               ),
-                          bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
+              bottomNavigationBar: BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                items: const <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                    label: 'Home',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.people),
+                    label: 'Patients',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.person_add),
+                    label: '+Patient',
+                  ),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.calendar_today), label: 'Schedule'),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.chat_bubble),
+                    label: 'Chat',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.settings),
+                    label: 'Settings',
+                  ),
+                ],
+                currentIndex: _selectedIndex,
+                selectedItemColor: Colors.blue,
+                unselectedItemColor: Colors.grey,
+                showUnselectedLabels: true,
+                onTap: _onItemTapped,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.people),
-                label: 'Patients',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person_add),
-                label: '+Patient',
-              ),   
-              BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today), 
-                label: 'Schedule'),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.chat_bubble),
-                label: 'Chat',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                label: 'Settings',
-              ),
-            ],
-            currentIndex: _selectedIndex,
-            selectedItemColor: Colors.blue,
-            unselectedItemColor: Colors.grey,
-            showUnselectedLabels: true,
-            onTap: _onItemTapped,
             ),
-            ),
-
           );
         }
       },
