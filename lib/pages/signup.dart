@@ -51,7 +51,10 @@ class _SignUpPageState extends State<SignUpPage> {
         // add patient data
         DatabaseReference ref = FirebaseDatabase.instance.ref('users');
         final newRef = ref.child(user.uid);
-        await newRef.set({'email': user.email});
+        await newRef.set({
+          'email': user.email,
+          'name': user.displayName,
+        });
       }
 
       // Navigate to HomeScreen or any other page after successful sign up
