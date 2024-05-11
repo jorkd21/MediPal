@@ -6,6 +6,7 @@ class Practitioner {
   // VARIABLES
   String? id;
   String? email;
+  String? name;
   List<String> patients = [];
   List<Appointment> appointments = [];
 
@@ -16,6 +17,7 @@ class Practitioner {
     return {
       'email': email,
       'patients': patients,
+      'name': name,
       'appointments': appointments
           .map((appointment) => appointment.toJson())
           .toList(), // Serialize appointments
@@ -77,6 +79,7 @@ class Practitioner {
   factory Practitioner.fromMap(Map<String, dynamic> jsonMap) {
     Practitioner u = Practitioner();
     u.email = jsonMap['email'];
+    u.name = jsonMap['name'];
     List<dynamic>? patients = jsonMap['patients'];
     if (patients is List<dynamic>) {
       u.patients = List<String>.from(patients);
