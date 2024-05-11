@@ -53,7 +53,7 @@ class _SignUpPageState extends State<SignUpPage> {
         final newRef = ref.child(user.uid);
         await newRef.set({
           'email': user.email,
-          'name': user.displayName,
+          'name': '${_firstNameController.text} ${_lastNameController.text}',
         });
       }
 
