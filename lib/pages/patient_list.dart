@@ -95,8 +95,8 @@ class PatientListState extends State<PatientList> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: const Text('Patient List'),
+          automaticallyImplyLeading: true,
+          title: const Text('All Patient List'),
           flexibleSpace: Container(
             width: MediaQuery.of(context).size.width,
             decoration: const BoxDecoration(
