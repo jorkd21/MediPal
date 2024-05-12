@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/patient_data.dart';
+import 'package:medipal/pages/patient_list.dart';
 
 class UserPatients extends StatefulWidget {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -162,7 +163,7 @@ class UserPatientsState extends State<UserPatients> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(_isAddMode ? 'All Patients' : 'Patient List'),
+        title: Text(_isAddMode ? 'Remaining Patients' : 'My Patient List'),
         flexibleSpace: Container(
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
@@ -170,8 +171,8 @@ class UserPatientsState extends State<UserPatients> {
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
               colors: [
-                Color.fromARGB(255, 192, 212, 248), 
-                Color.fromARGB(255, 214, 228, 255), 
+                Color.fromARGB(255, 192, 212, 248),
+                Color.fromARGB(255, 214, 228, 255),
               ],
             ),
           ),
@@ -233,13 +234,13 @@ class UserPatientsState extends State<UserPatients> {
         ),
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.bottomCenter,
             end: Alignment.topCenter,
             colors: [
               Color.fromARGB(255, 151, 183, 247),
-              Color.fromARGB(255, 192, 212, 248), 
+              Color.fromARGB(255, 192, 212, 248),
             ],
           ),
         ),
@@ -286,6 +287,26 @@ class UserPatientsState extends State<UserPatients> {
               ),
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 5,
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    const PatientList(),
+              ),
+            );
+          },
+          backgroundColor: const Color(0xFF003CD6),
+          child: const Icon(
+            Icons.list,
+            color: Colors.white,
+          ),
         ),
       ),
     );

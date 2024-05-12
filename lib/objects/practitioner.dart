@@ -66,7 +66,7 @@ class Practitioner {
   static Future<Practitioner?> getPractitioner(String uid) async {
     DatabaseReference ref = FirebaseDatabase.instance.ref('users');
     DataSnapshot snapshot = await ref.child(uid).get();
-    if (snapshot.exists) return null;
+    if (!snapshot.exists) return null;
     Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
     return Practitioner.fromMap(value.cast<String, dynamic>());
   }
