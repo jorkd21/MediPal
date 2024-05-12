@@ -1,9 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/objects/practitioner.dart';
+import 'package:medipal/objects/show_all.dart';
+import 'package:medipal/pages/appointment_page.dart';
+import 'package:medipal/pages/dashboard.dart';
 import 'package:medipal/pages/patient_data.dart';
+import 'package:medipal/objects/navbar.dart';
+import 'package:medipal/pages/patient_form.dart';
+import 'package:medipal/pages/patient_list.dart';
+import 'package:medipal/pages/settings.dart';
 
 class UserPatients extends StatefulWidget {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -28,7 +37,28 @@ class UserPatientsState extends State<UserPatients> {
   bool _isAddMode = false;
   String _searchQuery = '';
 
+  //navbar
+  int _selectedIndex = 1;
+  final List<Widget> _pagesNav = [
+    Dashboard(),
+    UserPatients(user: FirebaseAuth.instance.currentUser),
+    PatientForm(patient: Patient()),
+    AppointmentPage(),
+    ChatList(),
+    SettingsPage(),
+  ];
+
+  //functions
   @override
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => _pagesNav[index]),
+    );
+  }
+
   void initState() {
     super.initState();
     _fetchPractitioner();
@@ -163,6 +193,19 @@ class UserPatientsState extends State<UserPatients> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(_isAddMode ? 'All Patients' : 'Patient List'),
+        flexibleSpace: Container(
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                Color.fromARGB(255, 192, 212, 248), 
+                Color.fromARGB(255, 214, 228, 255), 
+              ],
+            ),
+          ),
+        ),
         actions: [
           // delete toggle button
           if (!_isAddMode)
@@ -202,57 +245,86 @@ class UserPatientsState extends State<UserPatients> {
                 ),
               ),
               ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    Color(0xFF003CD6),
+                  ),
+                ),
                 onPressed: _updatePatients,
-                child: const Text('Update'),
+                child: const Text(
+                  'Update',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ],
           ),
         ),
       ),
-      body: ListView(
-        children: [
-          Form(
-            key: widget.formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (!_isAddMode)
-                  Column(
-                    children: [
-                      // display the patient list
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _filterPatients(_myPatients).length,
-                        itemBuilder: (context, index) {
-                          Patient familyPatient =
-                              _filterPatients(_myPatients)[index];
-                          return _buildPatientInfo(familyPatient, true);
-                        },
-                      ),
-                    ],
-                  ),
-                if (_isAddMode)
-                  Column(
-                    children: [
-                      // display all patients
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _filterPatients(_allPatients).length,
-                        itemBuilder: (context, index) {
-                          Patient patient =
-                              _filterPatients(_allPatients)[index];
-                          return _buildPatientInfo(patient, false);
-                        },
-                      ),
-                    ],
-                  ),
-              ],
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
+            colors: [
+              Color.fromARGB(255, 151, 183, 247),
+              Color.fromARGB(255, 192, 212, 248), 
+            ],
           ),
-        ],
+        ),
+        child: ListView(
+          children: [
+            Form(
+              key: widget.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (!_isAddMode)
+                    Column(
+                      children: [
+                        // display the patient list
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: _filterPatients(_myPatients).length,
+                          itemBuilder: (context, index) {
+                            Patient familyPatient =
+                                _filterPatients(_myPatients)[index];
+                            return _buildPatientInfo(familyPatient, true);
+                          },
+                        ),
+                      ],
+                    ),
+                  if (_isAddMode)
+                    Column(
+                      children: [
+                        // display all patients
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: _filterPatients(_allPatients).length,
+                          itemBuilder: (context, index) {
+                            Patient patient =
+                                _filterPatients(_allPatients)[index];
+                            return _buildPatientInfo(patient, false);
+                          },
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
+      bottomNavigationBar: MyNavBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
+      floatingActionButton: AllPatientsButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      //floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling, for animating the moving of the button if we want it for other pages
     );
   }
 }
