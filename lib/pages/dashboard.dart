@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:medipal/objects/navbar.dart';
+import 'package:medipal/objects/appointment.dart';
 import 'package:medipal/objects/patient.dart';
 
 class Dashboard extends StatefulWidget {
@@ -20,7 +20,6 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     _fetchPatientData();
-    _fetchAppointmentData();
   }
   
   Future<void> _fetchPatientData() async {
