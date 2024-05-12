@@ -7,7 +7,6 @@ import 'package:medipal/forms/general_info.dart';
 import 'package:medipal/forms/health_conditions.dart';
 import 'package:medipal/forms/medications.dart';
 import 'package:medipal/objects/patient.dart';
-import 'package:medipal/objects/navbar.dart';
 
 class PatientForm extends StatefulWidget {
   final Patient patient;
@@ -272,6 +271,32 @@ class PatientFormState extends State<PatientForm> {
           ),
         ],
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.arrow_back),
+            label: 'Back',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.send),
+            label: 'Submit',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.arrow_forward),
+            label: 'Next',
+          ),
+        ],
+        currentIndex: 0,
+        selectedItemColor: Colors.blue,
+        onTap: (index) {
+          if (index == 0) {
+            _previousPage();
+          } else if (index == 1) {
+            _submitForm();
+          } else if (index == 2) {
+            _nextPage();
+          }
+        },
       ),
     );
   }

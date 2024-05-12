@@ -1,18 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/objects/practitioner.dart';
-import 'package:medipal/objects/show_all.dart';
-import 'package:medipal/pages/appointment_page.dart';
-import 'package:medipal/pages/dashboard.dart';
 import 'package:medipal/pages/patient_data.dart';
-import 'package:medipal/objects/navbar.dart';
-import 'package:medipal/pages/patient_form.dart';
-import 'package:medipal/pages/patient_list.dart';
-import 'package:medipal/pages/settings.dart';
 
 class UserPatients extends StatefulWidget {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -37,28 +28,7 @@ class UserPatientsState extends State<UserPatients> {
   bool _isAddMode = false;
   String _searchQuery = '';
 
-  //navbar
-  int _selectedIndex = 1;
-  final List<Widget> _pagesNav = [
-    Dashboard(),
-    UserPatients(user: FirebaseAuth.instance.currentUser),
-    PatientForm(patient: Patient()),
-    AppointmentPage(),
-    ChatList(),
-    SettingsPage(),
-  ];
-
-  //functions
   @override
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => _pagesNav[index]),
-    );
-  }
-
   void initState() {
     super.initState();
     _fetchPractitioner();
@@ -318,13 +288,6 @@ class UserPatientsState extends State<UserPatients> {
           ],
         ),
       ),
-      bottomNavigationBar: MyNavBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
-      floatingActionButton: AllPatientsButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      //floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling, for animating the moving of the button if we want it for other pages
     );
   }
 }
