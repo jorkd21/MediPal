@@ -59,7 +59,7 @@ class ChatListState extends State<ChatList> {
                     leading: const Icon(Icons.person),
                     trailing: const Icon(Icons.arrow_forward_ios),
                     title:
-                        Text(practitioner.email!), // Assuming email is present
+                        Text(practitioner.name!), 
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
