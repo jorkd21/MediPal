@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medipal/forms/input_template.dart';
+import 'package:medipal/templates/input_template.dart';
 import 'package:medipal/objects/patient.dart';
 
 class MedicationsForm extends StatefulWidget {
@@ -31,30 +31,26 @@ class MedicationsFormState extends State<MedicationsForm> {
               const Text('Current Medications'),
               Column(
                 children: [
-                  ...List.generate(widget.patient.currMedications.length, (index) {
+                  ...List.generate(widget.patient.currMedications.length,
+                      (index) {
                     String? medication = widget.patient.currMedications[index];
                     return buildTextFormField(
-                      labelText: 'medication ${index+1}',
+                      labelText: 'medication ${index + 1}',
                       value: medication,
                       onChanged: (value) {
                         widget.patient.currMedications[index] = value!;
                       },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Required';
-                        }
-                        return null;
-                      },
-                      onSuffixIconTap: () =>
-                          _removeField(widget.patient.currMedications, index),
+                      onSuffixIconTap: () => setState(
+                          () => widget.patient.currMedications.removeAt(index)),
                     );
                   }),
-                  ///Add more button
                   Align(
                     alignment: Alignment.topRight,
                     child: TextButton(
                       onPressed: () {
-                        _addField(widget.patient.currMedications, '');
+                        setState(() {
+                          widget.patient.currMedications.add('');
+                        });
                       },
                       child: const Text("Add More"),
                     ),
@@ -64,30 +60,29 @@ class MedicationsFormState extends State<MedicationsForm> {
               const Text('Previous Medications'),
               Column(
                 children: [
-                  ...List.generate(widget.patient.prevMedications.length, (index) {
-                    String? medication = widget.patient.prevMedications[index];
-                    return buildTextFormField(
-                      labelText: 'medication ${index+1}',
-                      value: medication,
-                      onChanged: (value) {
-                        widget.patient.prevMedications[index] = value!;
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Required';
-                        }
-                        return null;
-                      },
-                      onSuffixIconTap: () =>
-                          _removeField(widget.patient.prevMedications, index),
-                    );
-                  }),
-                  //Add more button
+                  ...List.generate(
+                    widget.patient.prevMedications.length,
+                    (index) {
+                      String? medication =
+                          widget.patient.prevMedications[index];
+                      return buildTextFormField(
+                        labelText: 'medication ${index + 1}',
+                        value: medication,
+                        onChanged: (value) {
+                          widget.patient.prevMedications[index] = value!;
+                        },
+                        onSuffixIconTap: () => setState(() =>
+                            widget.patient.prevMedications.removeAt(index)),
+                      );
+                    },
+                  ),
                   Align(
                     alignment: Alignment.topRight,
                     child: TextButton(
                       onPressed: () {
-                        _addField(widget.patient.prevMedications, '');
+                        setState(() {
+                          widget.patient.prevMedications.add('');
+                        });
                       },
                       child: const Text("Add More"),
                     ),
@@ -99,17 +94,5 @@ class MedicationsFormState extends State<MedicationsForm> {
         )
       ],
     );
-  }
-
-  _addField(List<dynamic>? list, dynamic value) {
-    list!.add(value);
-    setState(() {});
-  }
-
-  _removeField(List<dynamic>? list, int index) {
-    if (list != null && index < list.length) {
-      list.removeAt(index);
-      setState(() {});
-    }
   }
 }

@@ -1,47 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/constant/images.dart';
-//import 'package:medipal/objects/appointment_patient.dart';
-import 'package:medipal/pages/appointment_page.dart';
-import 'package:medipal/pages/dashboard.dart';
-import 'package:medipal/pages/patient_list.dart';
-import 'package:medipal/pages/patient_form.dart';
-import '../objects/patient.dart';
-
 
 class SettingsPage extends StatefulWidget {
-
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-
-
-  int _selectedIndex = 5;
-  final List<Widget> _pages = [
-    Dashboard(),
-    PatientList(),
-    PatientForm(patient: Patient()),
-    AppointmentPage(),
-    ChatList(),
-    SettingsPage(),
-  ];
-
- void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => _pages[index]),);
-  }
-
-  //Signs out the user and sends them back to the login page. 
+  //Signs out the user and sends them back to the login page.
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
     Navigator.pushNamed(context, '/Login');
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -303,15 +275,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   BorderRadius.circular(30.0),
                                             ),
                                           ),
-                                            child: Text(
-                                              'Logout',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 30.0,
-                                              ),
+                                          child: Text(
+                                            'Logout',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 30.0,
                                             ),
-                                          
+                                          ),
                                           onPressed: () {
                                             _signOut();
                                           },
@@ -333,39 +304,6 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people),
-              label: 'Patients',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_add),
-              label: '+Patient',
-            ),   
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today), 
-              label: 'Schedule'),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat_bubble),
-              label: 'Chat',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Settings',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.blue,
-          unselectedItemColor: Colors.grey,
-          showUnselectedLabels: true,
-          onTap: _onItemTapped,
-        ),
     );
   }
 }

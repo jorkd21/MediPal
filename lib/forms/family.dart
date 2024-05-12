@@ -32,7 +32,7 @@ class FamilyFormState extends State<FamilyForm> {
   }
 
   void _fetchPatients() async {
-    List<Patient> patients = await Patient.getPatients();
+    List<Patient> patients = await Patient.getAllPatients();
     setState(() {
       _patients = patients;
     });

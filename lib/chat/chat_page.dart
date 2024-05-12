@@ -18,7 +18,7 @@ class _ChatPageState extends State<ChatPage> {
   final ChatService _chatService = ChatService();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  void sendMessage() async {
+  void _sendMessage() async {
     if (_messageController.text.isNotEmpty) {
       await _chatService.sendMessages(
           widget.receiverUid, _messageController.text);
@@ -43,7 +43,6 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  // build message list
   // build message list
   Widget _buildMessageList() {
     return StreamBuilder<List<Message>>(
@@ -70,12 +69,11 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  //build message item
+  // build message item
   Widget _buildMessageItem(Message message) {
     var alignment = (message.senderUid == _firebaseAuth.currentUser!.uid)
         ? Alignment.centerRight
         : Alignment.centerLeft;
-
     return Container(
       alignment: alignment,
       child: Padding(
@@ -94,20 +92,24 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  //build input
+  // build input
   Widget _buildMessageInput() {
-    return Row(children: [
-      Expanded(
+    return Row(
+      children: [
+        Expanded(
           child: TextField(
-        controller: _messageController,
-        obscureText: false,
-      )),
-      IconButton(
-          onPressed: sendMessage,
+            controller: _messageController,
+            obscureText: false,
+          ),
+        ),
+        IconButton(
+          onPressed: _sendMessage,
           icon: const Icon(
             Icons.send,
             size: 40,
-          ))
-    ]);
+          ),
+        )
+      ],
+    );
   }
 }

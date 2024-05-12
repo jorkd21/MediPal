@@ -1,9 +1,11 @@
 class Message {
+  // vairaibles
   String content;
   DateTime timeSent;
   String senderUid;
   String receiverUid;
 
+  // constructor
   Message({
     required this.content,
     required this.timeSent,
@@ -11,7 +13,7 @@ class Message {
     required this.receiverUid,
   });
 
-  // Factory method to create a Message object from a Map
+  // create message from json map
   factory Message.fromMap(Map<String, dynamic> map) {
     return Message(
       content: map['content'] ?? '',
@@ -21,8 +23,8 @@ class Message {
     );
   }
 
-  // Convert Message object to a Map
-  Map<String, dynamic> toMap() {
+  // convert to json
+  Map<String, dynamic> toJson() {
     return {
       'content': content,
       'timeSent': timeSent.millisecondsSinceEpoch,

@@ -76,7 +76,7 @@ class UserPatientsState extends State<UserPatients> {
   }
 
   void _fetchPatients() async {
-    List<Patient> patients = await Patient.getPatients();
+    List<Patient> patients = await Patient.getAllPatients();
     setState(() {
       _allPatients = patients;
     });

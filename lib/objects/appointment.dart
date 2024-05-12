@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 
 class Appointment {
-  // Variables
+  // variables
   String? topic;
   String? patient;
   DateTimeRange? time;
 
-  Appointment({this.topic, this.patient, this.time});
+  // constructor
+  Appointment({
+    this.topic,
+    this.patient,
+    this.time,
+  });
 
-  // Convert Appointment object to JSON
+  // convert to json
   Map<String, dynamic> toJson() {
     return {
       'topic': topic,
@@ -22,8 +27,8 @@ class Appointment {
     };
   }
 
-  // Factory method to create Appointment object from JSON
-  factory Appointment.fromJson(Map<String, dynamic> json) {
+  // 
+  factory Appointment.fromMap(Map<String, dynamic> json) {
     return Appointment(
       topic: json['topic'],
       patient: json['patient'],
