@@ -1,9 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:medipal/chat/chat_list.dart';
-import 'package:medipal/pages/appointment_page.dart';
-import 'package:medipal/pages/dashboard.dart';
-import 'package:medipal/pages/settings.dart';
 import 'package:medipal/pages/patient_form.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/pages/patient_data.dart';
@@ -29,28 +25,6 @@ class PatientListState extends State<PatientList> {
   void initState() {
     super.initState();
     _fetchPatientData();
-  }
-
-  int _selectedIndex = 1;
-  final List<Widget> _pages = [
-    Dashboard(),
-    PatientList(),
-    PatientForm(patient: Patient()),
-    AppointmentPage(),
-    ChatList(),
-    SettingsPage(),
-  ];
-
-  void _onItemTapped(int index) {
-    if (_selectedIndex != index) {
-      setState(() {
-        _selectedIndex = index;
-      });
-
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => _pages[index]),
-      );
-    }
   }
 
   void _fetchPatientData() async {
@@ -121,18 +95,17 @@ class PatientListState extends State<PatientList> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          //automaticallyImplyLeading: false, //remove back arrow from appbar
+          automaticallyImplyLeading: false,
           title: const Text('Patient List'),
           flexibleSpace: Container(
-            //appbar container
             width: MediaQuery.of(context).size.width,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
                 colors: [
-                  Color.fromARGB(255, 192, 212, 248), // light blue at bottom
-                  Color.fromARGB(255, 214, 228, 255), // White at top
+                  Color.fromARGB(255, 192, 212, 248),
+                  Color.fromARGB(255, 214, 228, 255),
                 ],
               ),
             ),
@@ -154,7 +127,7 @@ class PatientListState extends State<PatientList> {
                   _isEditMode = !_isEditMode;
                 });
               },
-              icon: Icon(_isEditMode ? Icons.cancel : Icons.add),
+              icon: Icon(_isEditMode ? Icons.cancel : Icons.edit),
             ),
           ],
           bottom: PreferredSize(
@@ -202,70 +175,64 @@ class PatientListState extends State<PatientList> {
                       String fullName = '${_patients[index].firstName ?? ""} '
                           '${_patients[index].middleName ?? ""} '
                           '${_patients[index].lastName ?? ""}';
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    "Name: $fullName",
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    "DOB: ${_patients[index].dob?.year}/${_patients[index].dob?.month}/${_patients[index].dob?.day}",
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    'Patient ID: ${_patients[index].id}',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
+                      return GestureDetector(
+                        onTap: () {
+                          // Handle tap on the patient entry
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GetPatientData(
+                                patientId: _patients[index].id!,
                               ),
                             ),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => GetPatientData(
-                                      patientId: _patients[index].id!,
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      "Name: $fullName",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                  ),
-                                );
-                              },
-                              icon: const Icon(Icons.arrow_forward),
-                            ),
-                            if (_isEditMode)
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => PatientForm(
-                                        patient: _patients[index],
+                                    Text(
+                                      "DOB: ${_patients[index].dob?.year}/${_patients[index].dob?.month}/${_patients[index].dob?.day}",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              if (_isEditMode)
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => PatientForm(
+                                          patient: _patients[index],
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                                icon: const Icon(Icons.add),
-                              ),
-                            // delete patient
-                            if (_isDeleteMode)
-                              IconButton(
-                                onPressed: () async {
-                                  await _deletePatient(_patientKeys[index]);
-                                },
-                                icon: const Icon(Icons.delete),
-                              ),
-                          ],
+                                    );
+                                  },
+                                  icon: const Icon(Icons.edit),
+                                ),
+                              // delete patient
+                              if (_isDeleteMode)
+                                IconButton(
+                                  onPressed: () async {
+                                    await _deletePatient(_patientKeys[index]);
+                                  },
+                                  icon: const Icon(Icons.delete),
+                                ),
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -275,38 +242,6 @@ class PatientListState extends State<PatientList> {
             : const Center(
                 child: CircularProgressIndicator(),
               ),
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people),
-              label: 'Patients',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_add),
-              label: '+Patient',
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today), label: 'Schedule'),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat_bubble),
-              label: 'Chat',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Settings',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.blue,
-          unselectedItemColor: Colors.grey,
-          showUnselectedLabels: true,
-          onTap: _onItemTapped,
-        ),
       ),
     );
   }
