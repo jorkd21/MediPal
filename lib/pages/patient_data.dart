@@ -13,9 +13,7 @@ class GetPatientData extends StatefulWidget {
   });
 
   @override
-  GetPatientDataState createState() {
-    return GetPatientDataState();
-  }
+  GetPatientDataState createState() => GetPatientDataState();
 }
 
 class GetPatientDataState extends State<GetPatientData> {
@@ -47,7 +45,7 @@ class GetPatientDataState extends State<GetPatientData> {
     // Load image URL
     final storageRef = FirebaseStorage.instance.ref();
     final downloadUrl = await storageRef
-        .child("patients/${widget.patientId}/idImage.jpg")
+        .child("patients/${widget.patientId}/idImage")
         .getDownloadURL();
     setState(() {
       imageUrl = downloadUrl;
@@ -210,7 +208,8 @@ class GetPatientDataState extends State<GetPatientData> {
                       Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(top: 18.92, left: 30),
+                            padding:
+                                const EdgeInsets.only(top: 18.92, left: 30),
                             child: Text(
                               i == 0
                                   ? 'Date of birth'
@@ -289,7 +288,8 @@ class GetPatientDataState extends State<GetPatientData> {
                               ),
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.only(top: 18.92, right: 30),
+                                padding: const EdgeInsets.only(
+                                    top: 18.92, right: 30),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment
                                       .end, // Align widgets to the end
@@ -341,7 +341,8 @@ class GetPatientDataState extends State<GetPatientData> {
                         Row(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(top: 18.92, left: 30),
+                              padding:
+                                  const EdgeInsets.only(top: 18.92, left: 30),
                               child: Text(
                                 _patient.emergency[i].name ?? 'N/A',
                                 style: const TextStyle(
@@ -353,7 +354,8 @@ class GetPatientDataState extends State<GetPatientData> {
                             ),
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.only(top: 18.92, right: 30),
+                                padding: const EdgeInsets.only(
+                                    top: 18.92, right: 30),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment
                                       .end, // Align widgets to the end
@@ -419,7 +421,8 @@ class GetPatientDataState extends State<GetPatientData> {
                             ),
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 18.92, right: 30),
+                              padding:
+                                  const EdgeInsets.only(top: 18.92, right: 30),
                               child: Text(
                                 _patient.currIllness[i],
                                 textAlign: TextAlign.right,
@@ -452,7 +455,8 @@ class GetPatientDataState extends State<GetPatientData> {
                             ),
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 18.92, right: 30),
+                              padding:
+                                  const EdgeInsets.only(top: 18.92, right: 30),
                               child: Text(
                                 _patient.prevIllness[i],
                                 textAlign: TextAlign.right,
@@ -483,7 +487,8 @@ class GetPatientDataState extends State<GetPatientData> {
                           ),
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 18.92, right: 30),
+                              padding:
+                                  const EdgeInsets.only(top: 18.92, right: 30),
                               child: Text(
                                 _patient.allergies[i],
                                 textAlign: TextAlign.right,
@@ -531,7 +536,8 @@ class GetPatientDataState extends State<GetPatientData> {
                           ),
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 18.92, right: 30),
+                              padding:
+                                  const EdgeInsets.only(top: 18.92, right: 30),
                               child: Text(
                                 _patient.currMedications[i],
                                 textAlign: TextAlign.right,
@@ -562,7 +568,8 @@ class GetPatientDataState extends State<GetPatientData> {
                           ),
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 18.92, right: 30),
+                              padding:
+                                  const EdgeInsets.only(top: 18.92, right: 30),
                               child: Text(
                                 _patient.prevMedications[i],
                                 textAlign: TextAlign.right,

@@ -4,12 +4,16 @@ Widget buildDropdownFormField<T>({
   required T? value,
   required List<T> items,
   required ValueChanged<T?> onChanged,
-  required String? Function(T?)? validator,
 }) {
   return DropdownButtonFormField<T>(
     value: value,
     onChanged: onChanged,
-    validator: validator,
+    validator: (value) {
+      if (value == null) {
+        return 'Required';
+      }
+      return null;
+    },
     items: items.map((item) {
       return DropdownMenuItem<T>(
         value: item,
@@ -23,7 +27,6 @@ Widget buildTextFormField({
   required String labelText,
   required String? value,
   required ValueChanged<String?> onChanged,
-  required String? Function(String?)? validator,
   VoidCallback? onSuffixIconTap,
 }) {
   return TextFormField(
@@ -39,6 +42,11 @@ Widget buildTextFormField({
     ),
     initialValue: value,
     onChanged: onChanged,
-    validator: validator,
+    validator: (value) {
+      if (value == null || value.isEmpty) {
+        return 'Required';
+      }
+      return null;
+    },
   );
 }

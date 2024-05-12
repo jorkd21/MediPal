@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class Patient {
   // VARTIABLES
@@ -140,6 +141,28 @@ class Patient {
       patients.add(p);
     });
     return patients;
+  }
+
+  // get list of all patient files from database
+  Future<List<FileData>> getAllFiles() async {
+    List<FileData> fetchedFiles = [];
+    Reference patientRef =
+        FirebaseStorage.instance.ref().child('patients/$id');
+    try {
+      ListResult result = await patientRef.listAll();
+      for (Reference ref in result.items) {
+        String fileName = ref.name;
+        String downloadUrl = await ref.getDownloadURL();
+        FileData fileData = FileData(
+          name: fileName,
+          url: downloadUrl,
+        );
+        fetchedFiles.add(fileData);
+      }
+    } catch (e) {
+      print('Error fetching files for patient $id: $e');
+    }
+    return fetchedFiles;
   }
 
   @override
