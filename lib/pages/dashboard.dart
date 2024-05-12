@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:medipal/chat/chat_list.dart';
@@ -6,19 +7,43 @@ import 'package:medipal/constant/images.dart';
 import 'package:medipal/forms/general_info.dart';
 import 'package:medipal/main.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:medipal/objects/appointment.dart';
+import 'package:medipal/objects/navbar.dart';
 import 'package:medipal/objects/patient.dart';
+import 'package:medipal/pages/patient_form.dart';
+//import 'package:medipal/pages/patientpage.dart';
 import 'package:medipal/pages/patient_list.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/pages/settings.dart';
-import 'package:medipal/pages/patient_form.dart';
+//import 'package:medipal/patient_form.dart';
 import 'package:medipal/objects/patient.dart';
-import 'package:medipal/pages/patient_data.dart';
+//import 'package:medipal/patient_data.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:medipal/pages/appointment_date.dart';
 import 'package:medipal/pages/appointment_page.dart';
+import 'package:medipal/pages/user_patients.dart';
 
+
+// from appointment_data.dart will be replaced with object/appointment.dart
+class Appointment {
+  final String id;
+  final String title;
+  final DateTime dateTime;
+
+  Appointment({
+    required this.id,
+    required this.title,
+    required this.dateTime,
+  });
+
+  factory Appointment.fromMap(Map<String, dynamic> map) {
+    return Appointment(
+      id: map['id'],
+      title: map['title'],
+      dateTime: DateTime.parse(map['dateTime']),
+    );
+  }
+}
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key});
@@ -35,12 +60,13 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     _fetchPatientData();
+    _fetchAppointmentData();
   }
 
   int _selectedIndex = 0;
   final List<Widget> _pages = [
     Dashboard(),
-    PatientList(),
+    UserPatients(user: FirebaseAuth.instance.currentUser),
     PatientForm(patient: Patient()),
     AppointmentPage(),
     ChatList(),
@@ -52,6 +78,29 @@ class _DashboardState extends State<Dashboard> {
       _selectedIndex = index;
     });
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => _pages[index]),);
+  }
+
+
+  Future<void> _fetchAppointmentData() async {
+    try {
+      DatabaseReference ref = FirebaseDatabase.instance.ref();
+      DataSnapshot snapshot = await ref.child('appointments').get();
+      if (snapshot.value != null) {
+        Map<dynamic, dynamic>? jsonMap =
+            snapshot.value as Map<dynamic, dynamic>;
+        List<Appointment> al = [];
+        jsonMap.forEach((key, value) {
+          Appointment a = Appointment.fromMap(value.cast<String, dynamic>());
+          al.add(a);
+        });
+        print(al); // Print the list of appointments
+        setState(() {
+          _appointments = al;
+        });
+      }
+    } catch (e) {
+      print("Error fetching appointment data: $e");
+    }
   }
 
   Future<void> _fetchPatientData() async {
@@ -201,7 +250,7 @@ class _DashboardState extends State<Dashboard> {
                       itemBuilder: (BuildContext context, int index) {
                         return ListTile(
                           title: Text(
-                              '${_appointments[index].patient}'), // Replace 'name' with the correct property
+                              '${_appointments[index].title}'), // Replace 'name' with the correct property
                         );
                       },
                     ),
@@ -280,37 +329,8 @@ class _DashboardState extends State<Dashboard> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people),
-              label: 'Patients',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_add),
-              label: '+Patient',
-            ),   
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today), 
-              label: 'Schedule'),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat_bubble),
-              label: 'Chat',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Settings',
-            ),
-          ],
+        bottomNavigationBar: MyNavBar(
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.blue,
-          unselectedItemColor: Colors.grey,
-          showUnselectedLabels: true,
           onTap: _onItemTapped,
         ),
       ),
