@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
@@ -16,15 +15,13 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   List<Appointment> _appointments = [];
   List<Patient> _patients = [];
-  String? imageUrl;
-
+  final user = FirebaseAuth.instance.currentUser;
+  
   @override
   void initState() {
     super.initState();
     _fetchPatientData();
   }
-
-
   
   Future<void> _fetchPatientData() async {
     try {
@@ -92,18 +89,20 @@ class _DashboardState extends State<Dashboard> {
                     children: [
                       Center(
                         child: Padding(
-                          padding: const EdgeInsets.only(top: 20, left: 148.0),
-                          child: Container(
-                            height: 100,
-                            width: 100,
-                            child: Image.asset(
-                              profilePic,
+                            padding: const EdgeInsets.only(top: 20, left: 148.0),
+                            child: Container(
+                              height: 100,
+                              width: 100,
+                              child: Image.asset(
+                                FirebaseAuth.instance.currentUser!.photoURL != null
+                                    ? FirebaseAuth.instance.currentUser!.photoURL!
+                                    : profilePic,
+                              ),
                             ),
                           ),
-                        ),
                       ),
-                    ],
-                  ),
+                        ],
+                      ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -142,8 +141,8 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                   ),*/
-                  SizedBox(height: 40),
-                  Row(
+                  SizedBox(height: 25),
+                  /*Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(width: 25),
@@ -153,7 +152,7 @@ class _DashboardState extends State<Dashboard> {
                         padding: EdgeInsets.only(
                             top: 1), // Adjust the top padding as needed
                         child: Text(
-                          'Upcoming Appointments',
+                          'Appointments',
                           style: TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
@@ -191,7 +190,7 @@ class _DashboardState extends State<Dashboard> {
                         },
                       ),
                     ),
-                  ),
+                  ),*/
                   SizedBox(height: 25),
                   /*Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
