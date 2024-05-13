@@ -192,6 +192,27 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ),
                   SizedBox(height: 25),
+                  /*Center(
+                    child: Container(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/appointment');
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            Color(0xFF003CD6),
+                          ),
+                        ),
+                        child: Text(
+                          'Appointments',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      
+                      ),
+                    ),
+                  ),*/
                   /*Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
