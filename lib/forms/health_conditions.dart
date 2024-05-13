@@ -13,9 +13,7 @@ class HealthConditionsForm extends StatefulWidget {
   });
 
   @override
-  HealthConditionsFormState createState() {
-    return HealthConditionsFormState();
-  }
+  HealthConditionsFormState createState() => HealthConditionsFormState();
 }
 
 class HealthConditionsFormState extends State<HealthConditionsForm> {

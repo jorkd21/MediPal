@@ -15,9 +15,7 @@ class GeneralInfoForm extends StatefulWidget {
   });
 
   @override
-  GeneralInfoFormState createState() {
-    return GeneralInfoFormState();
-  }
+  GeneralInfoFormState createState() => GeneralInfoFormState();
 }
 
 class GeneralInfoFormState extends State<GeneralInfoForm> {
