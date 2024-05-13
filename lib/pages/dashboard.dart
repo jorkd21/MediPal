@@ -1,4 +1,5 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -15,12 +16,15 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   List<Appointment> _appointments = [];
   List<Patient> _patients = [];
+  String? imageUrl;
 
   @override
   void initState() {
     super.initState();
     _fetchPatientData();
   }
+
+
   
   Future<void> _fetchPatientData() async {
     try {
@@ -63,7 +67,6 @@ class _DashboardState extends State<Dashboard> {
             child: Padding(
               padding: EdgeInsets.all(5),
               child: Column(
-                // Removed Expanded widget
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
@@ -85,19 +88,33 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ],
                   ),
+                  Row(                  
+                    children: [
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 20, left: 148.0),
+                          child: Container(
+                            height: 100,
+                            width: 100,
+                            child: Image.asset(
+                              profilePic,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(width: 25),
-                      Image.asset('assets/alert.png'),
-                      SizedBox(width: 7), // Adjust the width as needed
+                      SizedBox(width: 55),
                       Padding(
                         padding: EdgeInsets.only(
-                            top: 3), // Adjust the top padding as needed
+                            top: 20), // Adjust the top padding as needed
                         child: Text(
-                          'Alerts',
+                          'Welcome Dr. ${FirebaseAuth.instance.currentUser!.displayName}',
                           style: TextStyle(
-                            fontSize: 26,
+                            fontSize: 30,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                             shadows: [
@@ -113,7 +130,7 @@ class _DashboardState extends State<Dashboard> {
                     ],
                   ),
                   SizedBox(height: 4),
-                  Center(
+                  /*Center(
                     child: Container(
                       constraints: BoxConstraints(
                           maxWidth: MediaQuery.of(context).size.width - 35),
@@ -124,8 +141,8 @@ class _DashboardState extends State<Dashboard> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 25),
+                  ),*/
+                  SizedBox(height: 40),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -136,7 +153,7 @@ class _DashboardState extends State<Dashboard> {
                         padding: EdgeInsets.only(
                             top: 1), // Adjust the top padding as needed
                         child: Text(
-                          'Appointments',
+                          'Upcoming Appointments',
                           style: TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
@@ -176,7 +193,7 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ),
                   SizedBox(height: 25),
-                  Row(
+                  /*Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(width: 25),
@@ -202,9 +219,9 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       ),
                     ],
-                  ),
+                  ),*/
                   SizedBox(height: 4),
-                  Center(
+                  /*Center(
                     child: Container(
                       constraints: BoxConstraints(
                           maxWidth: MediaQuery.of(context).size.width - 35),
@@ -242,7 +259,7 @@ class _DashboardState extends State<Dashboard> {
                         },
                       ),
                     ),
-                  ),
+                  ),*/
                 ],
               ),
             ),
