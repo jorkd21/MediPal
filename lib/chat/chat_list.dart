@@ -58,13 +58,14 @@ class ChatListState extends State<ChatList> {
                   child: ListTile(
                     leading: const Icon(Icons.person),
                     trailing: const Icon(Icons.arrow_forward_ios),
-                    title:
-                        Text(practitioner.name!), 
+                    title: Text(practitioner.name!),
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            ChatPage(receiverUid: practitioner.id!),
+                        builder: (context) => ChatPage(
+                          receiverUid: practitioner.id!,
+                          receiverName: practitioner.name!,
+                        ),
                       ),
                     ),
                     tileColor: const Color(0xFFDADFEC),
