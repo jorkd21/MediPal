@@ -141,8 +141,8 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                   ),*/
-                  SizedBox(height: 25),
-                  /*Row(
+                  SizedBox(height: 40),
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(width: 25),
@@ -152,7 +152,7 @@ class _DashboardState extends State<Dashboard> {
                         padding: EdgeInsets.only(
                             top: 1), // Adjust the top padding as needed
                         child: Text(
-                          'Appointments',
+                          'Upcoming Appointments',
                           style: TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
@@ -174,7 +174,7 @@ class _DashboardState extends State<Dashboard> {
                     child: Container(
                       constraints: BoxConstraints(
                           maxWidth: MediaQuery.of(context).size.width - 35),
-                      height: 150,
+                      height: 400,
                       padding: EdgeInsets.all(25),
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -185,12 +185,12 @@ class _DashboardState extends State<Dashboard> {
                         itemBuilder: (BuildContext context, int index) {
                           return ListTile(
                             title: Text(
-                                '${_appointments[index].patient}'), // Replace 'name' with the correct property
+                                '${_appointments[index].patient}'),
                           );
                         },
                       ),
                     ),
-                  ),*/
+                  ),
                   SizedBox(height: 25),
                   /*Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
