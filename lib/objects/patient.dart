@@ -4,35 +4,25 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 class Patient {
   // VARTIABLES
-  // personal info
   String? id;
-  // name
   String? firstName;
   String? middleName;
   String? lastName;
-  // date of birth
   DateTime? dob;
-  // blood
   String? bloodGroup;
   String? rhFactor;
   String? sex;
   String? location;
   String? maritalStatus;
-  // contact
   String? email;
   List<PhoneData> phone = [PhoneData()];
   List<EmergancyData> emergency = [EmergancyData()];
-  // illnesses/allergies
   List<String> currIllness = [];
   List<String> prevIllness = [];
   List<String> allergies = [];
-  // medications
   List<String> currMedications = [];
   List<String> prevMedications = [];
-  // family
   List<String> family = [];
-  // files
-  File? imageFile;
   List<FileData> files = [];
 
   // CONSTRUCTOR
@@ -146,8 +136,7 @@ class Patient {
   // get list of all patient files from database
   Future<List<FileData>> getAllFiles() async {
     List<FileData> fetchedFiles = [];
-    Reference patientRef =
-        FirebaseStorage.instance.ref().child('patients/$id');
+    Reference patientRef = FirebaseStorage.instance.ref().child('patients/$id');
     try {
       ListResult result = await patientRef.listAll();
       for (Reference ref in result.items) {

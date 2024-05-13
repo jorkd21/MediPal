@@ -5,9 +5,12 @@ import 'package:medipal/objects/message.dart';
 
 class ChatPage extends StatefulWidget {
   final String receiverUid;
+  final String receiverName;
+
   const ChatPage({
     super.key,
     required this.receiverUid,
+    required this.receiverName,
   });
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -29,7 +32,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.receiverUid)),
+      appBar: AppBar(title: Text(widget.receiverName)),
       body: Column(
         children: [
           // messages
@@ -84,7 +87,11 @@ class _ChatPageState extends State<ChatPage> {
                   ? CrossAxisAlignment.end
                   : CrossAxisAlignment.start,
           children: [
-            Text(message.senderUid),
+            Text(
+              message.senderUid == _firebaseAuth.currentUser!.uid
+                  ? _firebaseAuth.currentUser!.displayName!
+                  : widget.receiverName,
+            ),
             Text(message.content),
           ],
         ),

@@ -13,12 +13,11 @@ class FamilyForm extends StatefulWidget {
   });
 
   @override
-  FamilyFormState createState() {
-    return FamilyFormState();
-  }
+  FamilyFormState createState() => FamilyFormState();
 }
 
 class FamilyFormState extends State<FamilyForm> {
+  // variables
   late List<Patient> _patients = [];
   late final List<Patient> _family = [];
   bool _isDeleteMode = false;

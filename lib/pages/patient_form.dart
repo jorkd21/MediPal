@@ -20,24 +20,14 @@ class PatientForm extends StatefulWidget {
 }
 
 class PatientFormState extends State<PatientForm> {
-  // VARIABLES
-  // page
+  // variables
   int _pageIndex = 0;
   final PageController _pageController = PageController();
   late List<Widget> _pages;
-  // form golobal keys
   final List<GlobalKey<FormState>> _formKeys = [
-    GlobalKey<FormState>(),
-    GlobalKey<FormState>(),
-    GlobalKey<FormState>(),
-    GlobalKey<FormState>(),
-    GlobalKey<FormState>(),
+    for (int i = 0; i < 5; i++) GlobalKey<FormState>()
   ];
-  // upload progress
-  double uploadProgress = 0;
-  String? uploadStatus;
 
-  // initialize state
   @override
   void initState() {
     super.initState();
@@ -61,16 +51,14 @@ class PatientFormState extends State<PatientForm> {
       FileForm(
         patient: widget.patient,
         formKey: _formKeys[4],
-        edit: true,
+        edit: false,
       ),
     ];
   }
 
   // FUNCTIONS
-  // next
   void _nextPage() {
     if (_pageIndex < _pages.length - 1) {
-      // validation check
       if (_currentPageIsValid()) {
         setState(() {
           _pageIndex++;
@@ -81,7 +69,6 @@ class PatientFormState extends State<PatientForm> {
           );
         });
       } else {
-        // display error
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Please fix errors before proceeding'),
@@ -94,7 +81,6 @@ class PatientFormState extends State<PatientForm> {
   // prev
   void _previousPage() {
     if (_pageIndex > 0) {
-      // validation check
       if (_currentPageIsValid()) {
         setState(() {
           _pageIndex--;
@@ -105,7 +91,6 @@ class PatientFormState extends State<PatientForm> {
           );
         });
       } else {
-        // display error
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Please fix errors before proceeding'),
@@ -120,80 +105,11 @@ class PatientFormState extends State<PatientForm> {
     return _formKeys[_pageIndex].currentState!.validate();
   }
 
-  // submission
-  Future<void> uploadFiles() async {
-    if (widget.patient.files.isEmpty) return;
-
-    final storageRef = FirebaseStorage.instance.ref();
-
-    for (int i = 0; i < widget.patient.files.length; i++) {
-      FileData fileData = widget.patient.files[i];
-      String fileName =
-          fileData.name ?? 'file_$i'; // Use a default file name if not provided
-      if (fileData.file == null) continue; // Skip if file is null
-      final metadata = SettableMetadata(contentType: "image/jpeg");
-
-      String path = 'patients/';
-      if (widget.patient.id != null && widget.patient.id!.isNotEmpty) {
-        // Existing patient, use ID in path
-        path += '${widget.patient.id}/';
-      }
-
-      final uploadTask =
-          storageRef.child(path + fileName).putFile(fileData.file!, metadata);
-
-      uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
-        setState(() {
-          uploadProgress =
-              100.0 * (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
-          uploadStatus = taskSnapshot.state == TaskState.running
-              ? "Uploading..."
-              : "Upload complete";
-        });
-
-        if (taskSnapshot.state == TaskState.success) {
-          // Handle successful upload
-          print("Upload of $fileName successful!");
-        } else if (taskSnapshot.state == TaskState.error) {
-          // Handle unsuccessful upload
-          print("Upload of $fileName failed!");
-        }
-      });
-    }
-  }
-
-  Future<void> uploadID() async {
-    if (widget.patient.imageFile == null) return;
-
-    final metadata = SettableMetadata(contentType: "image/jpeg");
-    final storageRef = FirebaseStorage.instance.ref();
-    final uploadTask = storageRef
-        .child("patients/${widget.patient.id}}/idImage.jpg")
-        .putFile(widget.patient.imageFile!, metadata);
-
-    uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
-      setState(() {
-        uploadProgress =
-            100.0 * (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
-        uploadStatus = taskSnapshot.state == TaskState.running
-            ? "Uploading..."
-            : "Upload complete";
-      });
-
-      if (taskSnapshot.state == TaskState.success) {
-        print("Upload successful!");
-      } else if (taskSnapshot.state == TaskState.error) {
-        print("Upload failed!");
-      }
-    });
-  }
-
   Future<void> _submitForm() async {
-    // Validate forms as before
     if (_currentPageIsValid()) {
       if (widget.patient.id?.isNotEmpty == true) {
-        // Check if patient ID is present
-        if (widget.patient.id != null && widget.patient.id!.isNotEmpty) {
+        // update existing patient
+        if (widget.patient.id != null) {
           DatabaseReference ref =
               FirebaseDatabase.instance.ref('patient/${widget.patient.id}');
           ref.update(widget.patient.toJson()).then((_) {
@@ -209,8 +125,9 @@ class PatientFormState extends State<PatientForm> {
               ),
             );
           });
-        } else {
-          // create new patient data
+        }
+        // create new patient data
+        else {
           DatabaseReference ref = FirebaseDatabase.instance.ref('patient');
           DatabaseReference newPatientRef = ref.push();
           setState(() {
@@ -231,8 +148,49 @@ class PatientFormState extends State<PatientForm> {
           });
         }
       }
-      await uploadID();
-      await uploadFiles();
+      // files
+      if (widget.patient.files.isEmpty) return;
+      final storageRef = FirebaseStorage.instance.ref();
+      String? uploadStatus;
+      for (int i = 0; i < widget.patient.files.length; i++) {
+        FileData fileData = widget.patient.files[i];
+        String fileName = fileData.name ?? 'file_$i'; //
+        if (fileData.file == null) continue; // Skip if file is null
+        final metadata = SettableMetadata(contentType: "image/jpeg");
+        String path = 'patients/';
+        // existing patient path update
+        if (widget.patient.id != null && widget.patient.id!.isNotEmpty) {
+          path += '${widget.patient.id}/';
+        }
+        final uploadTask =
+            storageRef.child(path + fileName).putFile(fileData.file!, metadata);
+        uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
+          setState(() {
+            uploadStatus = taskSnapshot.state == TaskState.running
+                ? "Uploading...(${(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes).toStringAsFixed(1)}%)"
+                : "Upload complete";
+          });
+          if (taskSnapshot.state == TaskState.success) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('File: ${fileData.name} added successfuly.'),
+              ),
+            );
+          } else if (taskSnapshot.state == TaskState.running) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('$uploadStatus'),
+              ),
+            );
+          } else if (taskSnapshot.state == TaskState.error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Upload of ${fileData.name} failed!'),
+              ),
+            );
+          }
+        });
+      }
     }
   }
 
