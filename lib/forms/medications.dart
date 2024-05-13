@@ -13,9 +13,7 @@ class MedicationsForm extends StatefulWidget {
   });
 
   @override
-  MedicationsFormState createState() {
-    return MedicationsFormState();
-  }
+  MedicationsFormState createState() => MedicationsFormState();
 }
 
 class MedicationsFormState extends State<MedicationsForm> {

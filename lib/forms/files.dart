@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medipal/templates/input_template.dart';
@@ -21,12 +22,18 @@ class FileForm extends StatefulWidget {
 }
 
 class FileFormState extends State<FileForm> {
-  List<FileData> files = [];
+  // variables
+  List<FileData> _files = [];
 
   @override
   void initState() {
     super.initState();
     _fetchAllFiles();
+  }
+
+  void _fetchAllFiles() async {
+    _files = await widget.patient.getAllFiles();
+    setState(() {});
   }
 
   Future<void> _selectFile(FileData f) async {
@@ -38,9 +45,26 @@ class FileFormState extends State<FileForm> {
     }
   }
 
-  void _fetchAllFiles() async {
-    files = await widget.patient.getAllFiles();
-    setState(() {});
+  void _deleteFile(FileData file) async {
+    final storageRef = FirebaseStorage.instance
+        .ref()
+        .child('patients/${widget.patient.id}/${file.name}');
+    await storageRef.delete().then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('File deleted successfully'),
+        ),
+      );
+      setState(() {
+        _files.remove(file);
+      });
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error deleting file: $error'),
+        ),
+      );
+    });
   }
 
   @override
@@ -50,9 +74,9 @@ class FileFormState extends State<FileForm> {
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: files.length,
+              itemCount: _files.length,
               itemBuilder: (context, index) {
-                FileData file = files[index];
+                FileData file = _files[index];
                 return ListTile(
                   title: Text(file.name ?? 'File ${index + 1}'),
                   onTap: () {
@@ -64,61 +88,68 @@ class FileFormState extends State<FileForm> {
                       ),
                     );
                   },
+                  trailing: widget.edit
+                      ? IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () => _deleteFile(file),
+                        )
+                      : null,
                 );
               },
             ),
           ),
-          Form(
-            key: widget.formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Add Files'),
-                ...List.generate(
-                  widget.patient.files.length,
-                  (index) {
-                    FileData file = widget.patient.files[index];
-                    return Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: buildTextFormField(
-                                labelText: 'File name ${index + 1}',
-                                value: file.name,
-                                onChanged: (value) {
-                                  file.name = value!;
-                                },
-                                onSuffixIconTap: () => setState(
-                                    () => widget.patient.files.removeAt(index)),
+          if (widget.edit)
+            Form(
+              key: widget.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Add Files'),
+                  ...List.generate(
+                    widget.patient.files.length,
+                    (index) {
+                      FileData file = widget.patient.files[index];
+                      return Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: buildTextFormField(
+                                  labelText: 'File name ${index + 1}',
+                                  value: file.name,
+                                  onChanged: (value) {
+                                    file.name = value!;
+                                  },
+                                  onSuffixIconTap: () => setState(() =>
+                                      widget.patient.files.removeAt(index)),
+                                ),
                               ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () => _selectFile(file),
-                              child: const Text('Select Image'),
-                            ),
-                          ],
-                        ),
-                        if (file.file != null)
-                          Text('File Path: ${file.file!.path}')
-                      ],
-                    );
-                  },
-                ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: TextButton(
-                    onPressed: () {
-                      setState(() {
-                        widget.patient.files.add(FileData());
-                      });
+                              ElevatedButton(
+                                onPressed: () => _selectFile(file),
+                                child: const Text('Select Image'),
+                              ),
+                            ],
+                          ),
+                          if (file.file != null)
+                            Text('File Path: ${file.file!.path}')
+                        ],
+                      );
                     },
-                    child: const Text("Add More"),
                   ),
-                ),
-              ],
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: TextButton(
+                      onPressed: () {
+                        setState(() {
+                          widget.patient.files.add(FileData());
+                        });
+                      },
+                      child: const Text("Add More"),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
         ],
       ),
     );
