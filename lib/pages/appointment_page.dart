@@ -340,6 +340,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                         icon: Icon(Icons.delete,
                                             color: Colors.red),
                                         onPressed: () async {
+                                          setState(() {});
                                           practitioner.appointments.remove(
                                               practitioner.appointments[index]);
                                           await _updatePractitioner(
