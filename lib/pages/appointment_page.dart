@@ -25,7 +25,11 @@ class _AppointmentPageState extends State<AppointmentPage> {
   Future<Practitioner> fetchPractitionerData() async {
     DatabaseReference ref = FirebaseDatabase.instance.ref('users');
     DataSnapshot snapshot = await ref.child(_user!.uid).get();
-    return Practitioner.fromSnapshot(snapshot);
+    if (snapshot.exists) {
+      Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
+      return Practitioner.fromMap(value.cast<String, dynamic>());
+    }
+    return Practitioner();
   }
 
   void _refreshData() {
