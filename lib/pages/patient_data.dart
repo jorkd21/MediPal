@@ -3,33 +3,33 @@ import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:medipal/objects/patient.dart';
 
-class GetPatientData extends StatefulWidget {
+class DisplayPatientData extends StatefulWidget {
   final String patientId;
 
-  const GetPatientData({
+  const DisplayPatientData({
     super.key,
     required this.patientId,
   });
 
   @override
-  GetPatientDataState createState() => GetPatientDataState();
+  DisplayPatientDataState createState() => DisplayPatientDataState();
 }
 
-class GetPatientDataState extends State<GetPatientData> {
+class DisplayPatientDataState extends State<DisplayPatientData> {
   // VARIABLES
   Patient? _patient;
   String? _imageID;
 
   // CONSTRUCTOR
-  GetPatientDataState();
+  DisplayPatientDataState();
   // initialize
   @override
   void initState() {
     super.initState();
-    _initData();
+    _fetchPatient();
   }
 
-  void _initData() async {
+  void _fetchPatient() async {
     Patient? patient = await Patient.getPatient(widget.patientId);
     final storageRef = FirebaseStorage.instance.ref();
     setState(() {

@@ -121,7 +121,7 @@ class UserPatientsState extends State<UserPatients> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => GetPatientData(patientId: patient.id!),
+            builder: (context) => DisplayPatientData(patientId: patient.id!),
           ),
         );
       },

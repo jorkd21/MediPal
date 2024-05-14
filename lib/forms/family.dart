@@ -35,14 +35,9 @@ class FamilyFormState extends State<FamilyForm> {
     setState(() {
       _patients = patients!;
     });
-    _separateFamily();
-    _sortLists();
-  }
-
-  void _separateFamily() {
-    List<Patient> patientsCopy = List.of(_patients);
+    //List<Patient> patientsCopy = List.of(_patients);
     for (String s in widget.patient.family) {
-      for (Patient p in patientsCopy) {
+      for (Patient p in patients!) {
         if (p.id == s) {
           setState(() {
             _family.add(p);
@@ -51,6 +46,7 @@ class FamilyFormState extends State<FamilyForm> {
         }
       }
     }
+    _sortLists();
   }
 
   void _sortLists() {
@@ -87,7 +83,7 @@ class FamilyFormState extends State<FamilyForm> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => GetPatientData(patientId: patient.id!),
+            builder: (context) => DisplayPatientData(patientId: patient.id!),
           ),
         );
       },
