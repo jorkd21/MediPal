@@ -8,16 +8,17 @@ import 'package:medipal/pages/dashboard.dart';
 import 'package:medipal/pages/patient_list.dart';
 import 'package:medipal/pages/patient_form.dart';
 import '../objects/patient.dart';
-import 'package:medipal/pages/languageRegionSelect.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:medipal/pages/language_constants.dart';
+
 
 class SettingsPage extends StatefulWidget {
+
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+
+
   int _selectedIndex = 5;
   final List<Widget> _pages = [
     Dashboard(),
@@ -28,21 +29,19 @@ class _SettingsPageState extends State<SettingsPage> {
     SettingsPage(),
   ];
 
-  void _onItemTapped(int index) {
+ void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => _pages[index]),
-    );
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => _pages[index]),);
   }
 
-  //Signs out the user and sends them back to the login page.
+  //Signs out the user and sends them back to the login page. 
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
     Navigator.pushNamed(context, '/Login');
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,7 +108,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           width: 7,
                         ), // Add some space between the image and the text
                         Text(
-                          translation(context).settings,
+                          'Settings',
                           style: TextStyle(
                             fontSize: 45,
                             fontWeight: FontWeight.bold,
@@ -168,8 +167,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                       left:
                                                           20.0), // Add 20 pixels of padding to the left side
                                                   child: Text(
-                                                    translation(context)
-                                                        .preferences,
+                                                    'Preferences',
                                                     style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 40.0),
@@ -188,8 +186,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   trailing: Image.asset(
                                                       'assets/arrow.png'),
                                                   title: Text(
-                                                    translation(context)
-                                                        .languageAndRegion,
+                                                    'Language and Region',
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 25.0,
@@ -203,13 +200,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   ),
                                                   onTap: () {
                                                     // Navigate to Account settings page
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            LanguageRegionSelect(),
-                                                      ),
-                                                    );
                                                   },
                                                 ),
                                               ),
@@ -226,16 +216,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   trailing: Image.asset(
                                                       'assets/arrow.png'),
                                                   title: Text(
-                                                    translation(context)
-                                                        .account,
+                                                    'Account',
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 25.0,
                                                     ),
                                                   ),
                                                   subtitle: Text(
-                                                    translation(context)
-                                                        .emailPasswordChange,
+                                                    'Email, Password Change',
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                     ),
@@ -257,16 +245,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   trailing: Image.asset(
                                                       'assets/arrow.png'),
                                                   title: Text(
-                                                    translation(context)
-                                                        .security,
+                                                    'Security',
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 25.0,
                                                     ),
                                                   ),
                                                   subtitle: Text(
-                                                    translation(context)
-                                                        .privacySettingsForPatientDataAccess,
+                                                    'Privacy Settings for Patient Data Access',
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                     ),
@@ -288,8 +274,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   trailing: Image.asset(
                                                       'assets/arrow.png'),
                                                   title: Text(
-                                                    translation(context)
-                                                        .notifications,
+                                                    'Notifications',
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 25.0,
@@ -318,14 +303,15 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   BorderRadius.circular(30.0),
                                             ),
                                           ),
-                                          child: Text(
-                                            translation(context).logout,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 30.0,
+                                            child: Text(
+                                              'Logout',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 30.0,
+                                              ),
                                             ),
-                                          ),
+                                          
                                           onPressed: () {
                                             _signOut();
                                           },
@@ -349,36 +335,37 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: 'Patients',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_add),
-            label: '+Patient',
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today), label: 'Schedule'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: true,
-        onTap: _onItemTapped,
-      ),
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people),
+              label: 'Patients',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_add),
+              label: '+Patient',
+            ),   
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today), 
+              label: 'Schedule'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat_bubble),
+              label: 'Chat',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Settings',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.blue,
+          unselectedItemColor: Colors.grey,
+          showUnselectedLabels: true,
+          onTap: _onItemTapped,
+        ),
     );
   }
 }
