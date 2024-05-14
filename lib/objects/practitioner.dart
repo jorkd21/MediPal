@@ -71,6 +71,21 @@ class Practitioner {
     return Practitioner.fromMap(value.cast<String, dynamic>());
   }
 
+  // get list of all practitioners from database
+  static Future<List<Practitioner>> getAllPractitioner() async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref('users');
+    DataSnapshot snapshot = await ref.get();
+    if (!snapshot.exists) return [];
+    Map<dynamic, dynamic>? jsonMap = snapshot.value as Map<dynamic, dynamic>;
+    List<Practitioner> practitioner = [];
+    jsonMap.forEach((key, value) {
+      Practitioner p = Practitioner.fromMap(value.cast<String, dynamic>());
+      p.id = key;
+      practitioner.add(p);
+    });
+    return practitioner;
+  }
+
   // get list of all practitioners
   static Future<List<Practitioner>> getAllPractitioners() async {
     DatabaseReference ref = FirebaseDatabase.instance.ref();
