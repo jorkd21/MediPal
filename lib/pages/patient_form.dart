@@ -199,6 +199,7 @@ class PatientFormState extends State<PatientForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('Patient Form'),
         flexibleSpace: Container(
           width: MediaQuery.of(context).size.width,

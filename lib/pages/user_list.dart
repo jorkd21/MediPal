@@ -98,24 +98,6 @@ class PractitionerListState extends State<PractitionerList> {
               ),
             ),
           ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  _isDeleteMode = !_isDeleteMode;
-                });
-              },
-              icon: Icon(_isDeleteMode ? Icons.cancel : Icons.delete),
-            ),
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  _isEditMode = !_isEditMode;
-                });
-              },
-              icon: Icon(_isEditMode ? Icons.cancel : Icons.edit),
-            ),
-          ],
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(kToolbarHeight),
             child: Padding(
