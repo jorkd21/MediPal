@@ -51,7 +51,7 @@ class PatientFormState extends State<PatientForm> {
       FileForm(
         patient: widget.patient,
         formKey: _formKeys[4],
-        edit: false,
+        edit: true,
       ),
     ];
   }
@@ -199,6 +199,7 @@ class PatientFormState extends State<PatientForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: widget.patient.id == null ? false : true,
         title: const Text('Patient Form'),
         flexibleSpace: Container(
           width: MediaQuery.of(context).size.width,

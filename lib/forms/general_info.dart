@@ -65,10 +65,10 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 children: [
                   if (_fetchingIdImage)
                     const CircularProgressIndicator()
-                  else if (_idImage.url != null)
-                    Image.network(_idImage.url!, height: 200, width: 200)
                   else if (_idImage.file != null)
-                    Image.file(_idImage.file!, height: 200, width: 200),
+                    Image.file(_idImage.file!, height: 200, width: 200)
+                  else if (_idImage.url != null)
+                    Image.network(_idImage.url!, height: 200, width: 200),
                   Center(
                     child: ElevatedButton(
                       onPressed: () async {

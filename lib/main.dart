@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart'; // firebase core
 import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/pages/home.dart';
+import 'package:medipal/pages/user_list.dart';
 import 'package:medipal/pages/user_patients.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/pages/appointment_page.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         '/ChatList': (context) => ChatList(),
         '/Settings': (context) => SettingsPage(),
         '/Home': (context) => HomeTestPage(),
+        '/UserList': (context) => PractitionerList(),
       },
     );
   }
@@ -96,6 +98,7 @@ class HomePage extends StatelessWidget {
             ButtonWidget('ChatList', '/ChatList'),
             ButtonWidget('Settings', '/Settings'),
             ButtonWidget('Home', '/Home'),
+            ButtonWidget('UserList', '/UserList'),
             /* FirebaseAuth.instance.currentUser != null
                 ? Align(
                     alignment: Alignment.bottomCenter,

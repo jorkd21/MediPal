@@ -1,59 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:medipal/pages/patient_form.dart';
-import 'package:medipal/objects/patient.dart';
-import 'package:medipal/pages/patient_data.dart';
+import 'package:medipal/objects/practitioner.dart';
+import 'package:medipal/pages/user_data.dart';
 
-class PatientList extends StatefulWidget {
-  const PatientList({super.key});
+class PractitionerList extends StatefulWidget {
+  const PractitionerList({super.key});
 
   @override
-  PatientListState createState() => PatientListState();
+  PractitionerListState createState() => PractitionerListState();
 }
 
-class PatientListState extends State<PatientList> {
-  late List<Patient> _patients = [];
-  bool _isDeleteMode = false;
-  bool _isEditMode = false;
+class PractitionerListState extends State<PractitionerList> {
+  late List<Practitioner> _practitioners = [];
   String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
-    _fetchPatients();
+    _fetchPractitioners();
   }
 
-  void _fetchPatients() async {
-    List<Patient>? patients = await Patient.getAllPatients();
-    patients!.sort((a, b) {
-      return a.firstName!.toLowerCase().compareTo(b.firstName!.toLowerCase());
+  void _fetchPractitioners() async {
+    List<Practitioner> practitioner = await Practitioner.getAllPractitioners();
+    practitioner.sort((a, b) {
+      return a.name!.toLowerCase().compareTo(b.name!.toLowerCase());
     });
     setState(() {
-      _patients = patients;
+      _practitioners = practitioner;
     });
   }
 
-  List<Patient> _filterPatients(List<Patient> patients) {
+  List<Practitioner> _filterPractitioners(List<Practitioner> practitioners) {
     if (_searchQuery.isEmpty) {
-      return patients;
+      return practitioners;
     } else {
-      return patients
-          .where((patient) =>
-              patient.firstName!.toLowerCase().contains(_searchQuery) ||
-              patient.middleName!.toLowerCase().contains(_searchQuery) ||
-              patient.lastName!.toLowerCase().contains(_searchQuery))
+      return practitioners
+          .where((practitioner) =>
+              practitioner.name!.toLowerCase().contains(_searchQuery))
           .toList();
     }
   }
 
-  Widget _buildPatientInfo(Patient patient) {
+  Widget _buildPractitionerInfo(Practitioner practitioner) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DisplayPatientData(
-              patientId: patient.id!,
-            ),
+            builder: (context) => PractitionerPage(practitioner: practitioner),
           ),
         );
       },
@@ -67,41 +60,16 @@ class PatientListState extends State<PatientList> {
                 children: [
                   const SizedBox(height: 4),
                   Text(
-                    'Name: ${patient.firstName} ${patient.middleName} ${patient.lastName}',
+                    'Name: ${practitioner.name}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "DOB: ${patient.dob?.year}/${patient.dob?.month}/${patient.dob?.day}",
+                    "Email: ${practitioner.email}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
             ),
-            if (_isEditMode)
-              IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PatientForm(
-                        patient: patient,
-                      ),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.edit),
-              ),
-            if (_isDeleteMode)
-              IconButton(
-                onPressed: () async {
-                  await Patient.deletePatient(
-                      patient.id!); // possible check is success
-                  setState(() {
-                    _patients.remove(patient);
-                  });
-                },
-                icon: const Icon(Icons.delete),
-              ),
           ],
         ),
       ),
@@ -114,7 +82,7 @@ class PatientListState extends State<PatientList> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: const Text('All Patient List'),
+          title: const Text('All Practitioner List'),
           flexibleSpace: Container(
             width: MediaQuery.of(context).size.width,
             decoration: const BoxDecoration(
@@ -128,24 +96,6 @@ class PatientListState extends State<PatientList> {
               ),
             ),
           ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  _isDeleteMode = !_isDeleteMode;
-                });
-              },
-              icon: Icon(_isDeleteMode ? Icons.cancel : Icons.delete),
-            ),
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  _isEditMode = !_isEditMode;
-                });
-              },
-              icon: Icon(_isEditMode ? Icons.cancel : Icons.edit),
-            ),
-          ],
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(kToolbarHeight),
             child: Padding(
@@ -164,7 +114,7 @@ class PatientListState extends State<PatientList> {
             ),
           ),
         ),
-        body: _patients.isNotEmpty
+        body: _practitioners.isNotEmpty
             ? Container(
                 padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
                 decoration: const BoxDecoration(
@@ -183,9 +133,10 @@ class PatientListState extends State<PatientList> {
                       kToolbarHeight -
                       kBottomNavigationBarHeight,
                   child: ListView.builder(
-                    itemCount: _filterPatients(_patients).length,
+                    itemCount: _filterPractitioners(_practitioners).length,
                     itemBuilder: (context, index) {
-                      return _buildPatientInfo(_filterPatients(_patients)[index]);
+                      return _buildPractitionerInfo(
+                          _filterPractitioners(_practitioners)[index]);
                     },
                   ),
                 ),
