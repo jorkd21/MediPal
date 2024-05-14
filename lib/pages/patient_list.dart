@@ -23,8 +23,8 @@ class PatientListState extends State<PatientList> {
   }
 
   void _fetchPatients() async {
-    List<Patient> patients = await Patient.getAllPatients();
-    patients.sort((a, b) {
+    List<Patient>? patients = await Patient.getAllPatients();
+    patients!.sort((a, b) {
       return a.firstName!.toLowerCase().compareTo(b.firstName!.toLowerCase());
     });
     setState(() {

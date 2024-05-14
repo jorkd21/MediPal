@@ -23,7 +23,7 @@ class FileForm extends StatefulWidget {
 
 class FileFormState extends State<FileForm> {
   // variables
-  List<FileData> _files = [];
+  List<FileData>? _files = [];
 
   @override
   void initState() {
@@ -56,7 +56,7 @@ class FileFormState extends State<FileForm> {
         ),
       );
       setState(() {
-        _files.remove(file);
+        _files!.remove(file);
       });
     }).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -74,9 +74,9 @@ class FileFormState extends State<FileForm> {
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: _files.length,
+              itemCount: _files!.length,
               itemBuilder: (context, index) {
-                FileData file = _files[index];
+                FileData file = _files![index];
                 return ListTile(
                   title: Text(file.name ?? 'File ${index + 1}'),
                   onTap: () {

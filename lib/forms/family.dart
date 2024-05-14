@@ -31,9 +31,9 @@ class FamilyFormState extends State<FamilyForm> {
   }
 
   void _fetchPatients() async {
-    List<Patient> patients = await Patient.getAllPatients();
+    List<Patient>? patients = await Patient.getAllPatients();
     setState(() {
-      _patients = patients;
+      _patients = patients!;
     });
     _separateFamily();
     _sortLists();
