@@ -51,7 +51,7 @@ class PatientFormState extends State<PatientForm> {
       FileForm(
         patient: widget.patient,
         formKey: _formKeys[4],
-        edit: false,
+        edit: true,
       ),
     ];
   }

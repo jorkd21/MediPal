@@ -218,7 +218,7 @@ class UserPatientsState extends State<UserPatients> {
               ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
-                    Color(0xFF003CD6),
+                    const Color(0xFF003CD6),
                   ),
                 ),
                 onPressed: _updatePatients,
