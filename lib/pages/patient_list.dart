@@ -161,40 +161,34 @@ class PatientListState extends State<PatientList> {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: TextField(
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value;
-                });
-              },
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.fromLTRB(15, 20, 10, 0),
-                hintText: 'Search by name...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-                filled: true,
-                fillColor: const Color.fromARGB(143, 255, 255, 255),
-              ),
-            ),
-          ),
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+              child: Column(
+                children: [
+                  TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        _searchQuery = value;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.fromLTRB(15, 20, 10, 0),
+                      hintText: 'Search by name...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      filled: true,
+                      fillColor: const Color.fromARGB(143, 255, 255, 255),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              )),
         ),
       ),
       body: _patients.isNotEmpty
           ? Container(
               padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [
-                    Color.fromARGB(
-                        255, 151, 183, 247), // Light blue at the bottom
-                    Color.fromARGB(255, 192, 212, 248), // White at top
-                  ],
-                ),
-              ),
+              color: Colors.white,
               child: SizedBox(
                 height: MediaQuery.of(context).size.height -
                     kToolbarHeight -
