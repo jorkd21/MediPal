@@ -109,6 +109,12 @@ class Patient {
     return p;
   }
 
+  // delete Patient from database
+  static Future<void> deletePatient(String uid) async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref();
+    await ref.child('patient/$uid').remove();
+  }
+
   // get patient from database
   static Future<Patient?> getPatient(String uid) async {
     DatabaseReference ref = FirebaseDatabase.instance.ref('patient');
@@ -119,7 +125,7 @@ class Patient {
   }
 
   // get list of all patients from database
-  static Future<List<Patient>> getAllPatients() async {
+  static Future<List<Patient>?> getAllPatients() async {
     DatabaseReference ref = FirebaseDatabase.instance.ref('patient');
     DataSnapshot snapshot = await ref.get();
     if (!snapshot.exists) return [];
@@ -134,22 +140,18 @@ class Patient {
   }
 
   // get list of all patient files from database
-  Future<List<FileData>> getAllFiles() async {
-    List<FileData> fetchedFiles = [];
+  Future<List<FileData>?> getAllFiles() async {
+    List<FileData>? fetchedFiles = [];
     Reference patientRef = FirebaseStorage.instance.ref().child('patients/$id');
-    try {
-      ListResult result = await patientRef.listAll();
-      for (Reference ref in result.items) {
-        String fileName = ref.name;
-        String downloadUrl = await ref.getDownloadURL();
-        FileData fileData = FileData(
-          name: fileName,
-          url: downloadUrl,
-        );
-        fetchedFiles.add(fileData);
-      }
-    } catch (e) {
-      print('Error fetching files for patient $id: $e');
+    ListResult result = await patientRef.listAll();
+    for (Reference ref in result.items) {
+      String fileName = ref.name;
+      String downloadUrl = await ref.getDownloadURL();
+      FileData fileData = FileData(
+        name: fileName,
+        url: downloadUrl,
+      );
+      fetchedFiles.add(fileData);
     }
     return fetchedFiles;
   }

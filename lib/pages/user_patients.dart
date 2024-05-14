@@ -47,9 +47,9 @@ class UserPatientsState extends State<UserPatients> {
   }
 
   void _fetchPatients() async {
-    List<Patient> patients = await Patient.getAllPatients();
+    List<Patient>? patients = await Patient.getAllPatients();
     setState(() {
-      _allPatients = patients;
+      _allPatients = patients!;
     });
     _separateMyPatients();
     _sortLists();
@@ -121,7 +121,7 @@ class UserPatientsState extends State<UserPatients> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => GetPatientData(patientId: patient.id!),
+            builder: (context) => DisplayPatientData(patientId: patient.id!),
           ),
         );
       },

@@ -24,15 +24,6 @@ class Practitioner {
     };
   }
 
-  // get practitioner from snapshot
-  factory Practitioner.fromSnapshot(DataSnapshot snapshot) {
-    if (snapshot.exists) {
-      Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
-      return Practitioner.fromMap(value.cast<String, dynamic>());
-    }
-    throw const FormatException('snapshot does not exist');
-  }
-
   // get practitioner from json map
   factory Practitioner.fromMap(Map<String, dynamic> jsonMap) {
     Practitioner u = Practitioner();
@@ -71,20 +62,18 @@ class Practitioner {
     return Practitioner.fromMap(value.cast<String, dynamic>());
   }
 
-  // get list of all practitioners
+  // get list of all practitioners from database
   static Future<List<Practitioner>> getAllPractitioners() async {
-    DatabaseReference ref = FirebaseDatabase.instance.ref();
-    DataSnapshot snapshot = await ref.child('users').get();
-    if (snapshot.exists) {
-      Map<dynamic, dynamic>? jsonMap = snapshot.value as Map<dynamic, dynamic>;
-      List<Practitioner> practitioners = [];
-      jsonMap.forEach((key, value) {
-        Practitioner p = Practitioner.fromMap(value.cast<String, dynamic>());
-        p.id = key;
-        practitioners.add(p);
-      });
-      return practitioners;
-    }
-    return [];
+    DatabaseReference ref = FirebaseDatabase.instance.ref('users');
+    DataSnapshot snapshot = await ref.get();
+    if (!snapshot.exists) return [];
+    Map<dynamic, dynamic>? jsonMap = snapshot.value as Map<dynamic, dynamic>;
+    List<Practitioner> practitioner = [];
+    jsonMap.forEach((key, value) {
+      Practitioner p = Practitioner.fromMap(value.cast<String, dynamic>());
+      p.id = key;
+      practitioner.add(p);
+    });
+    return practitioner;
   }
 }
