@@ -92,11 +92,23 @@ class PatientListState extends State<PatientList> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
+    return Scaffold(
+      appBar: AppBar(
           automaticallyImplyLeading: true,
-          title: const Text('All Patient List'),
+          title: Text(
+            'All Patient List',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              shadows: [
+                Shadow(
+                  color: Colors.black.withOpacity(0.5),
+                  offset: const Offset(0, 3),
+                  blurRadius: 5,
+                ),
+              ],
+            ),
+          ),
           flexibleSpace: Container(
             width: MediaQuery.of(context).size.width,
             decoration: const BoxDecoration(
@@ -104,8 +116,8 @@ class PatientListState extends State<PatientList> {
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
                 colors: [
-                  Color.fromARGB(255, 192, 212, 248),
-                  Color.fromARGB(255, 214, 228, 255),
+                  Color.fromARGB(255, 73, 118, 207),
+                  Color.fromARGB(255, 191, 200, 255),
                 ],
               ),
             ),
@@ -132,117 +144,112 @@ class PatientListState extends State<PatientList> {
           ],
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(kToolbarHeight),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: TextField(
-                controller: _searchController,
-                onChanged: (value) {
-                  setState(() {
-                    // Update the UI based on the new search term
-                    _patients = _filterPatients(value);
-                  });
-                },
-                decoration: const InputDecoration(
-                  hintText: 'Search by name...',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-          ),
-        ),
-        body: _patients.isNotEmpty
-            ? Container(
-                padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [
-                      Color.fromARGB(
-                          255, 151, 183, 247), // Light blue at the bottom
-                      Color.fromARGB(255, 192, 212, 248), // White at top
-                    ],
+            child: Column(
+              children: [
+                TextField(
+                  controller: _searchController,
+                  onChanged: (value) {
+                    setState(() {
+                      // Update the UI based on the new search term
+                      _patients = _filterPatients(value);
+                    });
+                  },
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.fromLTRB(15, 20, 10, 0),
+                    hintText: 'Search by name...',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    filled: true,
+                    fillColor: const Color.fromARGB(143, 255, 255, 255),
                   ),
                 ),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height -
-                      kToolbarHeight -
-                      kBottomNavigationBarHeight,
-                  child: ListView.builder(
-                    itemCount: _patients.length,
-                    itemBuilder: (context, index) {
-                      // Construct the full name with first, middle, and last name
-                      String fullName = '${_patients[index].firstName ?? ""} '
-                          '${_patients[index].middleName ?? ""} '
-                          '${_patients[index].lastName ?? ""}';
-                      return GestureDetector(
-                        onTap: () {
-                          // Handle tap on the patient entry
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => GetPatientData(
-                                patientId: _patients[index].id!,
+                const SizedBox(height: 10),
+              ],
+            ),
+          )),
+      body: _patients.isNotEmpty
+          ? Container(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+              color: Colors.white,
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height -
+                    kToolbarHeight -
+                    kBottomNavigationBarHeight,
+                child: ListView.builder(
+                  itemCount: _patients.length,
+                  itemBuilder: (context, index) {
+                    // Construct the full name with first, middle, and last name
+                    String fullName = '${_patients[index].firstName ?? ""} '
+                        '${_patients[index].middleName ?? ""} '
+                        '${_patients[index].lastName ?? ""}';
+                    return GestureDetector(
+                      onTap: () {
+                        // Handle tap on the patient entry
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => GetPatientData(
+                              patientId: _patients[index].id!,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    "Name: $fullName",
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    "DOB: ${_patients[index].dob?.year}/${_patients[index].dob?.month}/${_patients[index].dob?.day}",
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
                               ),
                             ),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      "Name: $fullName",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      "DOB: ${_patients[index].dob?.year}/${_patients[index].dob?.month}/${_patients[index].dob?.day}",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              if (_isEditMode)
-                                IconButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => PatientForm(
-                                          patient: _patients[index],
-                                        ),
+                            if (_isEditMode)
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PatientForm(
+                                        patient: _patients[index],
                                       ),
-                                    );
-                                  },
-                                  icon: const Icon(Icons.edit),
-                                ),
-                              // delete patient
-                              if (_isDeleteMode)
-                                IconButton(
-                                  onPressed: () async {
-                                    await _deletePatient(_patientKeys[index]);
-                                  },
-                                  icon: const Icon(Icons.delete),
-                                ),
-                            ],
-                          ),
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(Icons.edit),
+                              ),
+                            // delete patient
+                            if (_isDeleteMode)
+                              IconButton(
+                                onPressed: () async {
+                                  await _deletePatient(_patientKeys[index]);
+                                },
+                                icon: const Icon(Icons.delete),
+                              ),
+                          ],
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
-              )
-            : const Center(
-                child: CircularProgressIndicator(),
               ),
-      ),
+            )
+          : const Center(
+              child: CircularProgressIndicator(),
+            ),
     );
   }
 }

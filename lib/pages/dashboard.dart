@@ -64,8 +64,8 @@ class _DashboardState extends State<Dashboard> {
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
               colors: [
-                Color.fromARGB(255, 69, 109, 189),
-                Color.fromARGB(255, 174, 186, 255),
+                Color.fromARGB(255, 73, 118, 207),
+                Color.fromARGB(255, 191, 200, 255),
               ],
             ),
           ),
@@ -140,13 +140,6 @@ class _DashboardState extends State<Dashboard> {
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
                           color: const Color.fromARGB(255, 0, 0, 0),
-                          shadows: [
-                            Shadow(
-                              color: Colors.black.withOpacity(0.5),
-                              offset: const Offset(0, 3),
-                              blurRadius: 5,
-                            ),
-                          ],
                         ),
                       ),
                     ),
@@ -170,7 +163,10 @@ class _DashboardState extends State<Dashboard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(width: 25),
-                    Image.asset('assets/checkmarkCal.png'),
+                    Image.asset(
+                      'assets/checkmarkCal.png',
+                      color: Colors.blueGrey,
+                    ),
                     SizedBox(width: 7), // Adjust the width as needed
                     Padding(
                       padding: EdgeInsets.only(

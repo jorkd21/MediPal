@@ -276,7 +276,7 @@ class _AppointmentDateState extends State<AppointmentDate> {
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 100),
+                            horizontal: 10, vertical: 50),
                         child: SizedBox(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -338,7 +338,7 @@ class _AppointmentDateState extends State<AppointmentDate> {
   Widget _appointmentSelect() {
     return SafeArea(
       child: TableCalendar(
-        locale: "en_US", //laguage for the calendar
+        locale: "en_US", //language for the calendar
         rowHeight: 48,
         headerStyle: const HeaderStyle(
           formatButtonVisible: false,

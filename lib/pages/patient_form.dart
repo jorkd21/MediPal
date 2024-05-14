@@ -199,7 +199,21 @@ class PatientFormState extends State<PatientForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Patient Form'),
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Patient Form',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                color: Colors.black.withOpacity(0.5),
+                offset: const Offset(0, 3),
+                blurRadius: 5,
+              ),
+            ],
+          ),
+        ),
         flexibleSpace: Container(
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
@@ -207,8 +221,8 @@ class PatientFormState extends State<PatientForm> {
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
               colors: [
-                Color(0xFFBAD2FF),
-                Color(0xFFBAD2FF),
+                Color.fromARGB(255, 73, 118, 207),
+                Color.fromARGB(255, 191, 200, 255),
               ],
             ),
           ),
