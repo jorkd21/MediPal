@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medipal/forms/input_template.dart';
 import 'package:medipal/objects/patient.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class GeneralInfoForm extends StatefulWidget {
   final Patient patient;
@@ -58,14 +60,14 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                     children: <Widget>[
                       ElevatedButton(
                         onPressed: pickImage,
-                        child: const Text('Select Image'),
+                        child: Text(translation(context).selectImage),
                       ),
                     ],
                   ),
                 ],
               ),
               buildTextFormField(
-                labelText: 'First Name',
+                labelText: translation(context).firstName,
                 value: widget.patient.firstName,
                 onChanged: (value) {
                   setState(() {
@@ -74,13 +76,13 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Required';
+                    return translation(context).required;
                   }
                   return null;
                 },
               ),
               buildTextFormField(
-                labelText: 'Middle Name',
+                labelText: translation(context).middleName,
                 value: widget.patient.middleName,
                 onChanged: (value) {
                   setState(() {
@@ -89,13 +91,13 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Required';
+                    return translation(context).required;
                   }
                   return null;
                 },
               ),
               buildTextFormField(
-                labelText: 'Last Name',
+                labelText: translation(context).lastName,
                 value: widget.patient.lastName,
                 onChanged: (value) {
                   setState(() {
@@ -104,13 +106,13 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Required';
+                    return translation(context).required;
                   }
                   return null;
                 },
               ),
               buildTextFormField(
-                labelText: 'Location',
+                labelText: translation(context).location,
                 value: widget.patient.location,
                 onChanged: (value) {
                   setState(() {
@@ -119,13 +121,13 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Required';
+                    return translation(context).required;
                   }
                   return null;
                 },
               ),
               buildTextFormField(
-                labelText: 'Sex',
+                labelText: translation(context).sex,
                 value: widget.patient.sex,
                 onChanged: (value) {
                   setState(() {
@@ -134,7 +136,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Required';
+                    return translation(context).required;
                   }
                   return null;
                 },
@@ -344,7 +346,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                   ),
                 ],
               ),
-              const Text('Emergancy Contacts'),
+              Text(translation(context).emergencyContactInformation),
               Column(
                 children: [
                   ...List.generate(widget.patient.emergency.length, (index) {
