@@ -109,6 +109,12 @@ class Patient {
     return p;
   }
 
+  // delete Patient from database
+  static Future<void> deletePatient(String uid) async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref();
+    await ref.child('patient/$uid').remove();
+  }
+
   // get patient from database
   static Future<Patient?> getPatient(String uid) async {
     DatabaseReference ref = FirebaseDatabase.instance.ref('patient');
