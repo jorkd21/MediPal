@@ -11,8 +11,6 @@ class PractitionerList extends StatefulWidget {
 
 class PractitionerListState extends State<PractitionerList> {
   late List<Practitioner> _practitioners = [];
-  bool _isDeleteMode = false;
-  bool _isEditMode = false;
   String _searchQuery = '';
 
   @override
