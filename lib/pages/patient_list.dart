@@ -110,11 +110,23 @@ class PatientListState extends State<PatientList> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
+    return Scaffold(
+      appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: const Text('All Patient List'),
+          title: Text(
+            'All Patient List',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              shadows: [
+                Shadow(
+                  color: Colors.black.withOpacity(0.5),
+                  offset: const Offset(0, 3),
+                  blurRadius: 5,
+                ),
+              ],
+            ),
+          ),
           flexibleSpace: Container(
             width: MediaQuery.of(context).size.width,
             decoration: const BoxDecoration(
@@ -122,8 +134,8 @@ class PatientListState extends State<PatientList> {
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
                 colors: [
-                  Color.fromARGB(255, 192, 212, 248),
-                  Color.fromARGB(255, 214, 228, 255),
+                  Color.fromARGB(255, 73, 118, 207),
+                  Color.fromARGB(255, 191, 200, 255),
                 ],
               ),
             ),
@@ -156,9 +168,14 @@ class PatientListState extends State<PatientList> {
                     _searchQuery = value;
                   });
                 },
-                decoration: const InputDecoration(
-                  hintText: 'Search by name...',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.fromLTRB(15, 20, 10, 0),
+                    hintText: 'Search by name...',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    filled: true,
+                    fillColor: const Color.fromARGB(143, 255, 255, 255),
                 ),
               ),
             ),
@@ -189,11 +206,11 @@ class PatientListState extends State<PatientList> {
                     },
                   ),
                 ),
-              )
-            : const Center(
-                child: CircularProgressIndicator(),
               ),
-      ),
+            )
+          : const Center(
+              child: CircularProgressIndicator(),
+            ),
     );
   }
 }

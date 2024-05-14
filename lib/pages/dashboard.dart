@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:medipal/objects/appointment.dart';
@@ -16,13 +17,13 @@ class _DashboardState extends State<Dashboard> {
   List<Appointment> _appointments = [];
   List<Patient> _patients = [];
   final user = FirebaseAuth.instance.currentUser;
-  
+
   @override
   void initState() {
     super.initState();
     _fetchPatientData();
   }
-  
+
   Future<void> _fetchPatientData() async {
     try {
       DatabaseReference ref = FirebaseDatabase.instance.ref();
@@ -46,36 +47,59 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text(
+          "M E D I P A L",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        flexibleSpace: Container(
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                Color.fromARGB(255, 73, 118, 207),
+                Color.fromARGB(255, 191, 200, 255),
+              ],
+            ),
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            /*gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
                   Color(0xFFb6c9ee), // Light blue at the top
                   Color(0xFFb6c9ee), // Light blue at the bottom
                 ],
-              ),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(5),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ),*/
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /*Row(
+                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      IconButton(
+                      /* IconButton(
                         icon: const Icon(Icons.arrow_back,
                             color: Colors.black, size: 40),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                      ),
+                      ),*/
                       Container(
                         height: 100,
                         width: 100,
@@ -84,52 +108,45 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       ),
                     ],
-                  ),
-                  Row(                  
-                    children: [
-                      Center(
-                        child: Padding(
-                            padding: const EdgeInsets.only(top: 20, left: 148.0),
-                            child: Container(
-                              height: 100,
-                              width: 100,
-                              child: Image.asset(
-                                FirebaseAuth.instance.currentUser!.photoURL != null
-                                    ? FirebaseAuth.instance.currentUser!.photoURL!
-                                    : profilePic,
-                              ),
-                            ),
-                          ),
-                      ),
-                        ],
-                      ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(width: 55),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            top: 20), // Adjust the top padding as needed
-                        child: Text(
-                          'Welcome Dr. ${FirebaseAuth.instance.currentUser!.displayName}',
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black.withOpacity(0.5),
-                                offset: const Offset(0, 3),
-                                blurRadius: 5,
-                              ),
-                            ],
+                  ),*/
+                Row(
+                  children: [
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 20, left: 148.0),
+                        child: Container(
+                          height: 100,
+                          width: 100,
+                          child: Image.asset(
+                            //FirebaseAuth.instance.currentUser!.photoURL !=null
+                            //? FirebaseAuth.instance.currentUser!.photoURL! :
+                            profilePic,
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 4),
-                  /*Center(
+                    ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(width: 55),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          top: 20), // Adjust the top padding as needed
+                      child: Text(
+                        'Welcome Dr. ${FirebaseAuth.instance.currentUser?.displayName}',
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          color: const Color.fromARGB(255, 0, 0, 0),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 4),
+                /*Center(
                     child: Container(
                       constraints: BoxConstraints(
                           maxWidth: MediaQuery.of(context).size.width - 35),
@@ -141,58 +158,60 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                   ),*/
-                  SizedBox(height: 40),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(width: 25),
-                      Image.asset('assets/checkmarkCal.png'),
-                      SizedBox(width: 7), // Adjust the width as needed
-                      Padding(
-                        padding: EdgeInsets.only(
-                            top: 1), // Adjust the top padding as needed
-                        child: Text(
-                          'Upcoming Appointments',
-                          style: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black.withOpacity(0.5),
-                                offset: const Offset(0, 3),
-                                blurRadius: 5,
-                              ),
-                            ],
-                          ),
+                SizedBox(height: 40),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(width: 25),
+                    Image.asset(
+                      'assets/checkmarkCal.png',
+                      color: Colors.blueGrey,
+                    ),
+                    SizedBox(width: 7), // Adjust the width as needed
+                    Padding(
+                      padding: EdgeInsets.only(
+                          top: 1), // Adjust the top padding as needed
+                      child: Text(
+                        'Upcoming Appointments',
+                        style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 0, 0, 0),
+                          shadows: [
+                            Shadow(
+                              color: Colors.black.withOpacity(0.5),
+                              offset: const Offset(0, 3),
+                              blurRadius: 5,
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 4),
-                  Center(
-                    child: Container(
-                      constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width - 35),
-                      height: 400,
-                      padding: EdgeInsets.all(25),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: ListView.builder(
-                        itemCount: _appointments.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ListTile(
-                            title: Text(
-                                '${_appointments[index].patient}'),
-                          );
-                        },
-                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 4),
+                Center(
+                  child: Container(
+                    constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width - 35),
+                    height: 400,
+                    padding: EdgeInsets.all(25),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ListView.builder(
+                      itemCount: _appointments.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                          title: Text('${_appointments[index].patient}'),
+                        );
+                      },
                     ),
                   ),
-                  SizedBox(height: 25),
-                  /*Center(
+                ),
+                SizedBox(height: 25),
+                /*Center(
                     child: Container(
                       child: ElevatedButton(
                         onPressed: () {
@@ -213,7 +232,7 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                   ),*/
-                  /*Row(
+                /*Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(width: 25),
@@ -240,8 +259,8 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ],
                   ),*/
-                  SizedBox(height: 4),
-                  /*Center(
+                SizedBox(height: 4),
+                /*Center(
                     child: Container(
                       constraints: BoxConstraints(
                           maxWidth: MediaQuery.of(context).size.width - 35),
@@ -280,8 +299,7 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                   ),*/
-                ],
-              ),
+              ],
             ),
           ),
         ),

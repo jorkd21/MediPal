@@ -17,6 +17,36 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Settings',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                color: Colors.black.withOpacity(0.5),
+                offset: const Offset(0, 3),
+                blurRadius: 5,
+              ),
+            ],
+          ),
+        ),
+        flexibleSpace: Container(
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                Color.fromARGB(255, 73, 118, 207),
+                Color.fromARGB(255, 191, 200, 255),
+              ],
+            ),
+          ),
+        ),
+      ),
       body: Container(
         color: Colors.white,
         child: Stack(
@@ -42,25 +72,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        width: 50, // Fixed width for back arrow
-                        child: IconButton(
-                          icon: const Icon(Icons.arrow_back,
-                              color: Colors.black, size: 40),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ),
-                      Container(
-                        height: 100.0,
-                        width: 100.0,
-                        child: Image.asset(
-                          myImage,
-                        ),
-                      ),
-                    ],
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
