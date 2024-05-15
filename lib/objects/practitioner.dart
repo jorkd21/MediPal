@@ -63,7 +63,7 @@ class Practitioner {
   }
 
   // get list of all practitioners from database
-  static Future<List<Practitioner>> getAllPractitioners() async {
+  static Future<List<Practitioner>?> getAllPractitioners() async {
     DatabaseReference ref = FirebaseDatabase.instance.ref('users');
     DataSnapshot snapshot = await ref.get();
     if (!snapshot.exists) return [];
