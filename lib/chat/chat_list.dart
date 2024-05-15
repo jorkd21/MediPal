@@ -14,8 +14,7 @@ class ChatList extends StatefulWidget {
 
 class ChatListState extends State<ChatList> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-
-  List<Practitioner> practitioners = [];
+  List<Practitioner> _practitioners = [];
 
   @override
   void initState() {
@@ -26,7 +25,7 @@ class ChatListState extends State<ChatList> {
   void _fetchPractitioners() async {
     List<Practitioner> practitioners = await Practitioner.getAllPractitioners();
     setState(() {
-      this.practitioners = practitioners;
+      _practitioners = practitioners;
     });
   }
 
@@ -36,12 +35,12 @@ class ChatListState extends State<ChatList> {
       appBar: AppBar(
         title: const Text('Practitioners'),
       ),
-      body: practitioners.isEmpty
+      body: _practitioners.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
-              itemCount: practitioners.length,
+              itemCount: _practitioners.length,
               itemBuilder: (context, index) {
-                final practitioner = practitioners[index];
+                final practitioner = _practitioners[index];
                 if (practitioner.id == _firebaseAuth.currentUser!.uid) {
                   return Container();
                 }

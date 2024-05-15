@@ -3,25 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:medipal/objects/patient.dart';
 
-class DisplayPatientData extends StatefulWidget {
+class DisplayPatient extends StatefulWidget {
   final String patientId;
 
-  const DisplayPatientData({
+  const DisplayPatient({
     super.key,
     required this.patientId,
   });
 
   @override
-  DisplayPatientDataState createState() => DisplayPatientDataState();
+  DisplayPatientState createState() => DisplayPatientState();
 }
 
-class DisplayPatientDataState extends State<DisplayPatientData> {
+class DisplayPatientState extends State<DisplayPatient> {
   // VARIABLES
   Patient? _patient;
   String? _imageID;
 
   // CONSTRUCTOR
-  DisplayPatientDataState();
+  DisplayPatientState();
   // initialize
   @override
   void initState() {

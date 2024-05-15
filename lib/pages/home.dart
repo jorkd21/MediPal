@@ -20,7 +20,7 @@ class HomePageState extends State<HomeTestPage> {
   final PageController _pageController = PageController();
   final List<Widget> _pages = [
     const Dashboard(),
-    UserPatients(user: FirebaseAuth.instance.currentUser),
+    PractitionerPatients(userUid: FirebaseAuth.instance.currentUser!.uid),
     PatientForm(patient: Patient()),
     const AppointmentPage(),
     const ChatList(),

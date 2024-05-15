@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
         '/AppointmentPage': (context) => AppointmentPage(),
         '/Dashboard': (context) => Dashboard(),
         '/UserPatients': (context) =>
-            UserPatients(user: FirebaseAuth.instance.currentUser),
+            PractitionerPatients(userUid: FirebaseAuth.instance.currentUser!.uid),
         '/ChatList': (context) => ChatList(),
         '/Settings': (context) => SettingsPage(),
         '/Home': (context) => HomeTestPage(),
