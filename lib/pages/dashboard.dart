@@ -19,7 +19,6 @@ class Dashboard extends StatefulWidget {
 
 class DashboardState extends State<Dashboard> {
   late Practitioner _practitioner;
-  String _searchQuery = '';
   bool _isLoading = true;
 
   @override
@@ -39,7 +38,6 @@ class DashboardState extends State<Dashboard> {
       _practitioner = practitioner;
       _isLoading = false;
     });
-    print(_practitioner.id);
   }
 
   Widget _buildAppointmentInfo(Appointment appointment) {
