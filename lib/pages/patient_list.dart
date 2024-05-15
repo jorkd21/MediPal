@@ -110,90 +110,106 @@ class PatientListState extends State<PatientList> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: const Text('All Patient List'),
-          flexibleSpace: Container(
-            width: MediaQuery.of(context).size.width,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [
-                  Color.fromARGB(255, 192, 212, 248),
-                  Color.fromARGB(255, 214, 228, 255),
-                ],
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(
+          'All Patient List',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                color: Colors.black.withOpacity(0.5),
+                offset: const Offset(0, 3),
+                blurRadius: 5,
               ),
+            ],
+          ),
+        ),
+        flexibleSpace: Container(
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                Color.fromARGB(255, 73, 118, 207),
+                Color.fromARGB(255, 191, 200, 255),
+              ],
             ),
           ),
-          actions: [
-            IconButton(
-              onPressed: () {
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _isDeleteMode = !_isDeleteMode;
+              });
+            },
+            icon: Icon(_isDeleteMode ? Icons.cancel : Icons.delete),
+          ),
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _isEditMode = !_isEditMode;
+              });
+            },
+            icon: Icon(_isEditMode ? Icons.cancel : Icons.edit),
+          ),
+        ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: TextField(
+              onChanged: (value) {
                 setState(() {
-                  _isDeleteMode = !_isDeleteMode;
+                  _searchQuery = value;
                 });
               },
-              icon: Icon(_isDeleteMode ? Icons.cancel : Icons.delete),
-            ),
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  _isEditMode = !_isEditMode;
-                });
-              },
-              icon: Icon(_isEditMode ? Icons.cancel : Icons.edit),
-            ),
-          ],
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(kToolbarHeight),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: TextField(
-                onChanged: (value) {
-                  setState(() {
-                    _searchQuery = value;
-                  });
-                },
-                decoration: const InputDecoration(
-                  hintText: 'Search by name...',
-                  border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.fromLTRB(15, 20, 10, 0),
+                hintText: 'Search by name...',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
                 ),
+                filled: true,
+                fillColor: const Color.fromARGB(143, 255, 255, 255),
               ),
             ),
           ),
         ),
-        body: _patients.isNotEmpty
-            ? Container(
-                padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [
-                      Color.fromARGB(
-                          255, 151, 183, 247), // Light blue at the bottom
-                      Color.fromARGB(255, 192, 212, 248), // White at top
-                    ],
-                  ),
-                ),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height -
-                      kToolbarHeight -
-                      kBottomNavigationBarHeight,
-                  child: ListView.builder(
-                    itemCount: _filterPatients(_patients).length,
-                    itemBuilder: (context, index) {
-                      return _buildPatientInfo(_filterPatients(_patients)[index]);
-                    },
-                  ),
-                ),
-              )
-            : const Center(
-                child: CircularProgressIndicator(),
-              ),
       ),
+      body: _patients.isNotEmpty
+          ? Container(
+              padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    Color.fromARGB(
+                        255, 151, 183, 247), // Light blue at the bottom
+                    Color.fromARGB(255, 192, 212, 248), // White at top
+                  ],
+                ),
+              ),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height -
+                    kToolbarHeight -
+                    kBottomNavigationBarHeight,
+                child: ListView.builder(
+                  itemCount: _filterPatients(_patients).length,
+                  itemBuilder: (context, index) {
+                    return _buildPatientInfo(_filterPatients(_patients)[index]);
+                  },
+                ),
+              ),
+            )
+          : const Center(
+              child: CircularProgressIndicator(),
+            ),
     );
   }
 }
