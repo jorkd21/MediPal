@@ -1,11 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:medipal/chat/chat_list.dart';
+//import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/pages/dashboard.dart';
 import 'package:medipal/pages/patient_form.dart';
 import 'package:medipal/pages/appointment_page.dart';
 import 'package:medipal/pages/settings.dart';
 import 'package:medipal/objects/patient.dart';
+import 'package:medipal/pages/user_list.dart';
 import 'package:medipal/pages/user_patients.dart';
 
 class HomeTestPage extends StatefulWidget {
@@ -19,11 +20,11 @@ class HomePageState extends State<HomeTestPage> {
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
   final List<Widget> _pages = [
-    const Dashboard(),
-    UserPatients(user: FirebaseAuth.instance.currentUser),
+    Dashboard(userUid: FirebaseAuth.instance.currentUser!.uid),
+    PractitionerPatients(userUid: FirebaseAuth.instance.currentUser!.uid),
     PatientForm(patient: Patient()),
-    const AppointmentPage(),
-    const ChatList(),
+    AppointmentPage(userUid: FirebaseAuth.instance.currentUser!.uid),
+    const PractitionerList(),
     SettingsPage(),
   ];
 
@@ -73,7 +74,7 @@ class HomePageState extends State<HomeTestPage> {
           BottomNavigationBarItem(
               icon: Icon(Icons.calendar_today), label: 'Schedule'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble),
+            icon: Icon(Icons.hub),
             label: 'Chat',
           ),
           BottomNavigationBarItem(

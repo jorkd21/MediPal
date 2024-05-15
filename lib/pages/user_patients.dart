@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/objects/patient.dart';
@@ -6,22 +5,21 @@ import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/patient_data.dart';
 import 'package:medipal/pages/patient_list.dart';
 
-class UserPatients extends StatefulWidget {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final User? user;
+class PractitionerPatients extends StatefulWidget {
+  final String? userUid;
 
-  UserPatients({
+  const PractitionerPatients({
     super.key,
-    required this.user,
+    required this.userUid,
   });
 
   @override
-  UserPatientsState createState() {
-    return UserPatientsState();
+  PractitionerPatientsState createState() {
+    return PractitionerPatientsState();
   }
 }
 
-class UserPatientsState extends State<UserPatients> {
+class PractitionerPatientsState extends State<PractitionerPatients> {
   late Practitioner _practitioner;
   late List<Patient> _allPatients = [];
   late final List<Patient> _myPatients = [];
@@ -38,7 +36,7 @@ class UserPatientsState extends State<UserPatients> {
 
   void _fetchPractitioner() async {
     Practitioner? practitioner =
-        await Practitioner.getPractitioner(widget.user!.uid);
+        await Practitioner.getPractitioner(widget.userUid!);
     if (practitioner != null) {
       setState(() {
         _practitioner = practitioner;
@@ -99,7 +97,7 @@ class UserPatientsState extends State<UserPatients> {
 
   Future<void> _updatePatients() async {
     DatabaseReference ref =
-        FirebaseDatabase.instance.ref('users/${widget.user!.uid}');
+        FirebaseDatabase.instance.ref('users/${widget.userUid!}');
     ref.update(_practitioner.toJson()).then((_) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -121,7 +119,7 @@ class UserPatientsState extends State<UserPatients> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DisplayPatientData(patientId: patient.id!),
+            builder: (context) => DisplayPatient(patientId: patient.id!),
           ),
         );
       },
@@ -259,45 +257,42 @@ class UserPatientsState extends State<UserPatients> {
         color: Colors.white,
         child: ListView(
           children: [
-            Form(
-              key: widget.formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (!_isAddMode)
-                    Column(
-                      children: [
-                        // display the patient list
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: _filterPatients(_myPatients).length,
-                          itemBuilder: (context, index) {
-                            Patient familyPatient =
-                                _filterPatients(_myPatients)[index];
-                            return _buildPatientInfo(familyPatient, true);
-                          },
-                        ),
-                      ],
-                    ),
-                  if (_isAddMode)
-                    Column(
-                      children: [
-                        // display all patients
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: _filterPatients(_allPatients).length,
-                          itemBuilder: (context, index) {
-                            Patient patient =
-                                _filterPatients(_allPatients)[index];
-                            return _buildPatientInfo(patient, false);
-                          },
-                        ),
-                      ],
-                    ),
-                ],
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (!_isAddMode)
+                  Column(
+                    children: [
+                      // display the patient list
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: _filterPatients(_myPatients).length,
+                        itemBuilder: (context, index) {
+                          Patient familyPatient =
+                              _filterPatients(_myPatients)[index];
+                          return _buildPatientInfo(familyPatient, true);
+                        },
+                      ),
+                    ],
+                  ),
+                if (_isAddMode)
+                  Column(
+                    children: [
+                      // display all patients
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: _filterPatients(_allPatients).length,
+                        itemBuilder: (context, index) {
+                          Patient patient =
+                              _filterPatients(_allPatients)[index];
+                          return _buildPatientInfo(patient, false);
+                        },
+                      ),
+                    ],
+                  ),
+              ],
             ),
           ],
         ),

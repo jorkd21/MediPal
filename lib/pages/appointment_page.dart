@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,15 +7,15 @@ import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/appointment_date.dart';
 
 class AppointmentPage extends StatefulWidget {
-  const AppointmentPage({Key? key}) : super(key: key);
+  final String? userUid;
+  const AppointmentPage({super.key, required this.userUid,});
 
   @override
-  _AppointmentPageState createState() => _AppointmentPageState();
+  AppointmentPageState createState() => AppointmentPageState();
 }
 
-class _AppointmentPageState extends State<AppointmentPage> {
+class AppointmentPageState extends State<AppointmentPage> {
   late Future<Practitioner> _practitionerFuture = fetchPractitionerData();
-  final User? _user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -25,7 +24,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
 
   Future<Practitioner> fetchPractitionerData() async {
     DatabaseReference ref = FirebaseDatabase.instance.ref('users');
-    DataSnapshot snapshot = await ref.child(_user!.uid).get();
+    DataSnapshot snapshot = await ref.child(widget.userUid!).get();
     if (snapshot.exists) {
       Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
       return Practitioner.fromMap(value.cast<String, dynamic>());
@@ -41,7 +40,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
 
   Future<void> _updatePractitioner(Practitioner p) async {
     DatabaseReference ref =
-        FirebaseDatabase.instance.ref('users/${_user!.uid}');
+        FirebaseDatabase.instance.ref('users/${widget.userUid}');
     ref.update(p.toJson()).then((_) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

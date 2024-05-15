@@ -83,7 +83,7 @@ class FamilyFormState extends State<FamilyForm> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DisplayPatientData(patientId: patient.id!),
+            builder: (context) => DisplayPatient(patientId: patient.id!),
           ),
         );
       },
