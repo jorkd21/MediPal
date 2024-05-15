@@ -1,54 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:medipal/objects/appointment.dart';
 import 'package:medipal/objects/practitioner.dart';
-import 'package:medipal/pages/dashboard.dart';
 
-class PractitionerList extends StatefulWidget {
-  const PractitionerList({super.key});
+class AppointmentList extends StatefulWidget {
+  final String? userUid;
+
+  const AppointmentList({
+    super.key,
+    required this.userUid,
+  });
 
   @override
-  PractitionerListState createState() => PractitionerListState();
+  AppointmentListState createState() => AppointmentListState();
 }
 
-class PractitionerListState extends State<PractitionerList> {
-  late List<Practitioner> _practitioners = [];
+class AppointmentListState extends State<AppointmentList> {
+  late Practitioner? _practitioner;
   String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
-    _fetchPractitioners();
+    _fetchPractitioner();
   }
 
-  void _fetchPractitioners() async {
-    List<Practitioner>? practitioner = await Practitioner.getAllPractitioners();
-    practitioner!.sort((a, b) {
-      return a.name!.toLowerCase().compareTo(b.name!.toLowerCase());
+  void _fetchPractitioner() async {
+    Practitioner? practitioner = await Practitioner.getPractitioner(widget.userUid!);
+    practitioner!.appointments.sort((a, b) {
+      return a.patient!.toLowerCase().compareTo(b.patient!.toLowerCase());
     });
     setState(() {
-      _practitioners = practitioner;
+      _practitioner = practitioner;
     });
   }
 
-  List<Practitioner> _filterPractitioners(List<Practitioner> practitioners) {
+  List<Appointment> _filterAppointments(List<Appointment> appointments) {
     if (_searchQuery.isEmpty) {
-      return practitioners;
+      return appointments;
     } else {
-      return practitioners
-          .where((practitioner) =>
-              practitioner.name!.toLowerCase().contains(_searchQuery))
+      return appointments
+          .where((appointment) =>
+              appointment.patient!.toLowerCase().contains(_searchQuery))
           .toList();
     }
   }
 
-  Widget _buildPractitionerInfo(Practitioner practitioner) {
+  Widget _buildAppointmentInfo(Appointment appointment) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
+        /* Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Dashboard(userUid: practitioner.id),
+            builder: (context) => PractitionerPage(practitioner: practitioner),
           ),
-        );
+        ); */
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -60,11 +65,15 @@ class PractitionerListState extends State<PractitionerList> {
                 children: [
                   const SizedBox(height: 4),
                   Text(
-                    'Name: ${practitioner.name}',
+                    'Name: ${appointment.patient}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "Email: ${practitioner.email}",
+                    "Topic: ${appointment.topic}",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "Time: ${appointment.time}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -82,7 +91,7 @@ class PractitionerListState extends State<PractitionerList> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: const Text('All Practitioner List'),
+          title: const Text('Appointment List'),
           flexibleSpace: Container(
             width: MediaQuery.of(context).size.width,
             decoration: const BoxDecoration(
@@ -114,7 +123,7 @@ class PractitionerListState extends State<PractitionerList> {
             ),
           ),
         ),
-        body: _practitioners.isNotEmpty
+        body: _practitioner!.appointments.isNotEmpty
             ? Container(
                 padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
                 decoration: const BoxDecoration(
@@ -133,10 +142,10 @@ class PractitionerListState extends State<PractitionerList> {
                       kToolbarHeight -
                       kBottomNavigationBarHeight,
                   child: ListView.builder(
-                    itemCount: _filterPractitioners(_practitioners).length,
+                    itemCount: _filterAppointments(_practitioner!.appointments).length,
                     itemBuilder: (context, index) {
-                      return _buildPractitionerInfo(
-                          _filterPractitioners(_practitioners)[index]);
+                      return _buildAppointmentInfo(
+                          _filterAppointments(_practitioner!.appointments)[index]);
                     },
                   ),
                 ),

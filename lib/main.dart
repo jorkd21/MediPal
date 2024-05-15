@@ -48,14 +48,15 @@ class MyApp extends StatelessWidget {
         '/SignUp': (context) => SignUpPage(),
         '/PatientForm': (context) => PatientForm(patient: Patient()),
         '/PatientList': (context) => PatientList(),
-        '/AppointmentPage': (context) => AppointmentPage(),
-        '/Dashboard': (context) => Dashboard(),
+        '/AppointmentPage': (context) => AppointmentPage(userUid: FirebaseAuth.instance.currentUser!.uid),
+        '/Dashboard': (context) => Dashboard(userUid: FirebaseAuth.instance.currentUser!.uid),
         '/UserPatients': (context) =>
             PractitionerPatients(userUid: FirebaseAuth.instance.currentUser!.uid),
         '/ChatList': (context) => ChatList(),
         '/Settings': (context) => SettingsPage(),
         '/Home': (context) => HomeTestPage(),
         '/UserList': (context) => PractitionerList(),
+
       },
     );
   }
