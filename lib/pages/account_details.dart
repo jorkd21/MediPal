@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -17,6 +18,8 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
   late Practitioner _practitioner;
   late TextEditingController _nameController;
   late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+  //late TextEditingController _photoController;
   bool _isEditing = false;
 
   void _fetchPractitioner() async {
@@ -35,8 +38,10 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
   void initState(){
     super.initState();
     _fetchPractitioner();
-    _nameController = TextEditingController(text: Practitioner.currentPractitioner?.name ?? 'Unkonwn');
-    _emailController = TextEditingController(text: Practitioner.currentPractitioner?.email ?? 'Unkonwn');
+    _nameController = TextEditingController(text: Practitioner.currentPractitioner?.name);
+    _emailController = TextEditingController(text: FirebaseAuth.instance.currentUser?.email);
+    _passwordController = TextEditingController(text: FirebaseAuth.instance.currentUser?.displayName);
+    //_photoController = TextEditingController(text: FirebaseAuth.instance.currentUser?.photoURL);  
   }
   
   @override
@@ -80,8 +85,10 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
               'Name:',
               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8.0),
             TextField(
+              decoration: InputDecoration(
+                hintText: '${_practitioner.name}',
+              ),
               controller: _nameController,
               enabled: _isEditing,
               style: TextStyle(fontSize: 16.0),
@@ -93,11 +100,41 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
             ),
             SizedBox(height: 8.0),
             TextField(
+              decoration: InputDecoration(
+                hintText: '${_practitioner.email}',
+              ),
               controller: _emailController,
               enabled: _isEditing,
               style: TextStyle(fontSize: 16.0),
             ),
             SizedBox(height: 16.0),
+            Text(
+              'Password:',
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8.0),
+            TextField(
+              decoration: InputDecoration(
+                hintText: '${FirebaseAuth.instance.currentUser?.displayName}',
+              ),
+              controller: _emailController,
+              enabled: _isEditing,
+              style: TextStyle(fontSize: 16.0),
+            ),
+            SizedBox(height: 16.0),
+            Text(
+              'Photo:',
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8.0),
+            /*TextField(
+              decoration: InputDecoration(
+                hintText: 'test',
+              ),
+              controller: _photoController,
+              enabled: _isEditing,
+              style: TextStyle(fontSize: 16.0),
+            ),*/
           ],
         ),
       ),
@@ -130,19 +167,39 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
 
   void _saveChanges() {
     if (_practitioner != null) {
-      _practitioner.name = _nameController.text;
-      _practitioner.email = _emailController.text;
-      DatabaseReference ref = FirebaseDatabase.instance.ref('users/${_practitioner.id}');
-      ref.set(_practitioner.toJson()).then((_) {
-        setState(() {
-          _isEditing = false;
+      FirebaseAuth.instance.currentUser?.updateEmail(_emailController.text)
+        .then((_) {
+          if (_passwordController.text.isNotEmpty) {
+            FirebaseAuth.instance.currentUser?.updatePassword(_passwordController.text)
+              .then((_) {
+                _updatePractitionerInfo();
+              }).catchError((error) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to update password: $error')));
+              });
+          } else {
+            _updatePractitionerInfo();
+          }
+        }).catchError((error) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to update email: $error')));
         });
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Changes saved')));
-      }).catchError((error) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to save changes')));
-      });
     }
   }
+
+  void _updatePractitionerInfo() {
+    //Update the practitioner's info in the database
+    _practitioner.name = _nameController.text;
+    _practitioner.email = _emailController.text;
+    DatabaseReference ref = FirebaseDatabase.instance.ref('users/${_practitioner.id}');
+    ref.set(_practitioner.toJson()).then((_) {
+      setState(() {
+        _isEditing = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Changes saved')));
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to save changes to database: $error')));
+    });
+  }
+
 
   @override
   void dispose(){
