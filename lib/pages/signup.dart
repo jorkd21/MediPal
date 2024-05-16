@@ -4,6 +4,7 @@ import 'package:medipal/constant/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:medipal/main.dart';
+import 'package:medipal/pages/home.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -60,7 +61,7 @@ class _SignUpPageState extends State<SignUpPage> {
       // Navigate to HomeScreen or any other page after successful sign up
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => HomeTestPage()),
       );
     } catch (e) {
       setState(() {
