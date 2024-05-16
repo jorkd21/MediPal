@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 // firebase
 import 'package:firebase_core/firebase_core.dart'; // firebase core
@@ -76,15 +75,17 @@ class _MyAppState extends State<MyApp> {
       supportedLocales: AppLocalizations.supportedLocales,
       initialRoute: '/',
       routes: {
-        '/': (context) => LoginPage(),
+        '/': (context) => HomePage(),
         '/Login': (context) => LoginPage(),
         '/SignUp': (context) => SignUpPage(),
         '/PatientForm': (context) => PatientForm(patient: Patient()),
         '/PatientList': (context) => PatientList(),
-        '/AppointmentPage': (context) => AppointmentPage(userUid: FirebaseAuth.instance.currentUser!.uid),
-        '/Dashboard': (context) => Dashboard(userUid: FirebaseAuth.instance.currentUser!.uid),
-        '/UserPatients': (context) =>
-            PractitionerPatients(userUid: FirebaseAuth.instance.currentUser!.uid),
+        '/AppointmentPage': (context) =>
+            AppointmentPage(userUid: FirebaseAuth.instance.currentUser!.uid),
+        '/Dashboard': (context) =>
+            Dashboard(userUid: FirebaseAuth.instance.currentUser!.uid),
+        '/UserPatients': (context) => PractitionerPatients(
+            userUid: FirebaseAuth.instance.currentUser!.uid),
         '/ChatList': (context) => ChatList(),
         '/Settings': (context) => SettingsPage(),
         '/Home': (context) => HomeTestPage(),

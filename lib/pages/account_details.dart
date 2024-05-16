@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class AccountInfoPage extends StatefulWidget {
   final String? userUid;
@@ -19,7 +24,9 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
   late TextEditingController _nameController;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
-  //late TextEditingController _photoController;
+  late String? _photoController;
+  final ImagePicker _picker = ImagePicker();
+  var user = FirebaseAuth.instance.currentUser;
   bool _isEditing = false;
 
   void _fetchPractitioner() async {
@@ -40,8 +47,8 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
     _fetchPractitioner();
     _nameController = TextEditingController(text: Practitioner.currentPractitioner?.name);
     _emailController = TextEditingController(text: FirebaseAuth.instance.currentUser?.email);
-    _passwordController = TextEditingController(text: FirebaseAuth.instance.currentUser?.displayName);
-    //_photoController = TextEditingController(text: FirebaseAuth.instance.currentUser?.photoURL);  
+    _passwordController = TextEditingController(text: '');
+    _photoController = FirebaseAuth.instance.currentUser?.photoURL;  
   }
   
   @override
@@ -76,66 +83,84 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
         ),
         actions: _buildAppBarActions(),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(50.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Name:',
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-            ),
-            TextField(
-              decoration: InputDecoration(
-                hintText: '${_practitioner.name}',
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(50.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Name:',
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
-              controller: _nameController,
-              enabled: _isEditing,
-              style: TextStyle(fontSize: 16.0),
-            ),
-            SizedBox(height: 16.0),
-            Text(
-              'Email:',
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8.0),
-            TextField(
-              decoration: InputDecoration(
-                hintText: '${_practitioner.email}',
+              TextField(
+                decoration: InputDecoration(
+                  hintText: '${_practitioner.name}',
+                ),
+                controller: _nameController,
+                enabled: _isEditing,
+                style: TextStyle(fontSize: 16.0),
               ),
-              controller: _emailController,
-              enabled: _isEditing,
-              style: TextStyle(fontSize: 16.0),
-            ),
-            SizedBox(height: 16.0),
-            Text(
-              'Password:',
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8.0),
-            TextField(
-              decoration: InputDecoration(
-                hintText: '${FirebaseAuth.instance.currentUser?.displayName}',
+              SizedBox(height: 16.0),
+              Text(
+                'Email:',
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
-              controller: _emailController,
-              enabled: _isEditing,
-              style: TextStyle(fontSize: 16.0),
-            ),
-            SizedBox(height: 16.0),
-            Text(
-              'Photo:',
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8.0),
-            /*TextField(
-              decoration: InputDecoration(
-                hintText: 'test',
+              SizedBox(height: 8.0),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: '${_practitioner.email}',
+                ),
+                controller: _emailController,
+                enabled: _isEditing,
+                style: TextStyle(fontSize: 16.0),
               ),
-              controller: _photoController,
-              enabled: _isEditing,
-              style: TextStyle(fontSize: 16.0),
-            ),*/
-          ],
+              SizedBox(height: 16.0),
+              Text(
+                'Password:',
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8.0),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: '********',
+                ),
+                controller: _passwordController,
+                enabled: _isEditing,
+                style: TextStyle(fontSize: 16.0),
+              ),
+              SizedBox(height: 16.0),
+              Center(
+                child: Text(
+                  'Profile Photo',
+                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(height: 10.0),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 105.0),
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(user!.photoURL!),
+                      radius: 50,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 80.0),
+                    child: IconButton(
+                      icon: Icon(Icons.edit, size: 30,),
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(0)),
+                        iconColor: MaterialStateColor.resolveWith((states) => const Color.fromARGB(255, 41, 49, 70)),
+                      ),
+                      onPressed: _pickImage,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -165,30 +190,43 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
     }
   }
 
-  void _saveChanges() {
+  Future<String?> _uploadImage(String filePath) async {
+    try {
+      final storageRef = FirebaseStorage.instance.ref().child('user_photos/${_practitioner.id}/${DateTime.now().millisecondsSinceEpoch}');
+      final uploadTask = storageRef.putFile(File(filePath));
+      final snapshot = await uploadTask.whenComplete(() => null);
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (error) {
+      print('Error uploading image: $error');
+      return null;
+    }
+  }
+
+
+  void _saveChanges() async {
     if (_practitioner != null) {
-      FirebaseAuth.instance.currentUser?.updateEmail(_emailController.text)
-        .then((_) {
-          if (_passwordController.text.isNotEmpty) {
-            FirebaseAuth.instance.currentUser?.updatePassword(_passwordController.text)
-              .then((_) {
-                _updatePractitionerInfo();
-              }).catchError((error) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to update password: $error')));
-              });
-          } else {
-            _updatePractitionerInfo();
-          }
-        }).catchError((error) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to update email: $error')));
-        });
+      // ignore: deprecated_member_use
+      var user = FirebaseAuth.instance.currentUser;
+      AuthCredential credential = EmailAuthProvider.credential(email: FirebaseAuth.instance.currentUser?.email ?? '', password: _passwordController.text);
+      user?.reauthenticateWithCredential(credential).then((_) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Reauthenticated')));
+        _updatePractitionerInfo();
+      }).catchError((error) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to reauthenticate: $error')));
+      });
     }
   }
 
   void _updatePractitionerInfo() {
     //Update the practitioner's info in the database
     _practitioner.name = _nameController.text;
+    FirebaseAuth.instance.currentUser?.updateEmail(_emailController.text);
     _practitioner.email = _emailController.text;
+    final String? newPhotoUrl = _photoController;
+    if (newPhotoUrl!.isNotEmpty) {
+      FirebaseAuth.instance.currentUser?.updatePhotoURL(newPhotoUrl);
+    } 
     DatabaseReference ref = FirebaseDatabase.instance.ref('users/${_practitioner.id}');
     ref.set(_practitioner.toJson()).then((_) {
       setState(() {
@@ -198,6 +236,16 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
     }).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to save changes to database: $error')));
     });
+  }
+
+  Future<void> _pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      final String filePath = image.path;
+      setState(() {
+        _photoController = filePath;
+      });
+    }
   }
 
 
