@@ -187,7 +187,7 @@ class PatientListState extends State<PatientList> {
       ),
       body: _patients.isNotEmpty
           ? Container(
-              padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
               color: Colors.white,
               child: SizedBox(
                 height: MediaQuery.of(context).size.height -
