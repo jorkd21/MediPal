@@ -22,7 +22,6 @@ class _AppointmentDateState extends State<AppointmentDate> {
   final User? user = FirebaseAuth.instance.currentUser;
 
   DateTime today = DateTime.now();
-  int? _currentIndex;
   String? _topic;
   String? _patient;
   var hour = 0;
@@ -63,32 +62,35 @@ class _AppointmentDateState extends State<AppointmentDate> {
   }
 
   void _submitAppointment(String patientId) {
-    // Calculate the start and end times based on the selected index
-    DateTime startTime =
-        DateTime(today.year, today.month, today.day, hour, minute);
-    DateTime endTime =
-        DateTime(today.year, today.month, today.day, hour + 1, minute);
-    setState(() {
-      _practitioner.appointments.add(
-        Appointment(
-          topic: _topic, // You can set the topic as needed
-          patient: patientId,
-          time: DateTimeRange(start: startTime, end: endTime),
-        ),
-      );
-    });
-    _submitForm();
+    if (_topic != null) {
+      // Calculate the start and end times based on the selected index
+      DateTime startTime =
+          DateTime(today.year, today.month, today.day, hour, minute);
+      DateTime endTime =
+          DateTime(today.year, today.month, today.day, hour + 1, minute);
+      setState(() {
+        _practitioner.appointments.add(
+          Appointment(
+            topic: _topic, // You can set the topic as needed
+            patient: patientId,
+            time: DateTimeRange(start: startTime, end: endTime),
+          ),
+        );
+      });
+      _submitForm();
 
-    // Show a confirmation message or navigate to another screen if needed
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('Appointment added for $patientId at $hour:$minute'),
-    ));
-    // Clear the selected index
-    setState(() {
-      _currentIndex = null;
-    });
-    widget.refreshCallback(); // Call the refresh callback
-    Navigator.pop(context); // pop back / not working
+      // Show a confirmation message or navigate to another screen if needed
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Appointment added for $patientId at $hour:$minute'),
+      ));
+      // Clear the selected index
+      setState(() {
+        _patient = null;
+        _topic = null;
+      });
+      widget.refreshCallback(); // Call the refresh callback
+      Navigator.pop(context); // pop back / not working
+    }
   }
 
   void _getPractitioner() async {
@@ -300,8 +302,10 @@ class _AppointmentDateState extends State<AppointmentDate> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () =>
-                          {_submitAppointment(_patient!), setState(() {})},
+                      onPressed: () => {
+                        _patient != null ? _submitAppointment(_patient!) : null,
+                        setState(() {})
+                      },
                       style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(
                             Color(0xFF1F56DE) //button color
