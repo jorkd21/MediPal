@@ -8,8 +8,6 @@ import 'package:medipal/pages/patient_list.dart';
 import 'package:medipal/pages/settings.dart';
 import 'package:medipal/pages/patient_form.dart';
 import '../objects/patient.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:medipal/pages/language_constants.dart';
 
 class ChatList extends StatefulWidget {
   const ChatList({super.key});
@@ -61,7 +59,7 @@ class ChatListState extends State<ChatList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(translation(context).practitionerChat),
+        title: const Text('Practitioners'),
       ),
       body: practitioners.isEmpty
           ? const Center(child: CircularProgressIndicator())
