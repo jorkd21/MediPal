@@ -7,6 +7,7 @@ import 'package:medipal/objects/practitioner.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:medipal/pages/forgotpasswd.dart';
 
 class AccountInfoPage extends StatefulWidget {
   final String? userUid;
@@ -121,13 +122,24 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8.0),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: '********',
+              Center(
+                child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                        builder: (context) => ForgotPassPage()),
+                      );
+                    },
+                    style: ButtonStyle(
+                      minimumSize: MaterialStateProperty.all<Size>(Size(278.0, 44)),
+                      backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF003CD6)),
+                    ),
+                    child: Text(
+                      'Reset Password',
+                      style: TextStyle(color: Color(0xFFEFEFEF), fontSize: 20, fontStyle: FontStyle.normal),
+                  ),
                 ),
-                controller: _passwordController,
-                enabled: _isEditing,
-                style: TextStyle(fontSize: 16.0),
               ),
               SizedBox(height: 16.0),
               Center(
