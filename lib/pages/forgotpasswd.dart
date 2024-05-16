@@ -103,7 +103,9 @@ class ForgotPassPage extends StatelessWidget {
                   Align(
                       alignment: Alignment.center,
                       child: ElevatedButton(
-                        onPressed: (null),
+                        onPressed: () {
+                          _resetPassword(context);
+                        },
                         style: ButtonStyle(
                           minimumSize: MaterialStateProperty.all<Size>(Size(278.0, 44)),
                           backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF003CD6)),
@@ -123,4 +125,25 @@ class ForgotPassPage extends StatelessWidget {
       ),
     );
   }
+
+  void _resetPassword(BuildContext context) {
+    String email = _emailController.text.trim();
+
+    if (email.isNotEmpty) {
+      FirebaseAuth.instance.sendPasswordResetEmail(email: email).then((_) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Password reset email sent to $email'),
+        ));
+      }).catchError((error) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Failed to send password reset email: $error'),
+        ));
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Please enter your email'),
+      ));
+    }
+  }
+  
 }
