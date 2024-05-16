@@ -76,8 +76,8 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
               colors: [
-                Color.fromARGB(255, 73, 118, 207),
-                Color.fromARGB(255, 191, 200, 255),
+                Color(0xFF4976CF),
+                Color(0xFFBFC8FF),
               ],
             ),
           ),
@@ -122,6 +122,15 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8.0),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: "Confirm your password",
+                ),
+                controller: _passwordController,
+                enabled: _isEditing,
+                style: TextStyle(fontSize: 16.0),
+              ),
+              SizedBox(height: 20.0),
               Center(
                 child: ElevatedButton(
                     onPressed: () {
