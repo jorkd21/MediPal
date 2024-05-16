@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medipal/objects/appointment.dart';
 import 'package:medipal/objects/practitioner.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class AppointmentList extends StatefulWidget {
   final String? userUid;
@@ -25,7 +26,8 @@ class AppointmentListState extends State<AppointmentList> {
   }
 
   void _fetchPractitioner() async {
-    Practitioner? practitioner = await Practitioner.getPractitioner(widget.userUid!);
+    Practitioner? practitioner =
+        await Practitioner.getPractitioner(widget.userUid!);
     practitioner!.appointments.sort((a, b) {
       return a.patient!.toLowerCase().compareTo(b.patient!.toLowerCase());
     });
@@ -63,17 +65,17 @@ class AppointmentListState extends State<AppointmentList> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
-                    'Name: ${appointment.patient}',
+                    translation(context).nameLabel + '${appointment.patient}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "Topic: ${appointment.topic}",
+                    translation(context).topic + ": ${appointment.topic}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "Time: ${appointment.time}",
+                    translation(context).time + ": ${appointment.time}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -91,7 +93,7 @@ class AppointmentListState extends State<AppointmentList> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: const Text('Appointment List'),
+          title: Text(translation(context).appointmentList),
           flexibleSpace: Container(
             width: MediaQuery.of(context).size.width,
             decoration: const BoxDecoration(
@@ -115,8 +117,8 @@ class AppointmentListState extends State<AppointmentList> {
                     _searchQuery = value;
                   });
                 },
-                decoration: const InputDecoration(
-                  hintText: 'Search by name...',
+                decoration: InputDecoration(
+                  hintText: translation(context).searchByName,
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -142,10 +144,11 @@ class AppointmentListState extends State<AppointmentList> {
                       kToolbarHeight -
                       kBottomNavigationBarHeight,
                   child: ListView.builder(
-                    itemCount: _filterAppointments(_practitioner!.appointments).length,
+                    itemCount:
+                        _filterAppointments(_practitioner!.appointments).length,
                     itemBuilder: (context, index) {
-                      return _buildAppointmentInfo(
-                          _filterAppointments(_practitioner!.appointments)[index]);
+                      return _buildAppointmentInfo(_filterAppointments(
+                          _practitioner!.appointments)[index]);
                     },
                   ),
                 ),

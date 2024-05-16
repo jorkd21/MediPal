@@ -1,13 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
-//import 'package:medipal/objects/appointment_patient.dart';
 import 'package:medipal/pages/appointment_page.dart';
 import 'package:medipal/pages/dashboard.dart';
 import 'package:medipal/pages/patient_list.dart';
 import 'package:medipal/pages/patient_form.dart';
 import '../objects/patient.dart';
-import 'package:medipal/pages/languageRegionSelect.dart';
+import 'package:medipal/pages/languageSelect.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:medipal/pages/language_constants.dart';
 
@@ -17,7 +16,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  //Signs out the user and sends them back to the login page.
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
     Navigator.pushNamed(context, '/Login');
@@ -29,7 +27,7 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'Settings',
+          translation(context).settings,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -70,63 +68,6 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  /*Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        width: 50, // Fixed width for back arrow
-                        child: IconButton(
-                          icon: const Icon(Icons.arrow_back,
-                              color: Colors.black, size: 40),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ),
-                      Container(
-                        height: 100.0,
-                        width: 100.0,
-                        child: Image.asset(
-                          myImage,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Row(
-                      children: [
-                        SizedBox(width: 25),
-                        Padding(
-                          padding: EdgeInsets.only(top: 13),
-                          child: Image.asset(
-                            'assets/bettercog.png',
-                            fit: BoxFit.contain,
-                            width: 50,
-                            height: 50,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 7,
-                        ), // Add some space between the image and the text
-                        Text(
-                          translation(context).settings,
-                          style: TextStyle(
-                            fontSize: 45,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black.withOpacity(0.5),
-                                offset: const Offset(0, 3),
-                                blurRadius: 5,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),*/
                   SingleChildScrollView(
                     child: ListView(
                       shrinkWrap: true,
@@ -154,7 +95,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                         Container(
                                           margin: EdgeInsets.symmetric(
                                               horizontal: 10.0, vertical: 25.0),
-                                          height: 420.0,
+                                          height: 280.0,
                                           decoration: BoxDecoration(
                                             color: Color(0xFF6589e3),
                                             borderRadius:
@@ -190,7 +131,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                       'assets/arrow.png'),
                                                   title: Text(
                                                     translation(context)
-                                                        .languageAndRegion,
+                                                        .language,
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 25.0,
@@ -208,7 +149,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            LanguageRegionSelect(),
+                                                            LanguageSelect(),
                                                       ),
                                                     );
                                                   },
@@ -253,58 +194,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           35.0),
-                                                ),
-                                                child: ListTile(
-                                                  trailing: Image.asset(
-                                                      'assets/arrow.png'),
-                                                  title: Text(
-                                                    translation(context)
-                                                        .security,
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 25.0,
-                                                    ),
-                                                  ),
-                                                  subtitle: Text(
-                                                    translation(context)
-                                                        .privacySettingsForPatientDataAccess,
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                  onTap: () {
-                                                    // Navigate to Security settings page
-                                                  },
-                                                ),
-                                              ),
-                                              Container(
-                                                margin: EdgeInsets.all(5.0),
-                                                decoration: BoxDecoration(
-                                                  color: Color(0xFF7f97ed),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          35.0),
-                                                ),
-                                                child: ListTile(
-                                                  trailing: Image.asset(
-                                                      'assets/arrow.png'),
-                                                  title: Text(
-                                                    translation(context)
-                                                        .notifications,
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 25.0,
-                                                    ),
-                                                  ),
-                                                  subtitle: Text(
-                                                    '',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                  onTap: () {
-                                                    // Navigate to Security settings page
-                                                  },
                                                 ),
                                               ),
                                             ],

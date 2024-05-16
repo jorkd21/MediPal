@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/dashboard.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class PractitionerList extends StatefulWidget {
   const PractitionerList({super.key});
@@ -58,13 +59,13 @@ class PractitionerListState extends State<PractitionerList> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
-                    'Name: ${practitioner.name}',
+                    translation(context).nameLabel + ': ${practitioner.name}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "Email: ${practitioner.email}",
+                    translation(context).email + ": ${practitioner.email}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -81,7 +82,7 @@ class PractitionerListState extends State<PractitionerList> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('All Practitioner List'),
+        title: Text(translation(context).allPractitionersList),
         flexibleSpace: Container(
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
@@ -109,7 +110,7 @@ class PractitionerListState extends State<PractitionerList> {
                   },
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.fromLTRB(15, 20, 10, 0),
-                    hintText: 'Search by name...',
+                    hintText: translation(context).searchByName,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),

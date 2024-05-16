@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:medipal/pages/patient_form.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/pages/patient_data.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class PatientList extends StatefulWidget {
   const PatientList({super.key});
@@ -67,11 +69,13 @@ class PatientListState extends State<PatientList> {
                 children: [
                   const SizedBox(height: 4),
                   Text(
-                    'Name: ${patient.firstName} ${patient.middleName} ${patient.lastName}',
+                    translation(context).name +
+                        ': ${patient.firstName} ${patient.middleName} ${patient.lastName}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "DOB: ${patient.dob?.year}/${patient.dob?.month}/${patient.dob?.day}",
+                    translation(context).dobLabel +
+                        ": ${patient.dob?.year}/${patient.dob?.month}/${patient.dob?.day}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -172,7 +176,7 @@ class PatientListState extends State<PatientList> {
                     },
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.fromLTRB(15, 20, 10, 0),
-                      hintText: 'Search by name...',
+                      hintText: translation(context).searchByName,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),

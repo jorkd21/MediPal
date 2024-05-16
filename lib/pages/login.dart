@@ -6,6 +6,8 @@ import 'package:medipal/main.dart';
 import 'package:medipal/pages/home.dart';
 import 'package:medipal/pages/signup.dart';
 import 'package:medipal/pages/forgotpasswd.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -31,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
 
       // If sign-in is successful, navigate to the home page or show a success message
       setState(() {
-        _errorMessage = 'Login successful!';
+        _errorMessage = translation(context).loginSuccessful;
       });
       // Navigate to the home page
       Navigator.push(
@@ -39,17 +41,17 @@ class _LoginPageState extends State<LoginPage> {
         MaterialPageRoute(builder: (context) => HomeTestPage()),
       );
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
+      if (e.code == translation(context).userNotFoundLabel) {
         setState(() {
-          _errorMessage = 'No user found for that email.';
+          _errorMessage = translation(context).userNotFound;
         });
-      } else if (e.code == 'wrong-password') {
+      } else if (e.code == translation(context).wrongPasswordLabel) {
         setState(() {
-          _errorMessage = 'Wrong password provided for that user.';
+          _errorMessage = translation(context).wrongPassword;
         });
       } else {
         setState(() {
-          _errorMessage = e.message ?? 'An error occurred.';
+          _errorMessage = e.message ?? translation(context).errorOccurred;
         });
       }
     } catch (e) {
@@ -97,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(41.0, 0.0, 0.0, 0.0),
                     child: Text(
-                      'Welcome',
+                      translation(context).welcome,
                       style: TextStyle(
                         fontSize: 45,
                         fontWeight: FontWeight.bold,
@@ -109,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(41.0, 0.0, 0.0, 0.0),
                     child: Text(
-                      'Back',
+                      translation(context).back,
                       style: TextStyle(
                         fontSize: 45,
                         fontWeight: FontWeight.bold,
@@ -141,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                           controller: _usernameController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
-                            labelText: 'Email or phone',
+                            labelText: translation(context).emailOrPhone,
                             labelStyle: TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.normal),
@@ -175,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
                           controller: _passwordController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
-                            labelText: 'Password',
+                            labelText: translation(context).password,
                             labelStyle: TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.normal),
@@ -200,7 +202,7 @@ class _LoginPageState extends State<LoginPage> {
                         );
                       },
                       child: Text(
-                        'Forgot password?',
+                        translation(context).forgotPassword,
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
@@ -221,7 +223,7 @@ class _LoginPageState extends State<LoginPage> {
                             MaterialStateProperty.all<Color>(Color(0xFF003CD6)),
                       ),
                       child: Text(
-                        'Login',
+                        translation(context).login,
                         style: TextStyle(
                             color: Color(0xFFEFEFEF),
                             fontSize: 20,
@@ -235,7 +237,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Row(
                       children: [
                         Text(
-                          'Don\'t have an account? ',
+                          translation(context).dontHaveAnAccount,
                           style: TextStyle(
                               color: Color(0xFFEFEFEF),
                               fontSize: 15,
@@ -252,7 +254,7 @@ class _LoginPageState extends State<LoginPage> {
                             );
                           },
                           child: Text(
-                            'Sign Up',
+                            translation(context).signUp,
                             style: TextStyle(
                                 color: Color(0xFFEFEFEF),
                                 fontSize: 15,

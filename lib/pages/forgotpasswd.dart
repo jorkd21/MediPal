@@ -4,13 +4,13 @@ import 'package:flutter/widgets.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:medipal/main.dart';
+import 'package:medipal/pages/language_constants.dart';
 import 'package:medipal/pages/signup.dart';
 import 'package:medipal/pages/forgotpasswd.dart';
 
 class ForgotPassPage extends StatelessWidget {
-
   final TextEditingController _emailController = TextEditingController();
-  
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -28,34 +28,35 @@ class ForgotPassPage extends StatelessWidget {
                 ],
               ),
             ),
-          child: Padding(
-            padding: EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.arrow_back, color: Colors.white, size: 40),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    Container(
-                      height: 100,
-                      width: 100,
-                      child: Image.asset(
-                        myImage,
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_back,
+                            color: Colors.white, size: 40),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
                       ),
-                    ),
-                  ],
-                ),
+                      Container(
+                        height: 100,
+                        width: 100,
+                        child: Image.asset(
+                          myImage,
+                        ),
+                      ),
+                    ],
+                  ),
                   SizedBox(height: 17.0),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(41.0, 0.0, 0.0, 0.0),
                     child: Text(
-                      'Forgot Password?',
+                      translation(context).forgotPassword,
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -79,21 +80,22 @@ class ForgotPassPage extends StatelessWidget {
                               color: Colors.black.withOpacity(0.5),
                               spreadRadius: 2,
                               blurRadius: 5,
-                              offset: Offset(0, 3), // changes position of shadow
-                              ),
-                            ],
-                          ),
-                      child: TextField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: 'Enter your email',
-                        fillColor: Colors.white,
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: BorderSide.none,
-                          ),
-                        contentPadding: EdgeInsets.all(15.0),
+                              offset:
+                                  Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: TextField(
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                            labelText: translation(context).enterYourEmail,
+                            fillColor: Colors.white,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: EdgeInsets.all(15.0),
                           ),
                         ),
                       ),
@@ -101,19 +103,24 @@ class ForgotPassPage extends StatelessWidget {
                   ),
                   SizedBox(height: 35),
                   Align(
-                      alignment: Alignment.center,
-                      child: ElevatedButton(
-                        onPressed: null,
-                        style: ButtonStyle(
-                          minimumSize: MaterialStateProperty.all<Size>(Size(278.0, 44)),
-                          backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF003CD6)),
-                        ),
-                        child: Text(
-                          'Confirm',
-                          style: TextStyle(color: Color(0xFFEFEFEF), fontSize: 20, fontStyle: FontStyle.normal),
-                        ),
+                    alignment: Alignment.center,
+                    child: ElevatedButton(
+                      onPressed: null,
+                      style: ButtonStyle(
+                        minimumSize:
+                            MaterialStateProperty.all<Size>(Size(278.0, 44)),
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Color(0xFF003CD6)),
+                      ),
+                      child: Text(
+                        translation(context).confirm,
+                        style: TextStyle(
+                            color: Color(0xFFEFEFEF),
+                            fontSize: 20,
+                            fontStyle: FontStyle.normal),
                       ),
                     ),
+                  ),
                   SizedBox(height: 75),
                 ],
               ),

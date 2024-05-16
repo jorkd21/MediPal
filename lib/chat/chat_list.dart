@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/chat/chat_page.dart';
 import 'package:medipal/objects/practitioner.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class ChatList extends StatefulWidget {
   const ChatList({super.key});
@@ -23,7 +24,8 @@ class ChatListState extends State<ChatList> {
   }
 
   void _fetchPractitioners() async {
-    List<Practitioner>? practitioners = await Practitioner.getAllPractitioners();
+    List<Practitioner>? practitioners =
+        await Practitioner.getAllPractitioners();
     setState(() {
       _practitioners = practitioners!;
     });
@@ -35,7 +37,7 @@ class ChatListState extends State<ChatList> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'Practitioners',
+          translation(context).practitionerChat,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,

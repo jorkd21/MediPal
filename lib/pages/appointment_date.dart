@@ -5,6 +5,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:medipal/objects/appointment.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/objects/practitioner.dart';
+import 'package:medipal/pages/language_constants.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AppointmentDate extends StatefulWidget {
@@ -82,8 +83,10 @@ class _AppointmentDateState extends State<AppointmentDate> {
 
       // Show a confirmation message or navigate to another screen if needed
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-            'Appointment added for $patientId at ${_currentIndex! + 9}:00'),
+        content: Text(translation(context).appointmentAddedFor +
+            ' $patientId ' +
+            translation(context).at +
+            ' ${_currentIndex! + 9}:00'),
       ));
       // Clear the selected index
       setState(() {
@@ -113,14 +116,14 @@ class _AppointmentDateState extends State<AppointmentDate> {
     DatabaseReference ref = FirebaseDatabase.instance.ref('users/${user!.uid}');
     ref.update(_practitioner.toJson()).then((_) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Patient data updated'),
+        SnackBar(
+          content: Text(translation(context).patientDataUpdated),
         ),
       );
     }).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error updating patient: $error'),
+          content: Text(translation(context).errorUpdatingPatient + ': $error'),
         ),
       );
     });
@@ -133,7 +136,8 @@ class _AppointmentDateState extends State<AppointmentDate> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Date Selected: ${today.toString().split(" ")[0]}"),
+        title: Text(translation(context).dateSelected +
+            ": ${today.toString().split(" ")[0]}"),
         flexibleSpace: Container(
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
@@ -154,11 +158,11 @@ class _AppointmentDateState extends State<AppointmentDate> {
             child: Column(
               children: <Widget>[
                 appointmentWidget, // Use the variable instead of method call because of 'Methods can't be invoked in constant expressions'
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
                   child: Center(
                     child: Text(
-                      'Select a Time',
+                      translation(context).selectATime,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
@@ -178,9 +182,9 @@ class _AppointmentDateState extends State<AppointmentDate> {
                       vertical: 40,
                     ),
                     alignment: Alignment.center,
-                    child: const Text(
+                    child: Text(
                       //message style
-                      'No Times Available For This Day',
+                      translation(context).noTimesAvailableForThisDay,
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
@@ -250,9 +254,9 @@ class _AppointmentDateState extends State<AppointmentDate> {
                             showSearchBox: true,
                           ),
                           items: _patients, // Set items to fetched patient data
-                          dropdownDecoratorProps: const DropDownDecoratorProps(
+                          dropdownDecoratorProps: DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
-                              labelText: "Select a Patient",
+                              labelText: translation(context).selectAPatient,
                             ),
                           ),
                           onChanged: (Patient? newValue) {
@@ -267,7 +271,8 @@ class _AppointmentDateState extends State<AppointmentDate> {
                         ),
                       ),
                       TextField(
-                        decoration: InputDecoration(labelText: 'Topic'),
+                        decoration: InputDecoration(
+                            labelText: translation(context).topic),
                         onChanged: (value) {
                           setState(() {
                             _topic = value;
@@ -291,8 +296,8 @@ class _AppointmentDateState extends State<AppointmentDate> {
                                         197, 29, 53, 161), //button color
                                   ),
                                 ),
-                                child: const Text(
-                                  'Cancel',
+                                child: Text(
+                                  translation(context).cancel,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15,
@@ -314,8 +319,8 @@ class _AppointmentDateState extends State<AppointmentDate> {
                                         197, 29, 53, 161), //button color
                                   ),
                                 ),
-                                child: const Text(
-                                  'Submit',
+                                child: Text(
+                                  translation(context).submit,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15,
