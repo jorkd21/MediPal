@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
+import 'package:medipal/pages/account_details.dart';
 //import 'package:medipal/objects/appointment_patient.dart';
 import 'package:medipal/pages/appointment_page.dart';
 import 'package:medipal/pages/dashboard.dart';
@@ -242,7 +243,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                                     ),
                                                   ),
                                                   onTap: () {
-                                                    // Navigate to Security settings page
+                                                    // Navigate to Account settings page
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            AccountInfoPage(),
+                                                      ),
+                                                    );
                                                   },
                                                 ),
                                               ),
