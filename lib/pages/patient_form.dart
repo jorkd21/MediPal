@@ -107,46 +107,43 @@ class PatientFormState extends State<PatientForm> {
 
   Future<void> _submitForm() async {
     if (_currentPageIsValid()) {
-      if (widget.patient.id?.isNotEmpty == true) {
-        // update existing patient
-        if (widget.patient.id != null) {
-          DatabaseReference ref =
-              FirebaseDatabase.instance.ref('patient/${widget.patient.id}');
-          ref.update(widget.patient.toJson()).then((_) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Patient data updated'),
-              ),
-            );
-          }).catchError((error) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Error updating patient: $error'),
-              ),
-            );
-          });
-        }
-        // create new patient data
-        else {
-          DatabaseReference ref = FirebaseDatabase.instance.ref('patient');
-          DatabaseReference newPatientRef = ref.push();
-          setState(() {
-            widget.patient.id = newPatientRef.key!;
-          });
-          newPatientRef.set(widget.patient.toJson()).then((_) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Patient data added'),
-              ),
-            );
-          }).catchError((error) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Error adding patient: $error'),
-              ),
-            );
-          });
-        }
+      if (widget.patient.id != null) {
+        DatabaseReference ref =
+            FirebaseDatabase.instance.ref('patient/${widget.patient.id}');
+        ref.update(widget.patient.toJson()).then((_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Patient data updated'),
+            ),
+          );
+        }).catchError((error) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error updating patient: $error'),
+            ),
+          );
+        });
+      }
+      // create new patient data
+      else {
+        DatabaseReference ref = FirebaseDatabase.instance.ref('patient');
+        DatabaseReference newPatientRef = ref.push();
+        setState(() {
+          widget.patient.id = newPatientRef.key!;
+        });
+        newPatientRef.set(widget.patient.toJson()).then((_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Patient data added'),
+            ),
+          );
+        }).catchError((error) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error adding patient: $error'),
+            ),
+          );
+        });
       }
       // files
       if (widget.patient.files.isEmpty) return;
@@ -214,7 +211,6 @@ class PatientFormState extends State<PatientForm> {
             ],
           ),
         ),
-
         flexibleSpace: Container(
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
