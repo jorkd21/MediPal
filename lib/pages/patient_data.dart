@@ -473,17 +473,18 @@ class GetPatientDataState extends State<DisplayPatient> {
                     for (int i = 0; i < _patient.allergies.length; i++)
                       Row(
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.only(top: 18.92, left: 30),
-                            child: Text(
-                              'Allergies', // You can customize this text if needed
-                              style: TextStyle(
-                                color: Color(0xFF7B7B7B),
-                                fontWeight: FontWeight.normal,
-                                fontSize: 16,
+                          if (i == 0)
+                            const Padding(
+                              padding: EdgeInsets.only(top: 18.92, left: 30),
+                              child: Text(
+                                'Allergies', // You can customize this text if needed
+                                style: TextStyle(
+                                  color: Color(0xFF7B7B7B),
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
-                          ),
                           Expanded(
                             child: Padding(
                               padding:
@@ -522,17 +523,18 @@ class GetPatientDataState extends State<DisplayPatient> {
                     for (int i = 0; i < _patient.currMedications.length; i++)
                       Row(
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.only(top: 18.92, left: 30),
-                            child: Text(
-                              'Current Medications', // You can customize this text if needed
-                              style: TextStyle(
-                                color: Color(0xFF7B7B7B),
-                                fontWeight: FontWeight.normal,
-                                fontSize: 16,
+                          if (i == 0)
+                            const Padding(
+                              padding: EdgeInsets.only(top: 18.92, left: 30),
+                              child: Text(
+                                'Current Medications', // You can customize this text if needed
+                                style: TextStyle(
+                                  color: Color(0xFF7B7B7B),
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
-                          ),
                           Expanded(
                             child: Padding(
                               padding:
@@ -554,17 +556,18 @@ class GetPatientDataState extends State<DisplayPatient> {
                     for (int i = 0; i < _patient.prevMedications.length; i++)
                       Row(
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.only(top: 18.92, left: 30),
-                            child: Text(
-                              'Previous Medications', // You can customize this text if needed
-                              style: TextStyle(
-                                color: Color(0xFF7B7B7B),
-                                fontWeight: FontWeight.normal,
-                                fontSize: 16,
+                          if (i == 0)
+                            const Padding(
+                              padding: EdgeInsets.only(top: 18.92, left: 30),
+                              child: Text(
+                                'Previous Medications', // You can customize this text if needed
+                                style: TextStyle(
+                                  color: Color(0xFF7B7B7B),
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
-                          ),
                           Expanded(
                             child: Padding(
                               padding:

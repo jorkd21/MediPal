@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/dashboard.dart';
+import 'package:medipal/pages/user_patients.dart';
 
 class PractitionerList extends StatefulWidget {
   const PractitionerList({super.key});
@@ -41,31 +43,33 @@ class PractitionerListState extends State<PractitionerList> {
   }
 
   Widget _buildPractitionerInfo(Practitioner practitioner) {
-    return Container(
-      decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.black,
-            width: 0.5,
-          ),
-        ),
-      ),
-      child: ListTile(
-        leading: const Icon(Icons.person),
-        trailing: const Icon(Icons.arrow_forward_ios),
-        title: Text('${practitioner.name}'),
-        subtitle: Text('${practitioner.email}'),
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Dashboard(
-              userUid: practitioner.id,
+    return FirebaseAuth.instance.currentUser!.uid != practitioner.id
+        ? Container(
+            decoration: const BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Colors.black,
+                  width: 0.5,
+                ),
+              ),
             ),
-          ),
-        ),
-        tileColor: const Color(0xFFDADFEC),
-      ),
-    );
+            child: ListTile(
+              leading: const Icon(Icons.person),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              title: Text('${practitioner.name}'),
+              subtitle: Text('${practitioner.email}'),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Dashboard(
+                    userUid: practitioner.id,
+                  ),
+                ),
+              ),
+              tileColor: const Color(0xFFDADFEC),
+            ),
+          )
+        : Container();
   }
 
   @override
