@@ -20,6 +20,7 @@ class _AppointmentDateState extends State<AppointmentDate> {
   late Practitioner _practitioner;
   late List<Patient> _patients = [];
   final User? user = FirebaseAuth.instance.currentUser;
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   DateTime today = DateTime.now();
   String? _topic;
@@ -62,7 +63,12 @@ class _AppointmentDateState extends State<AppointmentDate> {
   }
 
   void _submitAppointment(String patientId) {
-    if (_topic != null) {
+    if (_patient == null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Please select a patient'),
+      ));
+    }
+    if (_formkey.currentState!.validate()) {
       // Calculate the start and end times based on the selected index
       DateTime startTime =
           DateTime(today.year, today.month, today.day, hour, minute);
@@ -269,13 +275,23 @@ class _AppointmentDateState extends State<AppointmentDate> {
                     '${patient.firstName} ${patient.middleName} ${patient.lastName}',
               ),
             ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Reason'),
-              onChanged: (value) {
-                setState(() {
-                  _topic = value;
-                });
-              },
+            Form(
+              key: _formkey,
+              child: TextFormField(
+                decoration:
+                    InputDecoration(labelText: 'Reason for Appointment'),
+                onChanged: (value) {
+                  setState(() {
+                    _topic = value;
+                  });
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Required';
+                  }
+                  return null;
+                },
+              ),
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 50),
@@ -302,10 +318,8 @@ class _AppointmentDateState extends State<AppointmentDate> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () => {
-                        _patient != null ? _submitAppointment(_patient!) : null,
-                        setState(() {})
-                      },
+                      onPressed: () =>
+                          {_submitAppointment(_patient!), setState(() {})},
                       style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(
                             Color(0xFF1F56DE) //button color
