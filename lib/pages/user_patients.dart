@@ -1,6 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/patient_data.dart';
@@ -115,30 +114,43 @@ class PractitionerPatientsState extends State<PractitionerPatients> {
   }
 
   Widget _buildPatientInfo(Patient patient, bool isPatient) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DisplayPatient(patientId: patient.id!),
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.black,
+            width: 0.5,
           ),
-        );
-      },
+        ),
+      ),
       child: ListTile(
+        leading: const Icon(Icons.person),
         title: Text(
             '${patient.firstName} ${patient.middleName} ${patient.lastName}'),
-        subtitle: Text('DOB: ${patient.dob.toString()}'),
-        trailing: ElevatedButton(
-          onPressed: (_isDeleteMode || _isAddMode)
-              ? () {
-                  if (isPatient) {
-                    _removeFromPatients(patient);
-                  } else {
-                    _addToPatients(patient);
-                  }
-                }
-              : null,
-          child: Icon(isPatient ? Icons.delete : Icons.add),
+        subtitle: Text(
+            'DOB: ${patient.dob!.year}/${patient.dob!.month}/${patient.dob!.day}'),
+        trailing: _isDeleteMode
+            ? IconButton(
+                onPressed: () {
+                  _removeFromPatients(patient);
+                },
+                icon: const Icon(Icons.delete),
+              )
+            : _isAddMode
+                ? IconButton(
+                    onPressed: () {
+                      _addToPatients(patient);
+                    },
+                    icon: const Icon(Icons.add),
+                  )
+                : null,
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DisplayPatient(
+              patientId: patient.id!,
+            ),
+          ),
         ),
       ),
     );
@@ -258,49 +270,39 @@ class PractitionerPatientsState extends State<PractitionerPatients> {
           ),
         ),
       ),
-      body: Container(
-        color: Colors.white,
-        child: ListView(
-          children: [
+      body: ListView(
+        children: [
+          if (!_isAddMode)
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (!_isAddMode)
-                  Column(
-                    children: [
-                      // display the patient list
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _filterPatients(_myPatients).length,
-                        itemBuilder: (context, index) {
-                          Patient familyPatient =
-                              _filterPatients(_myPatients)[index];
-                          return _buildPatientInfo(familyPatient, true);
-                        },
-                      ),
-                    ],
-                  ),
-                if (_isAddMode)
-                  Column(
-                    children: [
-                      // display all patients
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _filterPatients(_allPatients).length,
-                        itemBuilder: (context, index) {
-                          Patient patient =
-                              _filterPatients(_allPatients)[index];
-                          return _buildPatientInfo(patient, false);
-                        },
-                      ),
-                    ],
-                  ),
+                // display the patient list
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: _filterPatients(_myPatients).length,
+                  itemBuilder: (context, index) {
+                    Patient familyPatient = _filterPatients(_myPatients)[index];
+                    return _buildPatientInfo(familyPatient, true);
+                  },
+                ),
               ],
             ),
-          ],
-        ),
+          if (_isAddMode)
+            Column(
+              children: [
+                // display all patients
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: _filterPatients(_allPatients).length,
+                  itemBuilder: (context, index) {
+                    Patient patient = _filterPatients(_allPatients)[index];
+                    return _buildPatientInfo(patient, false);
+                  },
+                ),
+              ],
+            ),
+        ],
       ),
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),

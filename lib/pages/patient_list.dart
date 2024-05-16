@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:medipal/pages/patient_data.dart';
 import 'package:medipal/pages/patient_form.dart';
 import 'package:medipal/objects/patient.dart';
-import 'package:medipal/pages/patient_data.dart';
 
 class PatientList extends StatefulWidget {
   const PatientList({super.key});
@@ -46,64 +46,49 @@ class PatientListState extends State<PatientList> {
   }
 
   Widget _buildPatientInfo(Patient patient) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DisplayPatient(
-              patientId: patient.id!,
-            ),
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.black,
+            width: 0.5,
           ),
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 4),
-                  Text(
-                    'Name: ${patient.firstName} ${patient.middleName} ${patient.lastName}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "DOB: ${patient.dob?.year}/${patient.dob?.month}/${patient.dob?.day}",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-            if (_isEditMode)
-              IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PatientForm(
-                        patient: patient,
-                      ),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.edit),
-              ),
-            if (_isDeleteMode)
-              IconButton(
+        ),
+      ),
+      child: ListTile(
+        leading: const Icon(Icons.person),
+        trailing: _isDeleteMode
+            ? IconButton(
                 onPressed: () async {
-                  await Patient.deletePatient(
-                      patient.id!); // possible check is success
+                  await Patient.deletePatient(patient.id!);
                   setState(() {
                     _patients.remove(patient);
                   });
                 },
                 icon: const Icon(Icons.delete),
-              ),
-          ],
+              )
+            : _isEditMode
+                ? const Icon(Icons.edit)
+                : null,
+        title: Text(
+            '${patient.firstName} ${patient.middleName} ${patient.lastName}'),
+        subtitle: Text(
+            'DOB: ${patient.dob!.year}/${patient.dob!.month}/${patient.dob!.day}'),
+        onTap: () => Navigator.push(
+          context,
+          _isEditMode
+              ? MaterialPageRoute(
+                  builder: (context) => PatientForm(
+                    patient: patient,
+                  ),
+                )
+              : MaterialPageRoute(
+                  builder: (context) => DisplayPatient(
+                    patientId: patient.id!,
+                  ),
+                ),
         ),
+        tileColor: const Color(0xFFDADFEC),
       ),
     );
   }
@@ -186,20 +171,11 @@ class PatientListState extends State<PatientList> {
         ),
       ),
       body: _patients.isNotEmpty
-          ? Container(
-              padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
-              color: Colors.white,
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height -
-                    kToolbarHeight -
-                    kBottomNavigationBarHeight,
-                child: ListView.builder(
-                  itemCount: _filterPatients(_patients).length,
-                  itemBuilder: (context, index) {
-                    return _buildPatientInfo(_filterPatients(_patients)[index]);
-                  },
-                ),
-              ),
+          ? ListView.builder(
+              itemCount: _filterPatients(_patients).length,
+              itemBuilder: (context, index) {
+                return _buildPatientInfo(_filterPatients(_patients)[index]);
+              },
             )
           : const Center(
               child: CircularProgressIndicator(),

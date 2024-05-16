@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-//import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/pages/dashboard.dart';
 import 'package:medipal/pages/patient_form.dart';
 import 'package:medipal/pages/appointment_page.dart';
