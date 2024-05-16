@@ -112,9 +112,9 @@ class PatientListState extends State<PatientList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         title: Text(
-          'All Patient List',
+          'All Patients List',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,

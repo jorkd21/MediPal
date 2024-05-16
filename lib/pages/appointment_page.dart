@@ -62,7 +62,7 @@ class AppointmentPageState extends State<AppointmentPage> {
       future: _practitionerFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // Show loading indicator while fetching data
+          return  CircularProgressIndicator(); // Show loading indicator while fetching data
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {

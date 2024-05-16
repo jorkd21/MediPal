@@ -71,7 +71,6 @@ class ChatListState extends State<ChatList> {
                 if (practitioner.id == _firebaseAuth.currentUser!.uid) {
                   return Container();
                 }
-
                 return Container(
                   decoration: const BoxDecoration(
                     border: Border(
