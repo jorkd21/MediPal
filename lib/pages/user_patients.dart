@@ -1,6 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/patient_data.dart';
@@ -128,19 +127,23 @@ class PractitionerPatientsState extends State<PractitionerPatients> {
         leading: const Icon(Icons.person),
         title: Text(
             '${patient.firstName} ${patient.middleName} ${patient.lastName}'),
-        subtitle: Text('DOB: ${patient.dob!.year}/${patient.dob!.month}/${patient.dob!.day}'),
-        trailing: ElevatedButton(
-          onPressed: (_isDeleteMode || _isAddMode)
-              ? () {
-                  if (isPatient) {
-                    _removeFromPatients(patient);
-                  } else {
-                    _addToPatients(patient);
-                  }
-                }
-              : null,
-          child: Icon(isPatient ? Icons.delete : Icons.add),
-        ),
+        subtitle: Text(
+            'DOB: ${patient.dob!.year}/${patient.dob!.month}/${patient.dob!.day}'),
+        trailing: _isDeleteMode
+            ? IconButton(
+                onPressed: () {
+                  _removeFromPatients(patient);
+                },
+                icon: const Icon(Icons.delete),
+              )
+            : _isAddMode
+                ? IconButton(
+                    onPressed: () {
+                      _addToPatients(patient);
+                    },
+                    icon: const Icon(Icons.add),
+                  )
+                : null,
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
@@ -268,39 +271,38 @@ class PractitionerPatientsState extends State<PractitionerPatients> {
         ),
       ),
       body: ListView(
-          children: [
-            if (!_isAddMode)
-              Column(
-                children: [
-                  // display the patient list
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: _filterPatients(_myPatients).length,
-                    itemBuilder: (context, index) {
-                      Patient familyPatient =
-                          _filterPatients(_myPatients)[index];
-                      return _buildPatientInfo(familyPatient, true);
-                    },
-                  ),
-                ],
-              ),
-            if (_isAddMode)
-              Column(
-                children: [
-                  // display all patients
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: _filterPatients(_allPatients).length,
-                    itemBuilder: (context, index) {
-                      Patient patient = _filterPatients(_allPatients)[index];
-                      return _buildPatientInfo(patient, false);
-                    },
-                  ),
-                ],
-              ),
-          ],
+        children: [
+          if (!_isAddMode)
+            Column(
+              children: [
+                // display the patient list
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: _filterPatients(_myPatients).length,
+                  itemBuilder: (context, index) {
+                    Patient familyPatient = _filterPatients(_myPatients)[index];
+                    return _buildPatientInfo(familyPatient, true);
+                  },
+                ),
+              ],
+            ),
+          if (_isAddMode)
+            Column(
+              children: [
+                // display all patients
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: _filterPatients(_allPatients).length,
+                  itemBuilder: (context, index) {
+                    Patient patient = _filterPatients(_allPatients)[index];
+                    return _buildPatientInfo(patient, false);
+                  },
+                ),
+              ],
+            ),
+        ],
       ),
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),

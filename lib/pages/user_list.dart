@@ -21,7 +21,7 @@ class PractitionerListState extends State<PractitionerList> {
 
   void _fetchPractitioners() async {
     List<Practitioner>? practitioner = await Practitioner.getAllPractitioners();
-    practitioner!.sort((a, b) {
+    practitioner.sort((a, b) {
       return a.name!.toLowerCase().compareTo(b.name!.toLowerCase());
     });
     setState(() {
@@ -56,12 +56,13 @@ class PractitionerListState extends State<PractitionerList> {
         title: Text('${practitioner.name}'),
         subtitle: Text('${practitioner.email}'),
         onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Dashboard(
-                userUid: practitioner.id,
-              ),
-            )),
+          context,
+          MaterialPageRoute(
+            builder: (context) => Dashboard(
+              userUid: practitioner.id,
+            ),
+          ),
+        ),
         tileColor: const Color(0xFFDADFEC),
       ),
     );
@@ -98,7 +99,7 @@ class PractitionerListState extends State<PractitionerList> {
                   Color.fromARGB(255, 191, 200, 255),
                 ],
               ),
-            ],
+            ),
           ),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(kToolbarHeight),
@@ -134,10 +135,7 @@ class PractitionerListState extends State<PractitionerList> {
             : const Center(
                 child: CircularProgressIndicator(),
               ),
-            )
-          : const Center(
-              child: CircularProgressIndicator(),
-            ),
+      ),
     );
   }
 }
