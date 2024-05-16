@@ -156,7 +156,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                         Container(
                                           margin: EdgeInsets.symmetric(
                                               horizontal: 10.0, vertical: 25.0),
-                                          height: 420.0,
+                                          height: 290.0,
                                           decoration: BoxDecoration(
                                             color: Color(0xFF6589e3),
                                             borderRadius:
@@ -252,67 +252,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                                             AccountInfoPage(userUid: FirebaseAuth.instance.currentUser!.uid),
                                                       ),
                                                     );
-                                                  },
-                                                ),
-                                              ),
-                                              Container(
-                                                margin: EdgeInsets.all(5.0),
-                                                decoration: BoxDecoration(
-                                                  color: Color(0xFF7f97ed),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          35.0),
-                                                ),
-                                                child: ListTile(
-                                                  trailing: Image.asset(
-                                                      'assets/arrow.png'),
-                                                  title: Text(
-                                                    translation(context)
-                                                        .security,
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 25.0,
-                                                    ),
-                                                  ),
-                                                  subtitle: Text(
-                                                    translation(context)
-                                                        .privacySettingsForPatientDataAccess,
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                  onTap: () {
-                                                    // Navigate to Security settings page
-                                                  },
-                                                ),
-                                              ),
-                                              Container(
-                                                margin: EdgeInsets.all(5.0),
-                                                decoration: BoxDecoration(
-                                                  color: Color(0xFF7f97ed),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          35.0),
-                                                ),
-                                                child: ListTile(
-                                                  trailing: Image.asset(
-                                                      'assets/arrow.png'),
-                                                  title: Text(
-                                                    translation(context)
-                                                        .notifications,
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 25.0,
-                                                    ),
-                                                  ),
-                                                  subtitle: Text(
-                                                    '',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                  onTap: () {
-                                                    // Navigate to Security settings page
                                                   },
                                                 ),
                                               ),
