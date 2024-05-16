@@ -23,7 +23,8 @@ class ChatListState extends State<ChatList> {
   }
 
   void _fetchPractitioners() async {
-    List<Practitioner>? practitioners = await Practitioner.getAllPractitioners();
+    List<Practitioner>? practitioners =
+        await Practitioner.getAllPractitioners();
     setState(() {
       _practitioners = practitioners!;
     });
@@ -71,7 +72,6 @@ class ChatListState extends State<ChatList> {
                 if (practitioner.id == _firebaseAuth.currentUser!.uid) {
                   return Container();
                 }
-
                 return Container(
                   decoration: const BoxDecoration(
                     border: Border(
