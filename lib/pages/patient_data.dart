@@ -128,7 +128,7 @@ class DisplayPatientState extends State<DisplayPatient> {
                                   width: 200,
                                   height: 200,
                                 )
-                              : const CircularProgressIndicator()),
+                              : Image.asset(profilePic)),
                     ),
                     const SizedBox(
                       height: 8.47,
@@ -513,18 +513,19 @@ class DisplayPatientState extends State<DisplayPatient> {
                               i++)
                             Row(
                               children: [
-                                const Padding(
-                                  padding:
-                                      EdgeInsets.only(top: 18.92, left: 30),
-                                  child: Text(
-                                    'Current Medications',
-                                    style: TextStyle(
-                                      color: Color(0xFF7B7B7B),
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 16,
+                                if (i == 0)
+                                  const Padding(
+                                    padding:
+                                        EdgeInsets.only(top: 18.92, left: 30),
+                                    child: Text(
+                                      'Current Medications',
+                                      style: TextStyle(
+                                        color: Color(0xFF7B7B7B),
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 16,
+                                      ),
                                     ),
                                   ),
-                                ),
                                 Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.only(
@@ -548,18 +549,19 @@ class DisplayPatientState extends State<DisplayPatient> {
                               i++)
                             Row(
                               children: [
-                                const Padding(
-                                  padding:
-                                      EdgeInsets.only(top: 18.92, left: 30),
-                                  child: Text(
-                                    'Previous Medications',
-                                    style: TextStyle(
-                                      color: Color(0xFF7B7B7B),
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 16,
+                                if (i == 0)
+                                  const Padding(
+                                    padding:
+                                        EdgeInsets.only(top: 18.92, left: 30),
+                                    child: Text(
+                                      'Previous Medications',
+                                      style: TextStyle(
+                                        color: Color(0xFF7B7B7B),
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 16,
+                                      ),
                                     ),
                                   ),
-                                ),
                                 Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.only(

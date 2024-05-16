@@ -67,10 +67,13 @@ class PatientListState extends State<PatientList> {
                 },
                 icon: const Icon(Icons.delete),
               )
-            : null,
+            : _isEditMode
+                ? const Icon(Icons.edit)
+                : null,
         title: Text(
             '${patient.firstName} ${patient.middleName} ${patient.lastName}'),
-        subtitle: Text('DOB: ${patient.dob!.year}/${patient.dob!.month}/${patient.dob!.day}'),
+        subtitle: Text(
+            'DOB: ${patient.dob!.year}/${patient.dob!.month}/${patient.dob!.day}'),
         onTap: () => Navigator.push(
           context,
           _isEditMode
