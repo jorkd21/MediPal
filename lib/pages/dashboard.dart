@@ -42,14 +42,6 @@ class DashboardState extends State<Dashboard> {
 
   Widget _buildAppointmentInfo(Appointment appointment) {
     return GestureDetector(
-      onTap: () {
-        /* Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PractitionerPage(practitioner: practitioner),
-          ),
-        ); */
-      },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
@@ -229,13 +221,11 @@ class DashboardState extends State<Dashboard> {
                     ),
                   ),
                 ),
-              ),
-        bottomNavigationBar: BottomAppBar(
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 5,
-          child: Column(
-            children: [
-              widget.userUid != FirebaseAuth.instance.currentUser!.uid
+          bottomNavigationBar: BottomAppBar(
+            shape: const CircularNotchedRectangle(),
+            notchMargin: 5,
+            child: Expanded(
+              child: widget.userUid != FirebaseAuth.instance.currentUser!.uid
                   ? FloatingActionButton(
                       onPressed: () {
                         Navigator.push(
@@ -271,8 +261,8 @@ class DashboardState extends State<Dashboard> {
                         color: Colors.white,
                       ),
                     ),
-            ],
-          ),
-        ));
+            ),
+          )),
+    );
   }
 }
