@@ -1,26 +1,26 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/patient_data.dart';
+import 'package:medipal/pages/patient_list.dart';
 
-class UserPatients extends StatefulWidget {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final User? user;
+class PractitionerPatients extends StatefulWidget {
+  final String? userUid;
 
-  UserPatients({
+  const PractitionerPatients({
     super.key,
-    required this.user,
+    required this.userUid,
   });
 
   @override
-  UserPatientsState createState() {
-    return UserPatientsState();
+  PractitionerPatientsState createState() {
+    return PractitionerPatientsState();
   }
 }
 
-class UserPatientsState extends State<UserPatients> {
+class PractitionerPatientsState extends State<PractitionerPatients> {
   late Practitioner _practitioner;
   late List<Patient> _allPatients = [];
   late final List<Patient> _myPatients = [];
@@ -37,7 +37,7 @@ class UserPatientsState extends State<UserPatients> {
 
   void _fetchPractitioner() async {
     Practitioner? practitioner =
-        await Practitioner.getPractitioner(widget.user!.uid);
+        await Practitioner.getPractitioner(widget.userUid!);
     if (practitioner != null) {
       setState(() {
         _practitioner = practitioner;
@@ -46,9 +46,9 @@ class UserPatientsState extends State<UserPatients> {
   }
 
   void _fetchPatients() async {
-    List<Patient> patients = await Patient.getPatients();
+    List<Patient>? patients = await Patient.getAllPatients();
     setState(() {
-      _allPatients = patients;
+      _allPatients = patients!;
     });
     _separateMyPatients();
     _sortLists();
@@ -98,7 +98,7 @@ class UserPatientsState extends State<UserPatients> {
 
   Future<void> _updatePatients() async {
     DatabaseReference ref =
-        FirebaseDatabase.instance.ref('users/${widget.user!.uid}');
+        FirebaseDatabase.instance.ref('users/${widget.userUid!}');
     ref.update(_practitioner.toJson()).then((_) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -120,7 +120,7 @@ class UserPatientsState extends State<UserPatients> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => GetPatientData(patientId: patient.id!),
+            builder: (context) => DisplayPatient(patientId: patient.id!),
           ),
         );
       },
@@ -162,7 +162,33 @@ class UserPatientsState extends State<UserPatients> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(_isAddMode ? 'All Patients' : 'Patient List'),
+        title: Text(
+          _isAddMode ? 'Remaining Patients' : 'My Patient List',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                color: Colors.black.withOpacity(0.5),
+                offset: const Offset(0, 3),
+                blurRadius: 5,
+              ),
+            ],
+          ),
+        ),
+        flexibleSpace: Container(
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                Color.fromARGB(255, 73, 118, 207),
+                Color.fromARGB(255, 191, 200, 255),
+              ],
+            ),
+          ),
+        ),
         actions: [
           // delete toggle button
           if (!_isAddMode)
@@ -185,35 +211,58 @@ class UserPatientsState extends State<UserPatients> {
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: const Size(50, 50),
+          preferredSize: const Size(50, 57),
           child: Row(
             children: [
               Expanded(
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      _searchQuery = value.toLowerCase();
-                    });
-                  },
-                  decoration: const InputDecoration(
-                    hintText: 'Search',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Column(
+                      children: [
+                        TextField(
+                          onChanged: (value) {
+                            setState(() {
+                              _searchQuery = value.toLowerCase();
+                            });
+                          },
+                          decoration: InputDecoration(
+                            contentPadding:
+                                const EdgeInsets.fromLTRB(15, 20, 10, 0),
+                            hintText: 'Search by name...',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            filled: true,
+                            fillColor: const Color.fromARGB(143, 255, 255, 255),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    )),
               ),
               ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    Colors.transparent,
+                  ),
+                ),
                 onPressed: _updatePatients,
-                child: const Text('Update'),
+                child: const Text(
+                  'Update',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ],
           ),
         ),
       ),
-      body: ListView(
-        children: [
-          Form(
-            key: widget.formKey,
-            child: Column(
+      body: Container(
+        color: Colors.white,
+        child: ListView(
+          children: [
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (!_isAddMode)
@@ -250,8 +299,27 @@ class UserPatientsState extends State<UserPatients> {
                   ),
               ],
             ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 5,
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const PatientList(),
+              ),
+            );
+          },
+          backgroundColor: const Color(0xFF003CD6),
+          child: const Icon(
+            Icons.list,
+            color: Colors.white,
           ),
-        ],
+        ),
       ),
     );
   }

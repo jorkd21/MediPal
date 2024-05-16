@@ -13,12 +13,11 @@ class FamilyForm extends StatefulWidget {
   });
 
   @override
-  FamilyFormState createState() {
-    return FamilyFormState();
-  }
+  FamilyFormState createState() => FamilyFormState();
 }
 
 class FamilyFormState extends State<FamilyForm> {
+  // variables
   late List<Patient> _patients = [];
   late final List<Patient> _family = [];
   bool _isDeleteMode = false;
@@ -32,18 +31,13 @@ class FamilyFormState extends State<FamilyForm> {
   }
 
   void _fetchPatients() async {
-    List<Patient> patients = await Patient.getPatients();
+    List<Patient>? patients = await Patient.getAllPatients();
     setState(() {
-      _patients = patients;
+      _patients = patients!;
     });
-    _separateFamily();
-    _sortLists();
-  }
-
-  void _separateFamily() {
-    List<Patient> patientsCopy = List.of(_patients);
+    //List<Patient> patientsCopy = List.of(_patients);
     for (String s in widget.patient.family) {
-      for (Patient p in patientsCopy) {
+      for (Patient p in patients!) {
         if (p.id == s) {
           setState(() {
             _family.add(p);
@@ -52,6 +46,7 @@ class FamilyFormState extends State<FamilyForm> {
         }
       }
     }
+    _sortLists();
   }
 
   void _sortLists() {
@@ -88,7 +83,7 @@ class FamilyFormState extends State<FamilyForm> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => GetPatientData(patientId: patient.id!),
+            builder: (context) => DisplayPatient(patientId: patient.id!),
           ),
         );
       },

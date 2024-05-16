@@ -1,61 +1,34 @@
 import 'dart:io';
-
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class Patient {
   // VARTIABLES
-  File? imageFile;
-  List<FileData> files = [];
-  // personal info
   String? id;
-  // name
   String? firstName;
   String? middleName;
   String? lastName;
-  // date of birth
   DateTime? dob;
-  // blood
   String? bloodGroup;
   String? rhFactor;
   String? sex;
   String? location;
   String? maritalStatus;
-  // contact
   String? email;
   List<PhoneData> phone = [PhoneData()];
   List<EmergancyData> emergency = [EmergancyData()];
-  // illnesses/allergies
   List<String> currIllness = [];
   List<String> prevIllness = [];
   List<String> allergies = [];
-  // medications
   List<String> currMedications = [];
   List<String> prevMedications = [];
-  // family
   List<String> family = [];
+  List<FileData> files = [];
 
   // CONSTRUCTOR
-  Patient(
-      /* {
-    this.firstName,
-    this.middleName,
-    this.lastName,
-    this.dob,
-    this.bloodGroup,
-    this.rhFactor,
-    this.maritalStatus,
-    this.email,
-    this.phone,
-    this.emergency,
-    this.currIllness,
-    this.prevIllness,
-    this.allergies,
-    this.currMedications,
-    this.prevMedications,
-  } */
-      );
-  // convert patient data to json map
-  // used for input to database
+  Patient();
+
+  // convert to json
   Map<String, dynamic> toJson() {
     return {
       'firstName': firstName,
@@ -75,19 +48,11 @@ class Patient {
       'allergies': allergies,
       'medicationsCurr': currMedications,
       'medicationsPrev': prevMedications,
-      //'family': family?.map((patient) => patient.id).toList(),
       'family': family,
     };
   }
-  
-  factory Patient.fromSnapshot(DataSnapshot snapshot) {
-    if (snapshot.exists) {
-      Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
-      return Patient.fromMap(value.cast<String, dynamic>());
-    }
-    throw const FormatException('snapshot does not exist');
-  }
-  
+
+  // get patient from map
   factory Patient.fromMap(Map<String, dynamic> jsonMap) {
     Patient p = Patient();
     p.firstName = jsonMap['firstName'];
@@ -100,7 +65,6 @@ class Patient {
     p.rhFactor = jsonMap['rhFactor'];
     p.maritalStatus = jsonMap['maritalStatus'];
     p.email = jsonMap['email'];
-    // Check if phone list is not null before mapping
     if (jsonMap['phone'] != null && jsonMap['phone'] is List<dynamic>) {
       p.phone = (jsonMap["phone"] as List<dynamic>)
           .map((phoneMap) => PhoneData(
@@ -109,7 +73,6 @@ class Patient {
               ))
           .toList();
     }
-    // Check if emergency list is not null before mapping
     if (jsonMap['emergency'] != null && jsonMap['emergency'] is List<dynamic>) {
       p.emergency = (jsonMap["emergency"] as List<dynamic>)
           .map((emergencyMap) => EmergancyData(
@@ -121,64 +84,78 @@ class Patient {
     }
     List<dynamic>? allergiesList = jsonMap['allergies'];
     if (allergiesList is List<dynamic>) {
-      //p.allergies = allergiesList.cast<String>();
       p.allergies = List<String>.from(allergiesList);
     }
     List<dynamic>? currList = jsonMap['illnessCurr'];
     if (currList is List<dynamic>) {
-      p.currIllness = currList.cast<String>();
       p.currIllness = List<String>.from(currList);
     }
     List<dynamic>? prevList = jsonMap['illnessPrev'];
     if (prevList is List<dynamic>) {
-      //p.prevIllness = prevList.cast<String>();
       p.prevIllness = List<String>.from(prevList);
     }
     List<dynamic>? currMed = jsonMap['medicationsCurr'];
     if (currMed is List<dynamic>) {
-      //p.currMedications = currMed.cast<String>();
       p.currMedications = List<String>.from(currMed);
     }
     List<dynamic>? prevMed = jsonMap['medicationsPrev'];
     if (prevMed is List<dynamic>) {
-      //p.prevMedications = prevMed.cast<String>();
       p.prevMedications = List<String>.from(prevMed);
     }
     List<dynamic>? family = jsonMap['family'];
     if (family is List<dynamic>) {
-      //p.family = family.cast<String>();
       p.family = List<String>.from(family);
-
     }
     return p;
   }
-  // Get patient from database
+
+  // delete Patient from database
+  static Future<void> deletePatient(String uid) async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref();
+    await ref.child('patient/$uid').remove();
+  }
+
+  // get patient from database
   static Future<Patient?> getPatient(String uid) async {
     DatabaseReference ref = FirebaseDatabase.instance.ref('patient');
     DataSnapshot snapshot = await ref.child(uid).get();
-    if (snapshot.exists) {
-      Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
-      return Patient.fromMap(value.cast<String, dynamic>());
-    }
-    return null;
+    if (!snapshot.exists) return null;
+    Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
+    return Patient.fromMap(value.cast<String, dynamic>());
   }
 
-  // Fetch list of patients
-  static Future<List<Patient>> getPatients() async {
+  // get list of all patients from database
+  static Future<List<Patient>?> getAllPatients() async {
     DatabaseReference ref = FirebaseDatabase.instance.ref('patient');
     DataSnapshot snapshot = await ref.get();
-    if (snapshot.exists) {
-      Map<dynamic, dynamic>? jsonMap = snapshot.value as Map<dynamic, dynamic>;
-      List<Patient> patients = [];
-      jsonMap.forEach((key, value) {
-        Patient p = Patient.fromMap(value.cast<String, dynamic>());
-        p.id = key;
-        patients.add(p);
-      });
-      return patients;
-    }
-    return [];
+    if (!snapshot.exists) return [];
+    Map<dynamic, dynamic>? jsonMap = snapshot.value as Map<dynamic, dynamic>;
+    List<Patient> patients = [];
+    jsonMap.forEach((key, value) {
+      Patient p = Patient.fromMap(value.cast<String, dynamic>());
+      p.id = key;
+      patients.add(p);
+    });
+    return patients;
   }
+
+  // get list of all patient files from database
+  Future<List<FileData>?> getAllFiles() async {
+    List<FileData>? fetchedFiles = [];
+    Reference patientRef = FirebaseStorage.instance.ref().child('patients/$id');
+    ListResult result = await patientRef.listAll();
+    for (Reference ref in result.items) {
+      String fileName = ref.name;
+      String downloadUrl = await ref.getDownloadURL();
+      FileData fileData = FileData(
+        name: fileName,
+        url: downloadUrl,
+      );
+      fetchedFiles.add(fileData);
+    }
+    return fetchedFiles;
+  }
+
   @override
   String toString() {
     String str = '';
@@ -200,15 +177,17 @@ class Patient {
 }
 
 class PhoneData {
+  // variables
   String? type;
   String? phoneNumber;
 
+  // constructor
   PhoneData({
     this.phoneNumber,
     this.type,
   });
 
-  // convert phone data to a map
+  // convert to json
   Map<String, dynamic> toJson() {
     return {
       'type': type,
@@ -226,27 +205,22 @@ class PhoneData {
 }
 
 class EmergancyData extends PhoneData {
+  // variables
   String? name;
 
+  //constructor
   EmergancyData({
     this.name,
     super.type,
     super.phoneNumber,
   });
 
+  // convert to json
   @override
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {'name': name};
     map.addAll(super.toJson());
     return map;
-  }
-
-  factory EmergancyData.fromJson(Map<String, dynamic> json) {
-    return EmergancyData(
-      name: json['name'],
-      phoneNumber: json['phoneNumber'],
-      type: json['type'],
-    );
   }
 
   @override
@@ -259,10 +233,12 @@ class EmergancyData extends PhoneData {
 }
 
 class FileData {
+  // variables
   File? file;
   String? name;
   String? url;
 
+  //constructor
   FileData({
     this.file,
     this.name,

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 // firebase
 import 'package:firebase_core/firebase_core.dart'; // firebase core
 import 'package:medipal/chat/chat_list.dart';
+import 'package:medipal/pages/home.dart';
+import 'package:medipal/pages/user_list.dart';
 import 'package:medipal/pages/user_patients.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/pages/appointment_page.dart';
@@ -80,12 +82,14 @@ class _MyAppState extends State<MyApp> {
         '/SignUp': (context) => SignUpPage(),
         '/PatientForm': (context) => PatientForm(patient: Patient()),
         '/PatientList': (context) => PatientList(),
-        '/AppointmentPage': (context) => AppointmentPage(),
-        '/Dashboard': (context) => Dashboard(),
+        '/AppointmentPage': (context) => AppointmentPage(userUid: FirebaseAuth.instance.currentUser!.uid),
+        '/Dashboard': (context) => Dashboard(userUid: FirebaseAuth.instance.currentUser!.uid),
         '/UserPatients': (context) =>
-            UserPatients(user: FirebaseAuth.instance.currentUser),
+            PractitionerPatients(userUid: FirebaseAuth.instance.currentUser!.uid),
         '/ChatList': (context) => ChatList(),
         '/Settings': (context) => SettingsPage(),
+        '/Home': (context) => HomeTestPage(),
+        '/UserList': (context) => PractitionerList(),
         '/LanguageRegionSelect': (context) => LanguageRegionSelect(),
       },
       locale: _locale,
@@ -129,6 +133,8 @@ class HomePage extends StatelessWidget {
             ButtonWidget('UserPatients', '/UserPatients'),
             ButtonWidget('ChatList', '/ChatList'),
             ButtonWidget('Settings', '/Settings'),
+            ButtonWidget('Home', '/Home'),
+            ButtonWidget('UserList', '/UserList'),
             ButtonWidget('LanguageRegionSelect', '/LanguageRegionSelect'),
             /* FirebaseAuth.instance.currentUser != null
                 ? Align(

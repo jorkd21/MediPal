@@ -79,7 +79,7 @@ class _AppointmentDateState extends State<AppointmentDate> {
         );
       });
       _submitForm();
-      
+
       // Show a confirmation message or navigate to another screen if needed
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
@@ -257,7 +257,8 @@ class _AppointmentDateState extends State<AppointmentDate> {
                           ),
                           onChanged: (Patient? newValue) {
                             setState(() {
-                              _patient = '${newValue!.firstName} ${newValue.middleName} ${newValue.lastName}';
+                              _patient =
+                                  '${newValue!.firstName} ${newValue.middleName} ${newValue.lastName}';
                             });
                           },
                           selectedItem: null,
@@ -275,7 +276,7 @@ class _AppointmentDateState extends State<AppointmentDate> {
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 100),
+                            horizontal: 10, vertical: 50),
                         child: SizedBox(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -302,7 +303,10 @@ class _AppointmentDateState extends State<AppointmentDate> {
                               TextButton(
                                 onPressed: //disables button if time is not picked or the day is not available
                                     _isButtonDisabled && _timeselected
-                                        ? () => {_submitAppointment(_patient!)}
+                                        ? () => {
+                                              _submitAppointment(_patient!),
+                                              setState(() {})
+                                            }
                                         : null,
                                 style: const ButtonStyle(
                                   backgroundColor: MaterialStatePropertyAll(
@@ -334,7 +338,7 @@ class _AppointmentDateState extends State<AppointmentDate> {
   Widget _appointmentSelect() {
     return SafeArea(
       child: TableCalendar(
-        locale: "en_US", //laguage for the calendar
+        locale: "en_US", //language for the calendar
         rowHeight: 48,
         headerStyle: const HeaderStyle(
           formatButtonVisible: false,

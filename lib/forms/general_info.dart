@@ -1,8 +1,8 @@
 import 'dart:io';
-
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:medipal/forms/input_template.dart';
+import 'package:medipal/templates/input_template.dart';
 import 'package:medipal/objects/patient.dart';
 
 class GeneralInfoForm extends StatefulWidget {
@@ -15,28 +15,40 @@ class GeneralInfoForm extends StatefulWidget {
   });
 
   @override
-  GeneralInfoFormState createState() {
-    return GeneralInfoFormState();
-  }
+  GeneralInfoFormState createState() => GeneralInfoFormState();
 }
 
 class GeneralInfoFormState extends State<GeneralInfoForm> {
   // list choices
-  List<int> years =
-      List.generate(100, (int index) => DateTime.now().year - 100 + index);
-  List<int> months = List.generate(12, (int index) => index + 1);
-  List<int> days = List.generate(31, (int index) => index + 1);
-  List<String> bloodGroups = ['A', 'B', 'AB', 'O'];
-  List<String> rhFactors = ['+', '-'];
-  List<String> phoneTypes = ['home', 'work', 'mobile'];
+  final List<String> _bloodGroups = ['A', 'B', 'AB', 'O'];
+  final List<String> _rhFactors = ['+', '-'];
+  final List<String> _phoneTypes = ['home', 'work', 'mobile'];
+  late FileData _idImage = FileData();
+  bool _fetchingIdImage = false;
 
-  Future<void> pickImage() async {
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      setState(() {
-        widget.patient.imageFile = File(image.path);
-      });
+  @override
+  void initState() {
+    super.initState();
+    if (widget.patient.id != null) {
+      _fetchIDImage();
     }
+  }
+
+  Future<void> _fetchIDImage() async {
+    setState(() {
+      _fetchingIdImage = true;
+    });
+    Reference idImageRef = FirebaseStorage.instance
+        .ref()
+        .child('patients/${widget.patient.id}/idImage');
+    String downloadUrl = await idImageRef.getDownloadURL();
+    setState(() {
+      _idImage = FileData(
+        name: 'idImage',
+        url: downloadUrl,
+      );
+      _fetchingIdImage = false;
+    });
   }
 
   // build
@@ -51,16 +63,29 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
             children: [
               Column(
                 children: [
-                  if (widget.patient.imageFile != null)
-                    Image.file(widget.patient.imageFile!,
-                        height: 200, width: 200),
-                  Row(
-                    children: <Widget>[
-                      ElevatedButton(
-                        onPressed: pickImage,
-                        child: const Text('Select Image'),
-                      ),
-                    ],
+                  if (_fetchingIdImage)
+                    const CircularProgressIndicator()
+                  else if (_idImage.file != null)
+                    Image.file(_idImage.file!, height: 200, width: 200)
+                  else if (_idImage.url != null)
+                    Image.network(_idImage.url!, height: 200, width: 200),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        final image = await ImagePicker()
+                            .pickImage(source: ImageSource.gallery);
+                        if (image != null) {
+                          setState(() {
+                            _idImage = FileData(
+                              file: File(image.path),
+                              name: 'idImage',
+                            );
+                            widget.patient.files.add(_idImage);
+                          });
+                        }
+                      },
+                      child: const Text('Select ID Image'),
+                    ),
                   ),
                 ],
               ),
@@ -72,12 +97,6 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                     widget.patient.firstName = value;
                   });
                 },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Required';
-                  }
-                  return null;
-                },
               ),
               buildTextFormField(
                 labelText: 'Middle Name',
@@ -86,12 +105,6 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                   setState(() {
                     widget.patient.middleName = value;
                   });
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Required';
-                  }
-                  return null;
                 },
               ),
               buildTextFormField(
@@ -102,12 +115,6 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                     widget.patient.lastName = value;
                   });
                 },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Required';
-                  }
-                  return null;
-                },
               ),
               buildTextFormField(
                 labelText: 'Location',
@@ -116,12 +123,6 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                   setState(() {
                     widget.patient.location = value;
                   });
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Required';
-                  }
-                  return null;
                 },
               ),
               buildTextFormField(
@@ -132,83 +133,27 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                     widget.patient.sex = value;
                   });
                 },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Required';
-                  }
-                  return null;
-                },
               ),
               const Text('Date of Birth'),
-              Row(
-                children: [
-                  // Dropdown for Year
-                  SizedBox(
-                    width: 100,
-                    child: buildDropdownFormField<int>(
-                      value: widget.patient.dob?.year,
-                      onChanged: (int? value) {
-                        setState(() {
-                          widget.patient.dob = DateTime(
-                              value ?? 0,
-                              widget.patient.dob?.month ?? 1,
-                              widget.patient.dob?.day ?? 1);
-                        });
-                      },
-                      items: years,
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Required';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  // Dropdown for Month
-                  SizedBox(
-                    width: 50,
-                    child: buildDropdownFormField<int>(
-                      value: widget.patient.dob?.month,
-                      onChanged: (int? value) {
-                        setState(() {
-                          widget.patient.dob = DateTime(
-                              widget.patient.dob?.year ?? DateTime.now().year,
-                              value ?? 1,
-                              widget.patient.dob?.day ?? 1);
-                        });
-                      },
-                      items: months,
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Required';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  // Dropdown for Day
-                  SizedBox(
-                    width: 50,
-                    child: buildDropdownFormField<int>(
-                      value: widget.patient.dob?.day,
-                      onChanged: (int? value) {
-                        setState(() {
-                          widget.patient.dob = DateTime(
-                              widget.patient.dob?.year ?? DateTime.now().year,
-                              widget.patient.dob?.month ?? 1,
-                              value ?? 1);
-                        });
-                      },
-                      items: days,
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Required';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ],
+              ElevatedButton(
+                onPressed: () async {
+                  final DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime(2100),
+                  );
+                  if (pickedDate != null) {
+                    setState(() {
+                      widget.patient.dob = pickedDate;
+                    });
+                  }
+                },
+                child: Text(
+                  widget.patient.dob != null
+                      ? 'DOB: ${widget.patient.dob!.year}-${widget.patient.dob!.month}-${widget.patient.dob!.day}'
+                      : 'Select DOB',
+                ),
               ),
               Row(
                 children: [
@@ -223,13 +168,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                           widget.patient.bloodGroup = value;
                         });
                       },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Required';
-                        }
-                        return null;
-                      },
-                      items: bloodGroups,
+                      items: _bloodGroups,
                     ),
                   ),
                   const Text('RH Factor'),
@@ -243,13 +182,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                           widget.patient.rhFactor = value;
                         });
                       },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Required';
-                        }
-                        return null;
-                      },
-                      items: rhFactors,
+                      items: _rhFactors,
                     ),
                   ),
                 ],
@@ -262,12 +195,6 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                     widget.patient.maritalStatus = value;
                   });
                 },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Required';
-                  }
-                  return null;
-                },
               ),
               buildTextFormField(
                 labelText: 'E-mail',
@@ -277,67 +204,53 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                     widget.patient.email = value;
                   });
                 },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Required';
-                  }
-                  return null;
-                },
               ),
               const Text('Phone'),
               Column(
                 children: [
-                  ...List.generate(widget.patient.phone.length, (index) {
-                    PhoneData contact = widget.patient.phone[index];
-                    return Row(
-                      children: [
-                        SizedBox(
-                          width: 100,
-                          child: buildDropdownFormField<String>(
-                            value: contact.type,
-                            onChanged: (String? value) {
-                              setState(() {
-                                contact.type = value;
-                              });
-                            },
-                            items: phoneTypes,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please select a phone type';
-                              }
-                              return null;
-                            },
+                  ...List.generate(
+                    widget.patient.phone.length,
+                    (index) {
+                      PhoneData contact = widget.patient.phone[index];
+                      return Row(
+                        children: [
+                          SizedBox(
+                            width: 100,
+                            child: buildDropdownFormField<String>(
+                              value: contact.type,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  contact.type = value;
+                                });
+                              },
+                              items: _phoneTypes,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: buildTextFormField(
-                            labelText: 'Phone Number ${index + 1}',
-                            value: contact.phoneNumber?.toString(),
-                            onChanged: (value) {
-                              contact.phoneNumber = value;
-                            },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Required';
-                              }
-                              return null;
-                            },
-                            onSuffixIconTap: index == 0
-                                ? null
-                                : () =>
-                                    _removeField(widget.patient.phone, index),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: buildTextFormField(
+                              labelText: 'Phone Number ${index + 1}',
+                              value: contact.phoneNumber?.toString(),
+                              onChanged: (value) {
+                                contact.phoneNumber = value;
+                              },
+                              onSuffixIconTap: index == 0
+                                  ? null
+                                  : () => setState(() =>
+                                      widget.patient.phone.removeAt(index)),
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  }),
-                  //Add more button
+                        ],
+                      );
+                    },
+                  ),
                   Align(
                     alignment: Alignment.topRight,
                     child: TextButton(
                       onPressed: () {
-                        _addField(widget.patient.phone, PhoneData());
+                        setState(() {
+                          widget.patient.phone.add(PhoneData());
+                        });
                       },
                       child: const Text("Add More"),
                     ),
@@ -347,73 +260,59 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
               const Text('Emergancy Contacts'),
               Column(
                 children: [
-                  ...List.generate(widget.patient.emergency.length, (index) {
-                    EmergancyData contact = widget.patient.emergency[index];
-                    return Row(
-                      children: [
-                        Expanded(
-                          child: buildTextFormField(
-                            labelText: 'Name ${index + 1}',
-                            value: contact.name?.toString(),
-                            onChanged: (value) {
-                              contact.name = value;
-                            },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Required';
-                              }
-                              return null;
-                            },
+                  ...List.generate(
+                    widget.patient.emergency.length,
+                    (index) {
+                      EmergancyData contact = widget.patient.emergency[index];
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: buildTextFormField(
+                              labelText: 'Name ${index + 1}',
+                              value: contact.name?.toString(),
+                              onChanged: (value) {
+                                contact.name = value;
+                              },
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 20),
-                        SizedBox(
-                          width: 100,
-                          child: buildDropdownFormField<String>(
-                            value: contact.type,
-                            onChanged: (String? value) {
-                              setState(() {
-                                contact.type = value;
-                              });
-                            },
-                            items: phoneTypes,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please select a phone type';
-                              }
-                              return null;
-                            },
+                          const SizedBox(width: 20),
+                          SizedBox(
+                            width: 100,
+                            child: buildDropdownFormField<String>(
+                              value: contact.type,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  contact.type = value;
+                                });
+                              },
+                              items: _phoneTypes,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: buildTextFormField(
-                            labelText: 'Phone Number ${index + 1}',
-                            value: contact.phoneNumber?.toString(),
-                            onChanged: (value) {
-                              contact.phoneNumber = value;
-                            },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Required';
-                              }
-                              return null;
-                            },
-                            onSuffixIconTap: index == 0
-                                ? null
-                                : () => _removeField(
-                                    widget.patient.emergency, index),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: buildTextFormField(
+                              labelText: 'Phone Number ${index + 1}',
+                              value: contact.phoneNumber?.toString(),
+                              onChanged: (value) {
+                                contact.phoneNumber = value;
+                              },
+                              onSuffixIconTap: index == 0
+                                  ? null
+                                  : () => setState(() =>
+                                      widget.patient.emergency.removeAt(index)),
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  }),
-                  //Add more button
+                        ],
+                      );
+                    },
+                  ),
                   Align(
                     alignment: Alignment.topRight,
                     child: TextButton(
                       onPressed: () {
-                        _addField(widget.patient.emergency, EmergancyData());
+                        setState(() {
+                          widget.patient.emergency.add(EmergancyData());
+                        });
                       },
                       child: const Text("Add More"),
                     ),
@@ -425,17 +324,5 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
         ),
       ],
     );
-  }
-
-  _addField(List<dynamic>? list, dynamic value) {
-    list!.add(value);
-    setState(() {});
-  }
-
-  _removeField(List<dynamic>? list, int index) {
-    if (list != null && index < list.length) {
-      list.removeAt(index);
-      setState(() {});
-    }
   }
 }

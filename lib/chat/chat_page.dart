@@ -5,9 +5,12 @@ import 'package:medipal/objects/message.dart';
 
 class ChatPage extends StatefulWidget {
   final String receiverUid;
+  final String receiverName;
+
   const ChatPage({
     super.key,
     required this.receiverUid,
+    required this.receiverName,
   });
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -18,7 +21,7 @@ class _ChatPageState extends State<ChatPage> {
   final ChatService _chatService = ChatService();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  void sendMessage() async {
+  void _sendMessage() async {
     if (_messageController.text.isNotEmpty) {
       await _chatService.sendMessages(
           widget.receiverUid, _messageController.text);
@@ -29,7 +32,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.receiverUid)),
+      appBar: AppBar(title: Text(widget.receiverName)),
       body: Column(
         children: [
           // messages
@@ -43,7 +46,6 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  // build message list
   // build message list
   Widget _buildMessageList() {
     return StreamBuilder<List<Message>>(
@@ -70,12 +72,11 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  //build message item
+  // build message item
   Widget _buildMessageItem(Message message) {
     var alignment = (message.senderUid == _firebaseAuth.currentUser!.uid)
         ? Alignment.centerRight
         : Alignment.centerLeft;
-
     return Container(
       alignment: alignment,
       child: Padding(
@@ -86,7 +87,11 @@ class _ChatPageState extends State<ChatPage> {
                   ? CrossAxisAlignment.end
                   : CrossAxisAlignment.start,
           children: [
-            Text(message.senderUid),
+            Text(
+              message.senderUid == _firebaseAuth.currentUser!.uid
+                  ? _firebaseAuth.currentUser!.displayName!
+                  : widget.receiverName,
+            ),
             Text(message.content),
           ],
         ),
@@ -94,20 +99,24 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  //build input
+  // build input
   Widget _buildMessageInput() {
-    return Row(children: [
-      Expanded(
+    return Row(
+      children: [
+        Expanded(
           child: TextField(
-        controller: _messageController,
-        obscureText: false,
-      )),
-      IconButton(
-          onPressed: sendMessage,
+            controller: _messageController,
+            obscureText: false,
+          ),
+        ),
+        IconButton(
+          onPressed: _sendMessage,
           icon: const Icon(
             Icons.send,
             size: 40,
-          ))
-    ]);
+          ),
+        )
+      ],
+    );
   }
 }

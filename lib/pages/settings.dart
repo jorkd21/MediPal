@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/constant/images.dart';
 //import 'package:medipal/objects/appointment_patient.dart';
 import 'package:medipal/pages/appointment_page.dart';
@@ -18,25 +17,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  int _selectedIndex = 5;
-  final List<Widget> _pages = [
-    Dashboard(),
-    PatientList(),
-    PatientForm(patient: Patient()),
-    AppointmentPage(),
-    ChatList(),
-    SettingsPage(),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => _pages[index]),
-    );
-  }
-
   //Signs out the user and sends them back to the login page.
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
@@ -46,6 +26,36 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Settings',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                color: Colors.black.withOpacity(0.5),
+                offset: const Offset(0, 3),
+                blurRadius: 5,
+              ),
+            ],
+          ),
+        ),
+        flexibleSpace: Container(
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                Color.fromARGB(255, 73, 118, 207),
+                Color.fromARGB(255, 191, 200, 255),
+              ],
+            ),
+          ),
+        ),
+      ),
       body: Container(
         color: Colors.white,
         child: Stack(
@@ -53,23 +63,14 @@ class _SettingsPageState extends State<SettingsPage> {
             Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [
-                    Color(0xFF6D98EB), // Light blue at the bottom
-                    Color.fromARGB(255, 192, 212, 248), // White at top
-                  ],
-                ),
-              ),
+              color: Colors.white,
             ),
             Padding(
               padding: EdgeInsets.only(top: 20, left: 5, right: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
+                  /*Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
@@ -125,7 +126,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       ],
                     ),
-                  ),
+                  ),*/
                   SingleChildScrollView(
                     child: ListView(
                       shrinkWrap: true,
@@ -319,6 +320,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                             ),
                                           ),
                                           child: Text(
+                                            //'Logout',
                                             translation(context).logout,
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
@@ -346,38 +348,6 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: 'Patients',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_add),
-            label: '+Patient',
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today), label: 'Schedule'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: true,
-        onTap: _onItemTapped,
       ),
     );
   }

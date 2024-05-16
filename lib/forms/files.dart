@@ -1,10 +1,8 @@
 import 'dart:io';
-
-import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:medipal/forms/file_display.dart';
-import 'package:medipal/forms/input_template.dart';
+import 'package:medipal/templates/input_template.dart';
 import 'package:medipal/objects/patient.dart';
 
 class FileForm extends StatefulWidget {
@@ -13,26 +11,32 @@ class FileForm extends StatefulWidget {
   final bool edit;
 
   const FileForm({
-    Key? key,
+    super.key,
     required this.patient,
     required this.formKey,
     required this.edit,
-  }) : super(key: key);
+  });
 
   @override
   FileFormState createState() => FileFormState();
 }
 
 class FileFormState extends State<FileForm> {
-  List<FileData> files = [];
+  // variables
+  List<FileData>? _files = [];
 
   @override
   void initState() {
     super.initState();
-    fetchFilesForPatient();
+    _fetchAllFiles();
   }
 
-  Future<void> pickFile(FileData f) async {
+  void _fetchAllFiles() async {
+    _files = await widget.patient.getAllFiles();
+    setState(() {});
+  }
+
+  Future<void> _selectFile(FileData f) async {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
@@ -41,25 +45,26 @@ class FileFormState extends State<FileForm> {
     }
   }
 
-  Future<void> fetchFilesForPatient() async {
-    Reference patientRef =
-        FirebaseStorage.instance.ref().child('patients/${widget.patient.id}');
-    try {
-      ListResult result = await patientRef.listAll();
-      for (Reference ref in result.items) {
-        String fileName = ref.name;
-        String downloadUrl = await ref.getDownloadURL();
-        FileData fileData = FileData(
-          name: fileName,
-          url: downloadUrl,
-        );
-        setState(() {
-          files.add(fileData);
-        });
-      }
-    } catch (e) {
-      print('Error fetching files: $e');
-    }
+  void _deleteFile(FileData file) async {
+    final storageRef = FirebaseStorage.instance
+        .ref()
+        .child('patients/${widget.patient.id}/${file.name}');
+    await storageRef.delete().then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('File deleted successfully'),
+        ),
+      );
+      setState(() {
+        _files!.remove(file);
+      });
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error deleting file: $error'),
+        ),
+      );
+    });
   }
 
   @override
@@ -69,9 +74,9 @@ class FileFormState extends State<FileForm> {
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: files.length,
+              itemCount: _files!.length,
               itemBuilder: (context, index) {
-                FileData file = files[index];
+                FileData file = _files![index];
                 return ListTile(
                   title: Text(file.name ?? 'File ${index + 1}'),
                   onTap: () {
@@ -83,81 +88,119 @@ class FileFormState extends State<FileForm> {
                       ),
                     );
                   },
+                  trailing: widget.edit
+                      ? IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () => _deleteFile(file),
+                        )
+                      : null,
                 );
               },
             ),
           ),
-          Form(
-            key: widget.formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Add Files'),
-                ...List.generate(widget.patient.files.length, (index) {
-                  FileData file = widget.patient.files[index];
-                  return Column(
-                    children: [
-                      Row(
+          if (widget.edit)
+            Form(
+              key: widget.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Add Files'),
+                  ...List.generate(
+                    widget.patient.files.length,
+                    (index) {
+                      FileData file = widget.patient.files[index];
+                      return Column(
                         children: [
-                          Expanded(
-                            child: buildTextFormField(
-                              labelText: 'File name ${index + 1}',
-                              value: file.name,
-                              onChanged: (value) {
-                                file.name = value!;
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter some text';
-                                }
-                                return null;
-                              },
-                              onSuffixIconTap: () =>
-                                  _removeField(widget.patient.files, index),
-                            ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: buildTextFormField(
+                                  labelText: 'File name ${index + 1}',
+                                  value: file.name,
+                                  onChanged: (value) {
+                                    file.name = value!;
+                                  },
+                                  onSuffixIconTap: () => setState(() =>
+                                      widget.patient.files.removeAt(index)),
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () => _selectFile(file),
+                                child: const Text('Select Image'),
+                              ),
+                            ],
                           ),
-                          ElevatedButton(
-                            onPressed: () => pickFile(file),
-                            child: const Text('Select Image'),
-                          ),
+                          if (file.file != null)
+                            Text('File Path: ${file.file!.path}')
                         ],
-                      ),
-                      if (file.file != null)
-                        Text('File Path: ${file.file!.path}')
-                    ],
-                  );
-                }),
-                // Add more button
-                Align(
-                  alignment: Alignment.topRight,
-                  child: TextButton(
-                    onPressed: () {
-                      _addField(widget.patient.files, FileData());
+                      );
                     },
-                    child: const Text("Add More"),
                   ),
-                ),
-              ],
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: TextButton(
+                      onPressed: () {
+                        setState(() {
+                          widget.patient.files.add(FileData());
+                        });
+                      },
+                      child: const Text("Add More"),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
         ],
       ),
     );
   }
+}
 
-  void _addField(List<FileData>? list, FileData value) {
-    if (list != null) {
-      setState(() {
-        list.add(value);
-      });
-    }
-  }
+class ImageDisplayPage extends StatelessWidget {
+  final String imageUrl;
 
-  void _removeField(List<FileData>? list, int index) {
-    if (list != null && index < list.length) {
-      setState(() {
-        list.removeAt(index);
-      });
-    }
+  const ImageDisplayPage({
+    super.key,
+    required this.imageUrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Image Display'),
+      ),
+      body: GestureDetector(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: Stack(
+          children: [
+            InteractiveViewer(
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(imageUrl),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+            Center(
+              child: FutureBuilder(
+                future: precacheImage(NetworkImage(imageUrl), context),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

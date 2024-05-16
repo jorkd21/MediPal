@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medipal/forms/input_template.dart';
+import 'package:medipal/templates/input_template.dart';
 import 'package:medipal/objects/patient.dart';
 
 class HealthConditionsForm extends StatefulWidget {
@@ -13,9 +13,7 @@ class HealthConditionsForm extends StatefulWidget {
   });
 
   @override
-  HealthConditionsFormState createState() {
-    return HealthConditionsFormState();
-  }
+  HealthConditionsFormState createState() => HealthConditionsFormState();
 }
 
 class HealthConditionsFormState extends State<HealthConditionsForm> {
@@ -31,30 +29,28 @@ class HealthConditionsFormState extends State<HealthConditionsForm> {
               const Text('Current Illness'),
               Column(
                 children: [
-                  ...List.generate(widget.patient.currIllness.length, (index) {
-                    String? illness = widget.patient.currIllness[index];
-                    return buildTextFormField(
-                      labelText: 'illness ${index + 1}',
-                      value: illness,
-                      onChanged: (value) {
-                        widget.patient.currIllness[index] = value!;
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Required';
-                        }
-                        return null;
-                      },
-                      onSuffixIconTap: () =>
-                          _removeField(widget.patient.currIllness, index),
-                    );
-                  }),
-                  //Add more button
+                  ...List.generate(
+                    widget.patient.currIllness.length,
+                    (index) {
+                      String? illness = widget.patient.currIllness[index];
+                      return buildTextFormField(
+                        labelText: 'illness ${index + 1}',
+                        value: illness,
+                        onChanged: (value) {
+                          widget.patient.currIllness[index] = value!;
+                        },
+                        onSuffixIconTap: () => setState(
+                            () => widget.patient.currIllness.removeAt(index)),
+                      );
+                    },
+                  ),
                   Align(
                     alignment: Alignment.topRight,
                     child: TextButton(
                       onPressed: () {
-                        _addField(widget.patient.currIllness, '');
+                        setState(() {
+                          widget.patient.currIllness.add('');
+                        });
                       },
                       child: const Text("Add More"),
                     ),
@@ -64,30 +60,28 @@ class HealthConditionsFormState extends State<HealthConditionsForm> {
               const Text('Previous Illness'),
               Column(
                 children: [
-                  ...List.generate(widget.patient.prevIllness.length, (index) {
-                    String? illness = widget.patient.prevIllness[index];
-                    return buildTextFormField(
-                      labelText: 'illness ${index + 1}',
-                      value: illness,
-                      onChanged: (value) {
-                        widget.patient.prevIllness[index] = value!;
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Required';
-                        }
-                        return null;
-                      },
-                      onSuffixIconTap: () =>
-                          _removeField(widget.patient.prevIllness, index),
-                    );
-                  }),
-                  //Add more button
+                  ...List.generate(
+                    widget.patient.prevIllness.length,
+                    (index) {
+                      String? illness = widget.patient.prevIllness[index];
+                      return buildTextFormField(
+                        labelText: 'illness ${index + 1}',
+                        value: illness,
+                        onChanged: (value) {
+                          widget.patient.prevIllness[index] = value!;
+                        },
+                        onSuffixIconTap: () => setState(
+                            () => widget.patient.prevIllness.removeAt(index)),
+                      );
+                    },
+                  ),
                   Align(
                     alignment: Alignment.topRight,
                     child: TextButton(
                       onPressed: () {
-                        _addField(widget.patient.prevIllness, '');
+                        setState(() {
+                          widget.patient.prevIllness.add('');
+                        });
                       },
                       child: const Text("Add More"),
                     ),
@@ -97,30 +91,28 @@ class HealthConditionsFormState extends State<HealthConditionsForm> {
               const Text('Specific allergies'),
               Column(
                 children: [
-                  ...List.generate(widget.patient.allergies.length, (index) {
-                    String? illness = widget.patient.allergies[index];
-                    return buildTextFormField(
-                      labelText: 'allergy ${index + 1}',
-                      value: illness,
-                      onChanged: (value) {
-                        widget.patient.allergies[index] = value!;
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Required';
-                        }
-                        return null;
-                      },
-                      onSuffixIconTap: () =>
-                          _removeField(widget.patient.allergies, index),
-                    );
-                  }),
-                  //Add more button
+                  ...List.generate(
+                    widget.patient.allergies.length,
+                    (index) {
+                      String? illness = widget.patient.allergies[index];
+                      return buildTextFormField(
+                        labelText: 'allergy ${index + 1}',
+                        value: illness,
+                        onChanged: (value) {
+                          widget.patient.allergies[index] = value!;
+                        },
+                        onSuffixIconTap: () => setState(
+                            () => widget.patient.allergies.removeAt(index)),
+                      );
+                    },
+                  ),
                   Align(
                     alignment: Alignment.topRight,
                     child: TextButton(
                       onPressed: () {
-                        _addField(widget.patient.allergies, '');
+                        setState(() {
+                          widget.patient.allergies.add('');
+                        });
                       },
                       child: const Text("Add More"),
                     ),
@@ -132,17 +124,5 @@ class HealthConditionsFormState extends State<HealthConditionsForm> {
         )
       ],
     );
-  }
-
-  _addField(List<dynamic>? list, dynamic value) {
-    list!.add(value);
-    setState(() {});
-  }
-
-  _removeField(List<dynamic>? list, int index) {
-    if (list != null && index < list.length) {
-      list.removeAt(index);
-      setState(() {});
-    }
   }
 }

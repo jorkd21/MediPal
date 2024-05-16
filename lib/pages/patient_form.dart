@@ -1,103 +1,64 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:medipal/chat/chat_list.dart';
 import 'package:medipal/forms/family.dart';
 import 'package:medipal/forms/files.dart';
 import 'package:medipal/forms/general_info.dart';
 import 'package:medipal/forms/health_conditions.dart';
 import 'package:medipal/forms/medications.dart';
-import 'package:medipal/pages/appointment_page.dart';
-import 'package:medipal/pages/dashboard.dart';
-import 'package:medipal/pages/patient_list.dart';
-import 'package:medipal/pages/settings.dart';
-import 'package:medipal/pages/patient_data.dart';
 import 'package:medipal/objects/patient.dart';
 
 class PatientForm extends StatefulWidget {
   final Patient patient;
-  const PatientForm({super.key, required this.patient});
+  const PatientForm({
+    super.key,
+    required this.patient,
+  });
 
   @override
-  PatientFormState createState() {
-    return PatientFormState();
-  }
+  PatientFormState createState() => PatientFormState();
 }
 
 class PatientFormState extends State<PatientForm> {
-  // VARIABLES
-  // page
+  // variables
   int _pageIndex = 0;
   final PageController _pageController = PageController();
   late List<Widget> _pages;
-  // patient
-  String _patientKey = '';
-  late Patient _patient;
-  // form golobal keys
-  final GlobalKey<FormState> _generalInfoFormKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _healthConditionsFormKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _medicationsFormKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _familyFormKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _fileFormKey = GlobalKey<FormState>();
-  // upload progress
-  double uploadProgress = 0;
-  String? uploadStatus;
-  // nav bar
-  int _selectedIndex = 2;
-  final List<Widget> _pagesNav = [
-    Dashboard(),
-    PatientList(),
-    PatientForm(patient: Patient()),
-    AppointmentPage(),
-    ChatList(),
-    SettingsPage(),
+  final List<GlobalKey<FormState>> _formKeys = [
+    for (int i = 0; i < 5; i++) GlobalKey<FormState>()
   ];
 
-  // initialize state
   @override
   void initState() {
     super.initState();
-    _patient = widget.patient;
     _pages = [
       GeneralInfoForm(
-        patient: _patient,
-        formKey: _generalInfoFormKey,
+        patient: widget.patient,
+        formKey: _formKeys[0],
       ),
       HealthConditionsForm(
-        patient: _patient,
-        formKey: _healthConditionsFormKey,
+        patient: widget.patient,
+        formKey: _formKeys[1],
       ),
       MedicationsForm(
-        patient: _patient,
-        formKey: _medicationsFormKey,
+        patient: widget.patient,
+        formKey: _formKeys[2],
       ),
       FamilyForm(
-        patient: _patient,
-        formKey: _familyFormKey,
+        patient: widget.patient,
+        formKey: _formKeys[3],
       ),
       FileForm(
-        patient: _patient,
-        formKey: _fileFormKey,
+        patient: widget.patient,
+        formKey: _formKeys[4],
         edit: true,
       ),
     ];
   }
 
   // FUNCTIONS
-  // nav bar
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => _pagesNav[index]),
-    );
-  }
-
-  // next
   void _nextPage() {
     if (_pageIndex < _pages.length - 1) {
-      // validation check
       if (_currentPageIsValid()) {
         setState(() {
           _pageIndex++;
@@ -108,7 +69,6 @@ class PatientFormState extends State<PatientForm> {
           );
         });
       } else {
-        // display error
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Please fix errors before proceeding'),
@@ -120,21 +80,17 @@ class PatientFormState extends State<PatientForm> {
 
   // prev
   void _previousPage() {
-    if (_pageIndex < _pages.length - 1) {
-      // validation check
+    if (_pageIndex > 0) {
       if (_currentPageIsValid()) {
         setState(() {
-          if (_pageIndex > 0) {
-            _pageIndex--;
-            _pageController.animateToPage(
-              _pageIndex,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
-          }
+          _pageIndex--;
+          _pageController.animateToPage(
+            _pageIndex,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
         });
       } else {
-        // display error
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Please fix errors before proceeding'),
@@ -146,133 +102,95 @@ class PatientFormState extends State<PatientForm> {
 
   // page validation check
   bool _currentPageIsValid() {
-    switch (_pageIndex) {
-      case 0: // GeneralInfoForm
-        return _generalInfoFormKey.currentState!.validate();
-      case 1: // HealthConditionsForm
-        return _healthConditionsFormKey.currentState!.validate();
-      // ...
-      default:
-        return true;
-    }
-  }
-
-  // submission
-  Future<void> uploadFiles() async {
-    if (_patient.files.isEmpty) return;
-
-    final storageRef = FirebaseStorage.instance.ref();
-
-    for (int i = 0; i < _patient.files.length; i++) {
-      FileData fileData = _patient.files[i];
-      String fileName =
-          fileData.name ?? 'file_$i'; // Use a default file name if not provided
-      if (fileData.file == null) continue; // Skip if file is null
-      final metadata = SettableMetadata(contentType: "image/jpeg");
-
-      String path = 'patients/';
-      if (_patient.id != null && _patient.id!.isNotEmpty) {
-        // Existing patient, use ID in path
-        path += '${_patient.id}/';
-      }
-
-      final uploadTask =
-          storageRef.child(path + fileName).putFile(fileData.file!, metadata);
-
-      uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
-        setState(() {
-          uploadProgress =
-              100.0 * (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
-          uploadStatus = taskSnapshot.state == TaskState.running
-              ? "Uploading..."
-              : "Upload complete";
-        });
-
-        if (taskSnapshot.state == TaskState.success) {
-          // Handle successful upload
-          print("Upload of $fileName successful!");
-        } else if (taskSnapshot.state == TaskState.error) {
-          // Handle unsuccessful upload
-          print("Upload of $fileName failed!");
-        }
-      });
-    }
-  }
-
-  Future<void> uploadID() async {
-    if (_patient.imageFile == null) return;
-
-    final metadata = SettableMetadata(contentType: "image/jpeg");
-    final storageRef = FirebaseStorage.instance.ref();
-    final uploadTask = storageRef
-        .child("patients/$_patientKey/idImage.jpg")
-        .putFile(_patient.imageFile!, metadata);
-
-    uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
-      setState(() {
-        uploadProgress =
-            100.0 * (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
-        uploadStatus = taskSnapshot.state == TaskState.running
-            ? "Uploading..."
-            : "Upload complete";
-      });
-
-      if (taskSnapshot.state == TaskState.success) {
-        // Handle successful upload (e.g., navigate to next form)
-        print("Upload successful!");
-        // You can potentially navigate to the next form here
-      } else if (taskSnapshot.state == TaskState.error) {
-        // Handle unsuccessful upload
-        print("Upload failed!");
-        // Display error message to the user
-      }
-    });
+    return _formKeys[_pageIndex].currentState!.validate();
   }
 
   Future<void> _submitForm() async {
-    // Validate forms as before
-    if (_generalInfoFormKey.currentState!.validate()) {
-      // Check if patient ID is present
-      if (widget.patient.id != null && widget.patient.id!.isNotEmpty) {
-        DatabaseReference ref =
-            FirebaseDatabase.instance.ref('patient/${widget.patient.id}');
-        ref.update(_patient.toJson()).then((_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Patient data updated'),
-            ),
-          );
-        }).catchError((error) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error updating patient: $error'),
-            ),
-          );
-        });
-      } else {
+    if (_currentPageIsValid()) {
+      if (widget.patient.id?.isNotEmpty == true) {
+        // update existing patient
+        if (widget.patient.id != null) {
+          DatabaseReference ref =
+              FirebaseDatabase.instance.ref('patient/${widget.patient.id}');
+          ref.update(widget.patient.toJson()).then((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Patient data updated'),
+              ),
+            );
+          }).catchError((error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Error updating patient: $error'),
+              ),
+            );
+          });
+        }
         // create new patient data
-        DatabaseReference ref = FirebaseDatabase.instance.ref('patient');
-        DatabaseReference newPatientRef = ref.push();
-        setState(() {
-          _patientKey = newPatientRef.key!;
-          _pages.add(GetPatientData(patientId: _patientKey));
-        });
-        newPatientRef.set(_patient.toJson()).then((_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Patient data added'),
-            ),
-          );
-        }).catchError((error) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error adding patient: $error'),
-            ),
-          );
+        else {
+          DatabaseReference ref = FirebaseDatabase.instance.ref('patient');
+          DatabaseReference newPatientRef = ref.push();
+          setState(() {
+            widget.patient.id = newPatientRef.key!;
+          });
+          newPatientRef.set(widget.patient.toJson()).then((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Patient data added'),
+              ),
+            );
+          }).catchError((error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Error adding patient: $error'),
+              ),
+            );
+          });
+        }
+      }
+      // files
+      if (widget.patient.files.isEmpty) return;
+      final storageRef = FirebaseStorage.instance.ref();
+      String? uploadStatus;
+      for (int i = 0; i < widget.patient.files.length; i++) {
+        FileData fileData = widget.patient.files[i];
+        String fileName = fileData.name ?? 'file_$i'; //
+        if (fileData.file == null) continue; // Skip if file is null
+        final metadata = SettableMetadata(contentType: "image/jpeg");
+        String path = 'patients/';
+        // existing patient path update
+        if (widget.patient.id != null && widget.patient.id!.isNotEmpty) {
+          path += '${widget.patient.id}/';
+        }
+        final uploadTask =
+            storageRef.child(path + fileName).putFile(fileData.file!, metadata);
+        uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
+          setState(() {
+            uploadStatus = taskSnapshot.state == TaskState.running
+                ? "Uploading...(${(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes).toStringAsFixed(1)}%)"
+                : "Upload complete";
+          });
+          if (taskSnapshot.state == TaskState.success) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('File: ${fileData.name} added successfuly.'),
+              ),
+            );
+          } else if (taskSnapshot.state == TaskState.running) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('$uploadStatus'),
+              ),
+            );
+          } else if (taskSnapshot.state == TaskState.error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Upload of ${fileData.name} failed!'),
+              ),
+            );
+          }
         });
       }
-      await uploadID();
-      await uploadFiles();
     }
   }
 
@@ -281,7 +199,22 @@ class PatientFormState extends State<PatientForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Patient Form'),
+        automaticallyImplyLeading: widget.patient.id == null ? false : true,
+        title: Text(
+          'Patient Form',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                color: Colors.black.withOpacity(0.5),
+                offset: const Offset(0, 3),
+                blurRadius: 5,
+              ),
+            ],
+          ),
+        ),
+
         flexibleSpace: Container(
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
@@ -289,8 +222,8 @@ class PatientFormState extends State<PatientForm> {
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
               colors: [
-                Color(0xFFBAD2FF),
-                Color(0xFFBAD2FF),
+                Color.fromARGB(255, 73, 118, 207),
+                Color.fromARGB(255, 191, 200, 255),
               ],
             ),
           ),
@@ -309,86 +242,34 @@ class PatientFormState extends State<PatientForm> {
               children: _pages,
             ),
           ),
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [
-                  Color(0xFFBAD2FF),
-                  Color(0xFFBAD2FF),
-                ],
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1F56DE),
-                  ),
-                  onPressed: _previousPage,
-                  child: const Text(
-                    'Back',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1F56DE),
-                  ),
-                  onPressed: _submitForm,
-                  child: const Text(
-                    'Submit',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1F56DE),
-                  ),
-                  onPressed: _nextPage,
-                  child: const Text(
-                    'Next',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: Icon(Icons.arrow_back),
+            label: 'Back',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: 'Patients',
+            icon: Icon(Icons.send),
+            label: 'Submit',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_add),
-            label: '+Patient',
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today), label: 'Schedule'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
+            icon: Icon(Icons.arrow_forward),
+            label: 'Next',
           ),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: 0,
         selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: true,
-        onTap: _onItemTapped,
+        onTap: (index) {
+          if (index == 0) {
+            _previousPage();
+          } else if (index == 1) {
+            _submitForm();
+          } else if (index == 2) {
+            _nextPage();
+          }
+        },
       ),
     );
   }
