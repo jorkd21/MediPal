@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:medipal/chat/chat_bubble.dart';
 import 'package:medipal/chat/chat_service.dart';
 import 'package:medipal/objects/message.dart';
 
@@ -32,7 +33,36 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.receiverName)),
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        title: Text(
+          widget.receiverName,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                color: Colors.black.withOpacity(0.5),
+                offset: const Offset(0, 3),
+                blurRadius: 5,
+              ),
+            ],
+          ),
+        ),
+        flexibleSpace: Container(
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                Color.fromARGB(255, 73, 118, 207),
+                Color.fromARGB(255, 191, 200, 255),
+              ],
+            ),
+          ),
+        ),
+      ),
       body: Column(
         children: [
           // messages
@@ -87,12 +117,10 @@ class _ChatPageState extends State<ChatPage> {
                   ? CrossAxisAlignment.end
                   : CrossAxisAlignment.start,
           children: [
-            Text(
-              message.senderUid == _firebaseAuth.currentUser!.uid
-                  ? _firebaseAuth.currentUser!.displayName!
-                  : widget.receiverName,
-            ),
-            Text(message.content),
+            ChatBubble(
+                message: message.content,
+                isCurrentUser:
+                    (message.senderUid == _firebaseAuth.currentUser!.uid)),
           ],
         ),
       ),
