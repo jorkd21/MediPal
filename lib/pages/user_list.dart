@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/dashboard.dart';
-import 'package:medipal/pages/user_patients.dart';
 
 class PractitionerList extends StatefulWidget {
   const PractitionerList({super.key});
