@@ -127,8 +127,15 @@ class FileFormState extends State<FileForm> {
                                 ),
                               ),
                               ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xFF003CD6),
+                                ),
                                 onPressed: () => _selectFile(file),
-                                child: const Text('Select Image'),
+                                child: const Text('Select Image',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
