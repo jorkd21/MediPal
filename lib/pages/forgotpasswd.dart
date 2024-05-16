@@ -51,7 +51,7 @@ class ForgotPassPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                  SizedBox(height: 17.0),
+                SizedBox(height: 17.0),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(41.0, 0.0, 0.0, 0.0),
                     child: Text(
@@ -145,5 +145,5 @@ class ForgotPassPage extends StatelessWidget {
       ));
     }
   }
-  
+
 }
