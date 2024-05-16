@@ -70,6 +70,7 @@ class PatientListState extends State<PatientList> {
             : null,
         title: Text(
             '${patient.firstName} ${patient.middleName} ${patient.lastName}'),
+        subtitle: Text('dob: ${patient.dob!.year}/${patient.dob!.month}/${patient.dob!.day}'),
         onTap: () => Navigator.push(
           context,
           _isEditMode
@@ -93,7 +94,7 @@ class PatientListState extends State<PatientList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         title: Text(
           'All Patient List',
           style: TextStyle(

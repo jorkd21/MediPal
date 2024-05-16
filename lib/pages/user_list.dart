@@ -41,37 +41,28 @@ class PractitionerListState extends State<PractitionerList> {
   }
 
   Widget _buildPractitionerInfo(Practitioner practitioner) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Dashboard(userUid: practitioner.id),
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.black,
+            width: 0.5,
           ),
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 4),
-                  Text(
-                    'Name: ${practitioner.name}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "Email: ${practitioner.email}",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-          ],
         ),
+      ),
+      child: ListTile(
+        leading: const Icon(Icons.person),
+        trailing: const Icon(Icons.arrow_forward_ios),
+        title: Text('${practitioner.name}'),
+        subtitle: Text('${practitioner.email}'),
+        onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Dashboard(
+                userUid: practitioner.id,
+              ),
+            )),
+        tileColor: const Color(0xFFDADFEC),
       ),
     );
   }
@@ -82,7 +73,20 @@ class PractitionerListState extends State<PractitionerList> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: const Text('All Practitioner List'),
+          title: Text(
+            'Practitioner List',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              shadows: [
+                Shadow(
+                  color: Colors.black.withOpacity(0.5),
+                  offset: const Offset(0, 3),
+                  blurRadius: 5,
+                ),
+              ],
+            ),
+          ),
           flexibleSpace: Container(
             width: MediaQuery.of(context).size.width,
             decoration: const BoxDecoration(
@@ -90,8 +94,8 @@ class PractitionerListState extends State<PractitionerList> {
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
                 colors: [
-                  Color.fromARGB(255, 192, 212, 248),
-                  Color.fromARGB(255, 214, 228, 255),
+                  Color.fromARGB(255, 73, 118, 207),
+                  Color.fromARGB(255, 191, 200, 255),
                 ],
               ),
             ),
@@ -106,40 +110,26 @@ class PractitionerListState extends State<PractitionerList> {
                     _searchQuery = value;
                   });
                 },
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.fromLTRB(15, 20, 10, 0),
                   hintText: 'Search by name...',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  filled: true,
+                  fillColor: const Color.fromARGB(143, 255, 255, 255),
                 ),
               ),
             ),
           ),
         ),
         body: _practitioners.isNotEmpty
-            ? Container(
-                padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [
-                      Color.fromARGB(
-                          255, 151, 183, 247), // Light blue at the bottom
-                      Color.fromARGB(255, 192, 212, 248), // White at top
-                    ],
-                  ),
-                ),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height -
-                      kToolbarHeight -
-                      kBottomNavigationBarHeight,
-                  child: ListView.builder(
-                    itemCount: _filterPractitioners(_practitioners).length,
-                    itemBuilder: (context, index) {
-                      return _buildPractitionerInfo(
-                          _filterPractitioners(_practitioners)[index]);
-                    },
-                  ),
-                ),
+            ? ListView.builder(
+                itemCount: _filterPractitioners(_practitioners).length,
+                itemBuilder: (context, index) {
+                  return _buildPractitionerInfo(
+                      _filterPractitioners(_practitioners)[index]);
+                },
               )
             : const Center(
                 child: CircularProgressIndicator(),
