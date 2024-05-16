@@ -19,7 +19,7 @@ import 'package:medipal/pages/patient_form.dart';
 import 'package:medipal/pages/settings.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:medipal/pages/languageRegionSelect.dart';
+import 'package:medipal/pages/languageSelect.dart';
 import 'package:medipal/pages/language_constants.dart';
 
 void main() async {
@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
       supportedLocales: AppLocalizations.supportedLocales,
       initialRoute: '/',
       routes: {
-        '/': (context) => HomePage(),
+        '/': (context) => LoginPage(),
         '/Login': (context) => LoginPage(),
         '/SignUp': (context) => SignUpPage(),
         '/PatientForm': (context) => PatientForm(patient: Patient()),
@@ -90,7 +90,7 @@ class _MyAppState extends State<MyApp> {
         '/Settings': (context) => SettingsPage(),
         '/Home': (context) => HomeTestPage(),
         '/UserList': (context) => PractitionerList(),
-        '/LanguageRegionSelect': (context) => LanguageRegionSelect(),
+        '/LanguageSelect': (context) => LanguageSelect(),
       },
       locale: _locale,
     );
@@ -135,7 +135,7 @@ class HomePage extends StatelessWidget {
             ButtonWidget('Settings', '/Settings'),
             ButtonWidget('Home', '/Home'),
             ButtonWidget('UserList', '/UserList'),
-            ButtonWidget('LanguageRegionSelect', '/LanguageRegionSelect'),
+            ButtonWidget('LanguageSelect', '/LanguageSelect'),
             /* FirebaseAuth.instance.currentUser != null
                 ? Align(
                     alignment: Alignment.bottomCenter,

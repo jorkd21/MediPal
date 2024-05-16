@@ -5,6 +5,8 @@ import 'package:medipal/constant/images.dart';
 import 'package:medipal/objects/appointment.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/appointment_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class Dashboard extends StatefulWidget {
   final String? userUid;
@@ -52,15 +54,15 @@ class DashboardState extends State<Dashboard> {
                 children: [
                   const SizedBox(height: 4),
                   Text(
-                    'Name: ${appointment.patient}',
+                    translation(context).nameLabel + ": ${appointment.patient}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "Topic: ${appointment.topic}",
+                    translation(context).topic + ": ${appointment.topic}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "Time: ${appointment.time}",
+                    translation(context).time + ": ${appointment.time}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -174,7 +176,8 @@ class DashboardState extends State<Dashboard> {
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 10),
                                 child: Text(
-                                  'Welcome Dr. ${_practitioner.name}',
+                                  translation(context).welcome +
+                                      ' ${_practitioner.name}',
                                   style: const TextStyle(
                                     fontSize: 30,
                                     fontWeight: FontWeight.bold,
@@ -195,10 +198,10 @@ class DashboardState extends State<Dashboard> {
                               color: Colors.black,
                             ),
                             const SizedBox(width: 7),
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.only(top: 1),
                               child: Text(
-                                'Upcoming Appointments',
+                                translation(context).upcomingAppointments,
                                 style: TextStyle(
                                   fontSize: 26,
                                   fontWeight: FontWeight.bold,

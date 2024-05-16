@@ -7,6 +7,8 @@ import 'package:medipal/forms/general_info.dart';
 import 'package:medipal/forms/health_conditions.dart';
 import 'package:medipal/forms/medications.dart';
 import 'package:medipal/objects/patient.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class PatientForm extends StatefulWidget {
   final Patient patient;
@@ -70,8 +72,8 @@ class PatientFormState extends State<PatientForm> {
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please fix errors before proceeding'),
+          SnackBar(
+            content: Text(translation(context).fixErrorsBeforeProceeding),
           ),
         );
       }
@@ -92,8 +94,8 @@ class PatientFormState extends State<PatientForm> {
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please fix errors before proceeding'),
+          SnackBar(
+            content: Text(translation(context).fixErrorsBeforeProceeding),
           ),
         );
       }
@@ -114,8 +116,8 @@ class PatientFormState extends State<PatientForm> {
               FirebaseDatabase.instance.ref('patient/${widget.patient.id}');
           ref.update(widget.patient.toJson()).then((_) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Patient data updated'),
+              SnackBar(
+                content: Text(translation(context).patientDataUpdated),
               ),
             );
           }).catchError((error) {
@@ -167,8 +169,9 @@ class PatientFormState extends State<PatientForm> {
         uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
           setState(() {
             uploadStatus = taskSnapshot.state == TaskState.running
-                ? "Uploading...(${(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes).toStringAsFixed(1)}%)"
-                : "Upload complete";
+                ? translation(context).upload +
+                    "(${(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes).toStringAsFixed(1)}%)"
+                : translation(context).uploadComplete;
           });
           if (taskSnapshot.state == TaskState.success) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -185,7 +188,9 @@ class PatientFormState extends State<PatientForm> {
           } else if (taskSnapshot.state == TaskState.error) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Upload of ${fileData.name} failed!'),
+                content: Text(translation(context).uploadOf +
+                    ' ${fileData.name}' +
+                    translation(context).failed),
               ),
             );
           }
@@ -201,7 +206,7 @@ class PatientFormState extends State<PatientForm> {
       appBar: AppBar(
         automaticallyImplyLeading: widget.patient.id == null ? false : true,
         title: Text(
-          'Patient Form',
+          translation(context).patientForm,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -214,7 +219,6 @@ class PatientFormState extends State<PatientForm> {
             ],
           ),
         ),
-
         flexibleSpace: Container(
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
@@ -245,18 +249,18 @@ class PatientFormState extends State<PatientForm> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.arrow_back),
-            label: 'Back',
+            label: translation(context).back,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.send),
-            label: 'Submit',
+            label: translation(context).submit,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.arrow_forward),
-            label: 'Next',
+            label: translation(context).next,
           ),
         ],
         currentIndex: 0,

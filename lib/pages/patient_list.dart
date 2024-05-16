@@ -157,7 +157,7 @@ class PatientListState extends State<PatientList> {
                     },
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.fromLTRB(15, 20, 10, 0),
-                      hintText: 'Search by name...',
+                      hintText: translation(context).searchByName,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),

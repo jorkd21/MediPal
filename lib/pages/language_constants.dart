@@ -13,6 +13,7 @@ const String HINDI = 'hi';
 const String FRENCH = 'fr';
 const String SWAHILI = 'sw';
 const String ZULU = 'zu';
+const String DEUTSCH = 'de';
 
 Future<Locale> setLocale(String languageCode) async {
   SharedPreferences _prefs = await SharedPreferences.getInstance();
@@ -42,6 +43,8 @@ Locale _locale(String languageCode) {
       return const Locale(SWAHILI, '');
     case ZULU:
       return const Locale(ZULU, '');
+    case DEUTSCH:
+      return const Locale(DEUTSCH, '');
 
     default:
       return const Locale(ENGLISH, '');

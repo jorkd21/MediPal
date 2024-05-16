@@ -2,8 +2,11 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:medipal/pages/language_constants.dart';
 import 'package:medipal/templates/input_template.dart';
 import 'package:medipal/objects/patient.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class GeneralInfoForm extends StatefulWidget {
   final Patient patient;
@@ -98,7 +101,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 ],
               ),
               buildTextFormField(
-                labelText: 'First Name',
+                labelText: translation(context).firstName,
                 value: widget.patient.firstName,
                 onChanged: (value) {
                   setState(() {
@@ -107,7 +110,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
               ),
               buildTextFormField(
-                labelText: 'Middle Name',
+                labelText: translation(context).middleName,
                 value: widget.patient.middleName,
                 onChanged: (value) {
                   setState(() {
@@ -116,7 +119,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
               ),
               buildTextFormField(
-                labelText: 'Last Name',
+                labelText: translation(context).lastName,
                 value: widget.patient.lastName,
                 onChanged: (value) {
                   setState(() {
@@ -125,7 +128,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
               ),
               buildTextFormField(
-                labelText: 'Location',
+                labelText: translation(context).location,
                 value: widget.patient.location,
                 onChanged: (value) {
                   setState(() {
@@ -134,7 +137,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
               ),
               buildTextFormField(
-                labelText: 'Sex',
+                labelText: translation(context).sex,
                 value: widget.patient.sex,
                 onChanged: (value) {
                   setState(() {
@@ -142,7 +145,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                   });
                 },
               ),
-              const Text('Date of Birth'),
+              Text(translation(context).dob),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF003CD6),
@@ -171,7 +174,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
               ),
               Row(
                 children: [
-                  const Text('Blood Group'),
+                  Text(translation(context).bloodGroup),
                   const SizedBox(width: 10),
                   SizedBox(
                     width: 50,
@@ -185,7 +188,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                       items: _bloodGroups,
                     ),
                   ),
-                  const Text('RH Factor'),
+                  Text(translation(context).rhFactor),
                   const SizedBox(width: 10),
                   SizedBox(
                     width: 50,
@@ -202,7 +205,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 ],
               ),
               buildTextFormField(
-                labelText: 'Marital Status',
+                labelText: translation(context).maritalStatus,
                 value: widget.patient.maritalStatus,
                 onChanged: (value) {
                   setState(() {
@@ -211,7 +214,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
               ),
               buildTextFormField(
-                labelText: 'E-mail',
+                labelText: translation(context).email,
                 value: widget.patient.email,
                 onChanged: (value) {
                   setState(() {
@@ -219,7 +222,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                   });
                 },
               ),
-              const Text('Phone'),
+              Text(translation(context).phone),
               Column(
                 children: [
                   ...List.generate(
@@ -243,7 +246,8 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: buildTextFormField(
-                              labelText: 'Phone Number ${index + 1}',
+                              labelText: translation(context).phoneNumber +
+                                  ' ${index + 1}',
                               value: contact.phoneNumber?.toString(),
                               onChanged: (value) {
                                 contact.phoneNumber = value;
@@ -266,12 +270,12 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                           widget.patient.phone.add(PhoneData());
                         });
                       },
-                      child: const Text("Add More"),
+                      child: Text(translation(context).addMore),
                     ),
                   ),
                 ],
               ),
-              const Text('Emergancy Contacts'),
+              Text(translation(context).emergencyContact),
               Column(
                 children: [
                   ...List.generate(
@@ -282,7 +286,8 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                         children: [
                           Expanded(
                             child: buildTextFormField(
-                              labelText: 'Name ${index + 1}',
+                              labelText:
+                                  translation(context).name + '${index + 1}',
                               value: contact.name?.toString(),
                               onChanged: (value) {
                                 contact.name = value;
@@ -305,7 +310,8 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: buildTextFormField(
-                              labelText: 'Phone Number ${index + 1}',
+                              labelText: translation(context).phoneNumber +
+                                  ' ${index + 1}',
                               value: contact.phoneNumber?.toString(),
                               onChanged: (value) {
                                 contact.phoneNumber = value;
@@ -328,7 +334,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                           widget.patient.emergency.add(EmergancyData());
                         });
                       },
-                      child: const Text("Add More"),
+                      child: Text(translation(context).addMore),
                     ),
                   ),
                 ],

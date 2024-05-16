@@ -111,14 +111,14 @@ class _AppointmentDateState extends State<AppointmentDate> {
     DatabaseReference ref = FirebaseDatabase.instance.ref('users/${user!.uid}');
     ref.update(_practitioner.toJson()).then((_) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Patient data updated'),
+        SnackBar(
+          content: Text(translation(context).patientDataUpdated),
         ),
       );
     }).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error updating patient: $error'),
+          content: Text(translation(context).errorUpdatingPatient + ': $error'),
         ),
       );
     });
