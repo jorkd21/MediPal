@@ -21,20 +21,6 @@ class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
   final ChatService _chatService = ChatService();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  FocusNode myFocusNode = FocusNode();
-
-  @override
-  void initState() {
-    super.initState();
-    myFocusNode.addListener(() {
-      if (myFocusNode.hasFocus) {
-        Future.delayed(
-          Duration(milliseconds: 400),
-          () => scrollDown(),
-        );
-      }
-    });
-  }
 
   void _sendMessage() async {
     if (_messageController.text.isNotEmpty) {
@@ -42,22 +28,6 @@ class _ChatPageState extends State<ChatPage> {
           widget.receiverUid, _messageController.text);
       _messageController.clear();
     }
-  }
-
-  @override
-  void dispose() {
-    myFocusNode.dispose();
-    _messageController.dispose();
-    super.dispose();
-  }
-
-  final ScrollController _scrollController = ScrollController();
-  void scrollDown() {
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: const Duration(seconds: 1),
-      curve: Curves.fastOutSlowIn,
-    );
   }
 
   @override
@@ -123,7 +93,6 @@ class _ChatPageState extends State<ChatPage> {
         List<Message> messages = snapshot.data ?? [];
 
         return ListView.builder(
-          controller: _scrollController,
           itemCount: messages.length,
           itemBuilder: (context, index) {
             return _buildMessageItem(messages[index]);
@@ -166,7 +135,6 @@ class _ChatPageState extends State<ChatPage> {
           child: TextField(
             controller: _messageController,
             obscureText: false,
-            focusNode: myFocusNode,
           ),
         ),
         IconButton(
