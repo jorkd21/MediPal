@@ -90,7 +90,9 @@ class FileFormState extends State<FileForm> {
                   },
                   trailing: widget.edit
                       ? IconButton(
-                          icon: const Icon(Icons.delete),
+                          icon: widget.edit
+                              ? const Icon(Icons.delete)
+                              : Container(),
                           onPressed: () => _deleteFile(file),
                         )
                       : null,

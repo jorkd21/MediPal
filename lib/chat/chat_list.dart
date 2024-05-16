@@ -23,7 +23,8 @@ class ChatListState extends State<ChatList> {
   }
 
   void _fetchPractitioners() async {
-    List<Practitioner>? practitioners = await Practitioner.getAllPractitioners();
+    List<Practitioner>? practitioners =
+        await Practitioner.getAllPractitioners();
     setState(() {
       _practitioners = practitioners!;
     });
