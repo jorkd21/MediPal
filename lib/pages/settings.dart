@@ -54,60 +54,13 @@ class _SettingsPageState extends State<SettingsPage> {
             Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [
-                    Color(0xFF6D98EB), // Light blue at the bottom
-                    Color.fromARGB(255, 192, 212, 248), // White at top
-                  ],
-                ),
-              ),
+              color: Colors.white,
             ),
             Padding(
               padding: EdgeInsets.only(top: 20, left: 5, right: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Row(
-                      children: [
-                        SizedBox(width: 25),
-                        Padding(
-                          padding: EdgeInsets.only(top: 13),
-                          child: Image.asset(
-                            'assets/bettercog.png',
-                            fit: BoxFit.contain,
-                            width: 50,
-                            height: 50,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 7,
-                        ), // Add some space between the image and the text
-                        Text(
-                          'Settings',
-                          style: TextStyle(
-                            fontSize: 45,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black.withOpacity(0.5),
-                                offset: const Offset(0, 3),
-                                blurRadius: 5,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                   SingleChildScrollView(
                     child: ListView(
                       shrinkWrap: true,
