@@ -73,72 +73,75 @@ class PractitionerListState extends State<PractitionerList> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Text(
-            'Practitioner List',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              shadows: [
-                Shadow(
-                  color: Colors.black.withOpacity(0.5),
-                  offset: const Offset(0, 3),
-                  blurRadius: 5,
-                ),
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Practitioner List',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                color: Colors.black.withOpacity(0.5),
+                offset: const Offset(0, 3),
+                blurRadius: 5,
+              ),
+            ],
+          ),
+        ),
+        flexibleSpace: Container(
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                Color.fromARGB(255, 73, 118, 207),
+                Color.fromARGB(255, 191, 200, 255),
               ],
             ),
           ),
-          flexibleSpace: Container(
-            width: MediaQuery.of(context).size.width,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [
-                  Color.fromARGB(255, 73, 118, 207),
-                  Color.fromARGB(255, 191, 200, 255),
-                ],
-              ),
-            ),
-          ),
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(kToolbarHeight),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: TextField(
-                onChanged: (value) {
-                  setState(() {
-                    _searchQuery = value;
-                  });
-                },
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.fromLTRB(15, 20, 10, 0),
-                  hintText: 'Search by name...',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Column(
+              children: [
+                TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.fromLTRB(15, 20, 10, 0),
+                    hintText: 'Search by name...',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    filled: true,
+                    fillColor: const Color.fromARGB(143, 255, 255, 255),
                   ),
-                  filled: true,
-                  fillColor: const Color.fromARGB(143, 255, 255, 255),
                 ),
-              ),
+                const SizedBox(height: 10),
+              ],
             ),
           ),
         ),
-        body: _practitioners.isNotEmpty
-            ? ListView.builder(
-                itemCount: _filterPractitioners(_practitioners).length,
-                itemBuilder: (context, index) {
-                  return _buildPractitionerInfo(
-                      _filterPractitioners(_practitioners)[index]);
-                },
-              )
-            : const Center(
-                child: CircularProgressIndicator(),
-              ),
       ),
+      body: _practitioners.isNotEmpty
+          ? ListView.builder(
+              itemCount: _filterPractitioners(_practitioners).length,
+              itemBuilder: (context, index) {
+                return _buildPractitionerInfo(
+                    _filterPractitioners(_practitioners)[index]);
+              },
+            )
+          : const Center(
+              child: CircularProgressIndicator(),
+            ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:medipal/chat/chat_bubble.dart';
 import 'package:medipal/chat/chat_service.dart';
 import 'package:medipal/objects/message.dart';
 
@@ -20,6 +21,20 @@ class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
   final ChatService _chatService = ChatService();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  FocusNode myFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    myFocusNode.addListener(() {
+      if (myFocusNode.hasFocus) {
+        Future.delayed(
+          Duration(milliseconds: 400),
+          () => scrollDown(),
+        );
+      }
+    });
+  }
 
   void _sendMessage() async {
     if (_messageController.text.isNotEmpty) {
@@ -30,9 +45,54 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   @override
+  void dispose() {
+    myFocusNode.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  final ScrollController _scrollController = ScrollController();
+  void scrollDown() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(seconds: 1),
+      curve: Curves.fastOutSlowIn,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.receiverName)),
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        title: Text(
+          widget.receiverName,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                color: Colors.black.withOpacity(0.5),
+                offset: const Offset(0, 3),
+                blurRadius: 5,
+              ),
+            ],
+          ),
+        ),
+        flexibleSpace: Container(
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                Color.fromARGB(255, 73, 118, 207),
+                Color.fromARGB(255, 191, 200, 255),
+              ],
+            ),
+          ),
+        ),
+      ),
       body: Column(
         children: [
           // messages
@@ -63,6 +123,7 @@ class _ChatPageState extends State<ChatPage> {
         List<Message> messages = snapshot.data ?? [];
 
         return ListView.builder(
+          controller: _scrollController,
           itemCount: messages.length,
           itemBuilder: (context, index) {
             return _buildMessageItem(messages[index]);
@@ -87,12 +148,10 @@ class _ChatPageState extends State<ChatPage> {
                   ? CrossAxisAlignment.end
                   : CrossAxisAlignment.start,
           children: [
-            Text(
-              message.senderUid == _firebaseAuth.currentUser!.uid
-                  ? _firebaseAuth.currentUser!.displayName!
-                  : widget.receiverName,
-            ),
-            Text(message.content),
+            ChatBubble(
+                message: message.content,
+                isCurrentUser:
+                    (message.senderUid == _firebaseAuth.currentUser!.uid)),
           ],
         ),
       ),
@@ -107,6 +166,7 @@ class _ChatPageState extends State<ChatPage> {
           child: TextField(
             controller: _messageController,
             obscureText: false,
+            focusNode: myFocusNode,
           ),
         ),
         IconButton(
