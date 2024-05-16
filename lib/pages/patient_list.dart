@@ -70,7 +70,7 @@ class PatientListState extends State<PatientList> {
             : null,
         title: Text(
             '${patient.firstName} ${patient.middleName} ${patient.lastName}'),
-        subtitle: Text('dob: ${patient.dob!.year}/${patient.dob!.month}/${patient.dob!.day}'),
+        subtitle: Text('DOB: ${patient.dob!.year}/${patient.dob!.month}/${patient.dob!.day}'),
         onTap: () => Navigator.push(
           context,
           _isEditMode
