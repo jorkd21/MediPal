@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
+import 'package:medipal/objects/practitioner.dart';
+import 'package:medipal/pages/account_details.dart';
 import 'package:medipal/pages/appointment_page.dart';
 import 'package:medipal/pages/dashboard.dart';
 import 'package:medipal/pages/patient_list.dart';
@@ -182,8 +184,15 @@ class _SettingsPageState extends State<SettingsPage> {
                                                       color: Colors.white,
                                                     ),
                                                   ),
-                                                  onTap: () {
-                                                    // Navigate to Security settings page
+                                                  onTap: () async {
+                                                    // Navigate to Account settings page
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            AccountInfoPage(userUid: FirebaseAuth.instance.currentUser!.uid),
+                                                      ),
+                                                    );
                                                   },
                                                 ),
                                               ),
@@ -199,6 +208,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                             ],
                                           ),
                                         ),
+                                        SizedBox(height: 10,),
                                         ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Color(0xFF1F56DE),

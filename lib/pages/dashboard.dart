@@ -44,14 +44,6 @@ class DashboardState extends State<Dashboard> {
 
   Widget _buildAppointmentInfo(Appointment appointment) {
     return GestureDetector(
-      onTap: () {
-        /* Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PractitionerPage(practitioner: practitioner),
-          ),
-        ); */
-      },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
@@ -126,19 +118,44 @@ class DashboardState extends State<Dashboard> {
                   child: Padding(
                     padding: const EdgeInsets.all(5),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        /* Row(
-                        children: [
-                          Center(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 20, left: 148.0),
-                              child: Container(
-                                  height: 100,
-                                  width: 100,
-                                  child: Image.asset(
-                                      profilePic) /* Image.asset(
+                        Row(
+                          mainAxisAlignment:
+                              FirebaseAuth.instance.currentUser!.uid !=
+                                      _practitioner.id
+                                  ? MainAxisAlignment.spaceBetween
+                                  : MainAxisAlignment.end,
+                          children: [
+                            if (FirebaseAuth.instance.currentUser!.uid !=
+                                _practitioner.id)
+                              IconButton(
+                                icon: const Icon(Icons.arrow_back,
+                                    color: Colors.black, size: 40),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            SizedBox(
+                              height: 100,
+                              width: 100,
+                              child: Image.asset(
+                                myImage,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Center(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 20, left: 148.0),
+                                child: SizedBox(
+                                    height: 100,
+                                    width: 100,
+                                    child: Image.asset(
+                                        profilePic) /* Image.asset(
                                   FirebaseAuth.instance.currentUser!
                                               .photoURL !=
                                           null
@@ -146,13 +163,13 @@ class DashboardState extends State<Dashboard> {
                                           .instance.currentUser!.photoURL!
                                       : profilePic,
                                 ), */
-                                  ),
+                                    ),
+                              ),
                             ),
-                          ),
-                        ],
-                      ), */
+                          ],
+                        ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const SizedBox(width: 55),
                             Expanded(
@@ -167,18 +184,6 @@ class DashboardState extends State<Dashboard> {
                                     color: Colors.black,
                                   ),
                                 ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: 130,
-                              width: 130,
-                              child: Image.asset(
-                                myLogo,
                               ),
                             ),
                           ],
@@ -236,45 +241,43 @@ class DashboardState extends State<Dashboard> {
         bottomNavigationBar: BottomAppBar(
           shape: const CircularNotchedRectangle(),
           notchMargin: 5,
-          child: Column(
-            children: [
-              widget.userUid != FirebaseAuth.instance.currentUser!.uid
-                  ? FloatingActionButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ChatPage(
-                              receiverUid: _practitioner.id!,
-                              receiverName: _practitioner.name!,
-                            ),
+          child: Expanded(
+            child: widget.userUid != FirebaseAuth.instance.currentUser!.uid
+                ? FloatingActionButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatPage(
+                            receiverUid: _practitioner.id!,
+                            receiverName: _practitioner.name!,
                           ),
-                        );
-                      },
-                      backgroundColor: const Color(0xFF003CD6),
-                      child: const Icon(
-                        Icons.chat,
-                        color: Colors.white,
-                      ),
-                    )
-                  : FloatingActionButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AppointmentPage(
-                              userUid: _practitioner.id!,
-                            ),
-                          ),
-                        );
-                      },
-                      backgroundColor: const Color(0xFF003CD6),
-                      child: const Icon(
-                        Icons.people,
-                        color: Colors.white,
-                      ),
+                        ),
+                      );
+                    },
+                    backgroundColor: const Color(0xFF003CD6),
+                    child: const Icon(
+                      Icons.chat,
+                      color: Colors.white,
                     ),
-            ],
+                  )
+                : FloatingActionButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AppointmentPage(
+                            userUid: _practitioner.id!,
+                          ),
+                        ),
+                      );
+                    },
+                    backgroundColor: const Color(0xFF003CD6),
+                    child: const Icon(
+                      Icons.people,
+                      color: Colors.white,
+                    ),
+                  ),
           ),
         ));
   }

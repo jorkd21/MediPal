@@ -90,7 +90,9 @@ class FileFormState extends State<FileForm> {
                   },
                   trailing: widget.edit
                       ? IconButton(
-                          icon: const Icon(Icons.delete),
+                          icon: widget.edit
+                              ? const Icon(Icons.delete)
+                              : Container(),
                           onPressed: () => _deleteFile(file),
                         )
                       : null,
@@ -125,8 +127,15 @@ class FileFormState extends State<FileForm> {
                                 ),
                               ),
                               ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xFF003CD6),
+                                ),
                                 onPressed: () => _selectFile(file),
-                                child: const Text('Select Image'),
+                                child: const Text('Select Image',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
                             ],
                           ),

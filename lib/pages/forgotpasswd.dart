@@ -103,21 +103,17 @@ class ForgotPassPage extends StatelessWidget {
                   ),
                   SizedBox(height: 35),
                   Align(
-                    alignment: Alignment.center,
-                    child: ElevatedButton(
-                      onPressed: null,
-                      style: ButtonStyle(
-                        minimumSize:
-                            MaterialStateProperty.all<Size>(Size(278.0, 44)),
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Color(0xFF003CD6)),
-                      ),
-                      child: Text(
-                        translation(context).confirm,
-                        style: TextStyle(
-                            color: Color(0xFFEFEFEF),
-                            fontSize: 20,
-                            fontStyle: FontStyle.normal),
+                      alignment: Alignment.center,
+                      child: ElevatedButton(
+                        onPressed: (null),
+                        style: ButtonStyle(
+                          minimumSize: MaterialStateProperty.all<Size>(Size(278.0, 44)),
+                          backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF003CD6)),
+                        ),
+                        child: Text(
+                          'Confirm',
+                          style: TextStyle(color: Color(0xFFEFEFEF), fontSize: 20, fontStyle: FontStyle.normal),
+                        ),
                       ),
                     ),
                   ),

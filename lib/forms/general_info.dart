@@ -74,6 +74,9 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                     Image.network(_idImage.url!, height: 200, width: 200),
                   Center(
                     child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF003CD6),
+                      ),
                       onPressed: () async {
                         final image = await ImagePicker()
                             .pickImage(source: ImageSource.gallery);
@@ -87,7 +90,12 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                           });
                         }
                       },
-                      child: Text(translation(context).selectIDImage),
+                      child: const Text(
+                        'Select ID Image',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -139,6 +147,9 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
               ),
               Text(translation(context).dob),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF003CD6),
+                ),
                 onPressed: () async {
                   final DateTime? pickedDate = await showDatePicker(
                     context: context,
@@ -154,9 +165,11 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
                 child: Text(
                   widget.patient.dob != null
-                      ? translation(context).dobLabel +
-                          ' ${widget.patient.dob!.year}-${widget.patient.dob!.month}-${widget.patient.dob!.day}'
-                      : translation(context).selectDOB,
+                      ? 'DOB: ${widget.patient.dob!.year}-${widget.patient.dob!.month}-${widget.patient.dob!.day}'
+                      : 'Select DOB',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
                 ),
               ),
               Row(

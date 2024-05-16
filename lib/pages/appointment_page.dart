@@ -1,7 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:medipal/constant/images.dart';
 import 'package:medipal/objects/appointment.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/appointment_date.dart';
@@ -68,7 +66,7 @@ class AppointmentPageState extends State<AppointmentPage> {
       future: _practitionerFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // Show loading indicator while fetching data
+          return const CircularProgressIndicator(); // Show loading indicator while fetching data
         } else if (snapshot.hasError) {
           return Text(translation(context).errorLabel + ': ${snapshot.error}');
         } else {
@@ -108,12 +106,11 @@ class AppointmentPageState extends State<AppointmentPage> {
               body: Column(
                 children: [
                   const SizedBox(height: 20),
-                  Container(
+                  SizedBox(
                     width: 350,
                     height: 57,
                     child: ElevatedButton(
                       onPressed: () {
-                        // goes to appointment_date.dart
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -123,7 +120,7 @@ class AppointmentPageState extends State<AppointmentPage> {
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        backgroundColor: Color(0xFF1F56DE), // Text color
+                        backgroundColor: const Color(0xFF1F56DE), // Text color
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 15), // Button padding
                         shape: RoundedRectangleBorder(
@@ -140,8 +137,8 @@ class AppointmentPageState extends State<AppointmentPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Center(
-                    child: Text(translation(context).noAppointmentsFound),
+                  const Center(
+                    child: Text('No appointments found.'),
                   ),
                 ],
               ),
@@ -183,104 +180,12 @@ class AppointmentPageState extends State<AppointmentPage> {
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  /*Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          Color.fromARGB(255, 73, 118, 207),
-                          Color.fromARGB(255, 191, 200, 255),
-                        ],
-                      ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Align(
-                                child: Text(
-                                  'Appointments',
-                                  style: TextStyle(
-                                    fontSize: 26,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    shadows: [
-                                      Shadow(
-                                        color: Colors.black.withOpacity(0.5),
-                                        offset: const Offset(0, 3),
-                                        blurRadius: 5,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 15),
-                          /* Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Colors.white, // White background color
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              padding: const EdgeInsets.all(10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Next Appointment',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 10),
-                                    decoration: BoxDecoration(
-                                      border: Border(
-                                        top: BorderSide(
-                                          color: Colors.grey.withOpacity(
-                                              0.5), // Greyish blurred line
-                                          width: 1,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: double.infinity,
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: Colors.red, // Red background color
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Text(
-                                      '${practitioner.appointments[0].topic} on ${practitioner.appointments[0].time!.start}',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ), */
-                        ],
-                      ),
-                    ),
-                  ),*/
                   const SizedBox(height: 20),
-                  Container(
+                  SizedBox(
                     width: 350,
                     height: 57,
                     child: ElevatedButton(
                       onPressed: () {
-                        // goes to appointment_date.dart
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -290,12 +195,12 @@ class AppointmentPageState extends State<AppointmentPage> {
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        backgroundColor: Color(0xFF1F56DE), // Text color
+                        backgroundColor: const Color(0xFF1F56DE),
                         padding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 20), // Button padding
+                            vertical: 15, horizontal: 20),
                         shape: RoundedRectangleBorder(
                           borderRadius:
-                              BorderRadius.circular(20), // Button border radius
+                              BorderRadius.circular(20),
                         ),
                       ),
                       child: Text(
@@ -310,7 +215,7 @@ class AppointmentPageState extends State<AppointmentPage> {
                   Container(
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
-                      color: Colors.white, // White background color
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     padding: const EdgeInsets.all(10),
@@ -330,82 +235,54 @@ class AppointmentPageState extends State<AppointmentPage> {
                           decoration: BoxDecoration(
                             border: Border(
                               top: BorderSide(
-                                color: Colors.grey
-                                    .withOpacity(0.5), // Greyish blurred line
+                                color: Colors.grey.withOpacity(0.5),
                                 width: 1,
                               ),
                             ),
                           ),
                         ),
                         // Display upcoming appointments
-                        Container(
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: practitioner.appointments.length,
-                            itemBuilder: (context, index) {
-                              practitioner.appointments.sort((a, b) =>
-                                  a.time!.start.compareTo(b.time!.start));
-                              Appointment appointment =
-                                  practitioner.appointments[index];
-                              return Container(
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  color: Colors.white, // White background color
-                                  borderRadius: BorderRadius.circular(10),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: practitioner.appointments.length,
+                          itemBuilder: (context, index) {
+                            practitioner.appointments.sort((a, b) =>
+                                a.time!.start.compareTo(b.time!.start));
+                            Appointment appointment =
+                                practitioner.appointments[index];
+                            return Container(
+                              decoration: const BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: Colors.black,
+                                    width: 0.5,
+                                  ),
                                 ),
-                                padding: const EdgeInsets.all(10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment
-                                      .spaceBetween, // Align content and button
+                              ),
+                              child: ListTile(
+                                leading: const Icon(Icons.person),
+                                trailing: IconButton(
+                                  icon: const Icon(Icons.delete,
+                                      color: Colors.red),
+                                  onPressed: () async {
+                                    setState(() {});
+                                    practitioner.appointments.remove(
+                                        practitioner.appointments[index]);
+                                    await _updatePractitioner(practitioner);
+                                  },
+                                ),
+                                title: Text(appointment.topic!),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          appointment
-                                              .topic!, // Display appointment title
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.blue,
-                                          ),
-                                        ),
-                                        Text(
-                                          appointment
-                                              .patient!, // Display appointment title
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        SizedBox(height: 10),
-                                        Text(
-                                          appointment.time!.start
-                                              .toString(), // Display appointment date and time
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    IconButton(
-                                      icon:
-                                          Icon(Icons.delete, color: Colors.red),
-                                      onPressed: () async {
-                                        setState(() {});
-                                        practitioner.appointments.remove(
-                                            practitioner.appointments[index]);
-                                        await _updatePractitioner(practitioner);
-                                      },
-                                    ),
+                                    Text(appointment.patient!),
+                                    Text(appointment.time!.start.toString()),
                                   ],
                                 ),
-                              );
-                            },
-                          ),
+                                tileColor: const Color(0xFFDADFEC),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
