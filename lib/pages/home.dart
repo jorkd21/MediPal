@@ -24,7 +24,7 @@ class HomePageState extends State<HomePage> {
     PatientForm(patient: Patient()),
     AppointmentPage(userUid: FirebaseAuth.instance.currentUser!.uid),
     const PractitionerList(),
-    SettingsPage(),
+    const SettingsPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -32,7 +32,6 @@ class HomePageState extends State<HomePage> {
       setState(() {
         _selectedIndex = index;
       });
-
       _pageController.jumpToPage(index);
     }
   }

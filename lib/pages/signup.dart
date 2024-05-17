@@ -2,16 +2,16 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
-import 'package:medipal/main.dart';
 import 'package:medipal/pages/home.dart';
 
 class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
+
   @override
-  _SignUpPageState createState() => _SignUpPageState();
+  SignUpPageState createState() => SignUpPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class SignUpPageState extends State<SignUpPage> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -29,27 +29,11 @@ class _SignUpPageState extends State<SignUpPage> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-
       User? user = userCredential.user;
-
       if (user != null) {
-        // Update user profile with first name, last name, and license number
-        // ignore: deprecated_member_use
-        await user.updateProfile(
-          displayName:
-              '${_firstNameController.text} ${_lastNameController.text}',
-          photoURL: _licenseController.text,
+        await user.updateDisplayName(
+          '${_firstNameController.text} ${_lastNameController.text}',
         );
-
-        // Update user's phone number
-        //await user.updatePhoneNumber(_phoneNumberController.text);
-
-        // Update user's country
-        // ignore: deprecated_member_use
-        await user.updateProfile(
-          photoURL: _countryController.text,
-        );
-        // add patient data
         DatabaseReference ref = FirebaseDatabase.instance.ref('users');
         final newRef = ref.child(user.uid);
         await newRef.set({
@@ -57,11 +41,9 @@ class _SignUpPageState extends State<SignUpPage> {
           'name': '${_firstNameController.text} ${_lastNameController.text}',
         });
       }
-
-      // Navigate to HomeScreen or any other page after successful sign up
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeTestPage()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
     } catch (e) {
       setState(() {
@@ -76,18 +58,18 @@ class _SignUpPageState extends State<SignUpPage> {
       child: Scaffold(
         // Purple at the top,),
         body: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
               colors: [
-                Color(0xFF6D98EB), // Light blue at the bottom
-                Color(0xFFBAA2DA), // Purple at the top
+                Color(0xFF6D98EB),
+                Color(0xFFBAA2DA),
               ],
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(20.0),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -96,13 +78,13 @@ class _SignUpPageState extends State<SignUpPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back,
+                        icon: const Icon(Icons.arrow_back,
                             color: Colors.white, size: 40),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
                       ),
-                      Container(
+                      SizedBox(
                         height: 100,
                         width: 100,
                         child: Image.asset(
@@ -111,8 +93,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0.0, 0.0, 100, 25.0),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(0.0, 0.0, 100, 25.0),
                     child: Text(
                       'Create Account',
                       style: TextStyle(
@@ -123,9 +105,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       textAlign: TextAlign.left,
                     ),
                   ),
-                  SizedBox(height: 21.0),
+                  const SizedBox(height: 21.0),
                   FractionallySizedBox(
-                    widthFactor: 0.75, // Set width factor to half
+                    widthFactor: 0.75,
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -135,13 +117,13 @@ class _SignUpPageState extends State<SignUpPage> {
                             color: Colors.black.withOpacity(0.5),
                             spreadRadius: 2,
                             blurRadius: 5,
-                            offset: Offset(0, 3), // changes position of shadow
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
                       child: TextField(
                         controller: _firstNameController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'First Name',
                           border: InputBorder.none,
                           contentPadding:
@@ -150,9 +132,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 24.0),
+                  const SizedBox(height: 24.0),
                   FractionallySizedBox(
-                    widthFactor: 0.75, // Set width factor to half
+                    widthFactor: 0.75,
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -162,13 +144,13 @@ class _SignUpPageState extends State<SignUpPage> {
                             color: Colors.black.withOpacity(0.5),
                             spreadRadius: 2,
                             blurRadius: 5,
-                            offset: Offset(0, 3), // changes position of shadow
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
                       child: TextField(
                         controller: _lastNameController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Last Name',
                           border: InputBorder.none,
                           contentPadding:
@@ -177,9 +159,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 24.0),
+                  const SizedBox(height: 24.0),
                   FractionallySizedBox(
-                    widthFactor: 0.75, // Set width factor to half
+                    widthFactor: 0.75,
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -189,13 +171,13 @@ class _SignUpPageState extends State<SignUpPage> {
                             color: Colors.black.withOpacity(0.5),
                             spreadRadius: 2,
                             blurRadius: 5,
-                            offset: Offset(0, 3), // changes position of shadow
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
                       child: TextField(
                         controller: _emailController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Email',
                           border: InputBorder.none,
                           contentPadding:
@@ -204,9 +186,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 24.0),
+                  const SizedBox(height: 24.0),
                   FractionallySizedBox(
-                    widthFactor: 0.75, // Set width factor to half
+                    widthFactor: 0.75,
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -216,25 +198,25 @@ class _SignUpPageState extends State<SignUpPage> {
                             color: Colors.black.withOpacity(0.5),
                             spreadRadius: 2,
                             blurRadius: 5,
-                            offset: Offset(0, 3), // changes position of shadow
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
                       child: TextField(
                         controller: _passwordController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Password',
                           border: InputBorder.none,
                           contentPadding:
                               EdgeInsets.symmetric(horizontal: 10.0),
                         ),
-                        obscureText: true, // Hide the entered text
+                        obscureText: true,
                       ),
                     ),
                   ),
-                  SizedBox(height: 24.0),
+                  const SizedBox(height: 24.0),
                   FractionallySizedBox(
-                    widthFactor: 0.75, // Set width factor to half
+                    widthFactor: 0.75,
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -244,13 +226,13 @@ class _SignUpPageState extends State<SignUpPage> {
                             color: Colors.black.withOpacity(0.5),
                             spreadRadius: 2,
                             blurRadius: 5,
-                            offset: Offset(0, 3), // changes position of shadow
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
                       child: TextField(
                         controller: _phoneNumberController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Phone Number',
                           border: InputBorder.none,
                           contentPadding:
@@ -259,9 +241,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 24.0),
+                  const SizedBox(height: 24.0),
                   FractionallySizedBox(
-                    widthFactor: 0.75, // Set width factor to half
+                    widthFactor: 0.75,
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -271,13 +253,13 @@ class _SignUpPageState extends State<SignUpPage> {
                             color: Colors.black.withOpacity(0.5),
                             spreadRadius: 2,
                             blurRadius: 5,
-                            offset: Offset(0, 3), // changes position of shadow
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
                       child: TextField(
                         controller: _licenseController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'License Number',
                           border: InputBorder.none,
                           contentPadding:
@@ -286,9 +268,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   FractionallySizedBox(
-                    widthFactor: 0.75, // Set width factor to half
+                    widthFactor: 0.75,
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -298,13 +280,13 @@ class _SignUpPageState extends State<SignUpPage> {
                             color: Colors.black.withOpacity(0.5),
                             spreadRadius: 2,
                             blurRadius: 5,
-                            offset: Offset(0, 3), // changes position of shadow
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
                       child: TextField(
                         controller: _countryController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Country',
                           border: InputBorder.none,
                           contentPadding:
@@ -313,8 +295,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 31.14),
-                  Align(
+                  const SizedBox(height: 31.14),
+                  const Align(
                     alignment: Alignment.center,
                     child: Text(
                       'By clicking “Create Account” you accept our Terms and Services agreement.',
@@ -326,18 +308,18 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 7),
+                  const SizedBox(height: 7),
                   Align(
                     alignment: Alignment.center,
                     child: ElevatedButton(
                       onPressed: _signUp,
                       style: ButtonStyle(
                         minimumSize:
-                            MaterialStateProperty.all<Size>(Size(278.0, 44.0)),
+                            MaterialStateProperty.all<Size>(const Size(278.0, 44.0)),
                         backgroundColor:
-                            MaterialStateProperty.all<Color>(Color(0xFF003CD6)),
+                            MaterialStateProperty.all<Color>(const Color(0xFF003CD6)),
                       ),
-                      child: Text(
+                      child: const Text(
                         'Create Account',
                         style: TextStyle(
                             color: Color(0xFFEFEFEF),
@@ -346,14 +328,14 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   if (_errorMessage.isNotEmpty)
                     Text(
                       _errorMessage,
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.red),
+                      style: const TextStyle(color: Colors.red),
                     ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),

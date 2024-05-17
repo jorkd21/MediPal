@@ -60,9 +60,9 @@ class _MyAppState extends State<MyApp> {
       supportedLocales: AppLocalizations.supportedLocales,
       initialRoute: '/',
       routes: {
-        '/': (context) => widget._testing ? LoginPage() : const TestingPage(),
-        '/Login': (context) => LoginPage(),
-        '/SignUp': (context) => SignUpPage(),
+        '/': (context) => widget._testing ?  const TestingPage() : const LoginPage(),
+        '/Login': (context) => const LoginPage(),
+        '/SignUp': (context) => const SignUpPage(),
         '/PatientForm': (context) => PatientForm(patient: Patient()),
         '/PatientList': (context) => const PatientList(),
         '/AppointmentPage': (context) =>
@@ -71,7 +71,7 @@ class _MyAppState extends State<MyApp> {
             Dashboard(userUid: FirebaseAuth.instance.currentUser!.uid),
         '/UserPatients': (context) => PractitionerPatients(
             userUid: FirebaseAuth.instance.currentUser!.uid),
-        '/Settings': (context) => SettingsPage(),
+        '/Settings': (context) => const SettingsPage(),
         '/Home': (context) => const HomePage(),
         '/UserList': (context) => const PractitionerList(),
         '/LanguageRegionSelect': (context) => const LanguageRegionSelect(),
