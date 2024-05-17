@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:medipal/pages/home.dart';
 import 'package:medipal/pages/signup.dart';
 import 'package:medipal/pages/forgotpasswd.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -29,24 +30,24 @@ class LoginPageState extends State<LoginPage> {
         password: password,
       );
       setState(() {
-        _errorMessage = 'Login successful!';
+        _errorMessage = translation(context).loginSuccessful;
       });
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const HomePage()),
       );
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
+      if (e.code == translation(context).userNotFoundLabel) {
         setState(() {
-          _errorMessage = 'No user found for that email.';
+          _errorMessage = translation(context).userNotFound;
         });
-      } else if (e.code == 'wrong-password') {
+      } else if (e.code == translation(context).wrongPasswordLabel) {
         setState(() {
-          _errorMessage = 'Wrong password provided for that user.';
+          _errorMessage = translation(context).wrongPassword;
         });
       } else {
         setState(() {
-          _errorMessage = e.message ?? 'An error occurred.';
+          _errorMessage = e.message ?? translation(context).errorOccurred;
         });
       }
     } catch (e) {
@@ -91,11 +92,11 @@ class LoginPageState extends State<LoginPage> {
                     ],
                   ),
                   const SizedBox(height: 17.0),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(41.0, 0.0, 0.0, 0.0),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(41.0, 0.0, 0.0, 0.0),
                     child: Text(
-                      'Welcome',
-                      style: TextStyle(
+                      translation(context).welcome,
+                      style: const TextStyle(
                         fontSize: 45,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -103,11 +104,11 @@ class LoginPageState extends State<LoginPage> {
                       textAlign: TextAlign.left,
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(41.0, 0.0, 0.0, 0.0),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(41.0, 0.0, 0.0, 0.0),
                     child: Text(
-                      'Back',
-                      style: TextStyle(
+                      translation(context).back,
+                      style: const TextStyle(
                         fontSize: 45,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -135,14 +136,14 @@ class LoginPageState extends State<LoginPage> {
                         ),
                         child: TextField(
                           controller: _usernameController,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             border: InputBorder.none,
-                            labelText: 'Email or phone',
-                            labelStyle: TextStyle(
+                            labelText: translation(context).emailOrPhone,
+                            labelStyle: const TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.normal),
                             contentPadding:
-                                EdgeInsets.symmetric(horizontal: 10.0),
+                                const EdgeInsets.symmetric(horizontal: 10.0),
                           ),
                         ),
                       ),
@@ -168,14 +169,14 @@ class LoginPageState extends State<LoginPage> {
                         ),
                         child: TextField(
                           controller: _passwordController,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             border: InputBorder.none,
-                            labelText: 'Password',
-                            labelStyle: TextStyle(
+                            labelText: translation(context).password,
+                            labelStyle: const TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.normal),
                             contentPadding:
-                                EdgeInsets.symmetric(horizontal: 10.0),
+                                const EdgeInsets.symmetric(horizontal: 10.0),
                           ),
                           obscureText: true,
                         ),
@@ -193,9 +194,9 @@ class LoginPageState extends State<LoginPage> {
                               builder: (context) => ForgotPassPage()),
                         );
                       },
-                      child: const Text(
-                        'Forgot password?',
-                        style: TextStyle(
+                      child: Text(
+                        translation(context).forgotPassword,
+                        style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -214,9 +215,9 @@ class LoginPageState extends State<LoginPage> {
                         backgroundColor: MaterialStateProperty.all<Color>(
                             const Color(0xFF003CD6)),
                       ),
-                      child: const Text(
-                        'Login',
-                        style: TextStyle(
+                      child: Text(
+                        translation(context).login,
+                        style: const TextStyle(
                             color: Color(0xFFEFEFEF),
                             fontSize: 20,
                             fontStyle: FontStyle.normal),
@@ -228,9 +229,9 @@ class LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.only(left: 78.0),
                     child: Row(
                       children: [
-                        const Text(
-                          'Don\'t have an account? ',
-                          style: TextStyle(
+                        Text(
+                          translation(context).dontHaveAnAccount,
+                          style: const TextStyle(
                               color: Color(0xFFEFEFEF),
                               fontSize: 15,
                               fontStyle: FontStyle.normal,
@@ -245,9 +246,9 @@ class LoginPageState extends State<LoginPage> {
                                   builder: (context) => const SignUpPage()),
                             );
                           },
-                          child: const Text(
-                            'Sign Up',
-                            style: TextStyle(
+                          child: Text(
+                            translation(context).signUp,
+                            style: const TextStyle(
                                 color: Color(0xFFEFEFEF),
                                 fontSize: 15,
                                 fontStyle: FontStyle.normal,

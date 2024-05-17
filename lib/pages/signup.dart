@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:medipal/pages/home.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -93,11 +94,11 @@ class SignUpPageState extends State<SignUpPage> {
                       ),
                     ],
                   ),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(0.0, 0.0, 100, 25.0),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0.0, 0.0, 100, 25.0),
                     child: Text(
-                      'Create Account',
-                      style: TextStyle(
+                      translation(context).createAccount,
+                      style: const TextStyle(
                         fontSize: 35,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -123,11 +124,11 @@ class SignUpPageState extends State<SignUpPage> {
                       ),
                       child: TextField(
                         controller: _firstNameController,
-                        decoration: const InputDecoration(
-                          labelText: 'First Name',
+                        decoration: InputDecoration(
+                          labelText: translation(context).firstName,
                           border: InputBorder.none,
                           contentPadding:
-                              EdgeInsets.symmetric(horizontal: 10.0),
+                              const EdgeInsets.symmetric(horizontal: 10.0),
                         ),
                       ),
                     ),
@@ -150,11 +151,11 @@ class SignUpPageState extends State<SignUpPage> {
                       ),
                       child: TextField(
                         controller: _lastNameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Last Name',
+                        decoration: InputDecoration(
+                          labelText: translation(context).lastName,
                           border: InputBorder.none,
                           contentPadding:
-                              EdgeInsets.symmetric(horizontal: 10.0),
+                              const EdgeInsets.symmetric(horizontal: 10.0),
                         ),
                       ),
                     ),
@@ -177,11 +178,11 @@ class SignUpPageState extends State<SignUpPage> {
                       ),
                       child: TextField(
                         controller: _emailController,
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
+                        decoration: InputDecoration(
+                          labelText: translation(context).email,
                           border: InputBorder.none,
                           contentPadding:
-                              EdgeInsets.symmetric(horizontal: 10.0),
+                              const EdgeInsets.symmetric(horizontal: 10.0),
                         ),
                       ),
                     ),
@@ -204,11 +205,11 @@ class SignUpPageState extends State<SignUpPage> {
                       ),
                       child: TextField(
                         controller: _passwordController,
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
+                        decoration: InputDecoration(
+                          labelText: translation(context).password,
                           border: InputBorder.none,
                           contentPadding:
-                              EdgeInsets.symmetric(horizontal: 10.0),
+                              const EdgeInsets.symmetric(horizontal: 10.0),
                         ),
                         obscureText: true,
                       ),
@@ -232,11 +233,11 @@ class SignUpPageState extends State<SignUpPage> {
                       ),
                       child: TextField(
                         controller: _phoneNumberController,
-                        decoration: const InputDecoration(
-                          labelText: 'Phone Number',
+                        decoration: InputDecoration(
+                          labelText: translation(context).phoneNumber,
                           border: InputBorder.none,
                           contentPadding:
-                              EdgeInsets.symmetric(horizontal: 10.0),
+                              const EdgeInsets.symmetric(horizontal: 10.0),
                         ),
                       ),
                     ),
@@ -259,11 +260,11 @@ class SignUpPageState extends State<SignUpPage> {
                       ),
                       child: TextField(
                         controller: _licenseController,
-                        decoration: const InputDecoration(
-                          labelText: 'License Number',
+                        decoration: InputDecoration(
+                          labelText: translation(context).licenseNumber,
                           border: InputBorder.none,
                           contentPadding:
-                              EdgeInsets.symmetric(horizontal: 10.0),
+                              const EdgeInsets.symmetric(horizontal: 10.0),
                         ),
                       ),
                     ),
@@ -286,22 +287,22 @@ class SignUpPageState extends State<SignUpPage> {
                       ),
                       child: TextField(
                         controller: _countryController,
-                        decoration: const InputDecoration(
-                          labelText: 'Country',
+                        decoration: InputDecoration(
+                          labelText: translation(context).country,
                           border: InputBorder.none,
                           contentPadding:
-                              EdgeInsets.symmetric(horizontal: 10.0),
+                              const EdgeInsets.symmetric(horizontal: 10.0),
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 31.14),
-                  const Align(
+                  Align(
                     alignment: Alignment.center,
                     child: Text(
-                      'By clicking “Create Account” you accept our Terms and Services agreement.',
+                      translation(context).termsAndServices,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
@@ -319,9 +320,9 @@ class SignUpPageState extends State<SignUpPage> {
                         backgroundColor:
                             MaterialStateProperty.all<Color>(const Color(0xFF003CD6)),
                       ),
-                      child: const Text(
-                        'Create Account',
-                        style: TextStyle(
+                      child: Text(
+                        translation(context).createAccount,
+                        style: const TextStyle(
                             color: Color(0xFFEFEFEF),
                             fontSize: 20,
                             fontStyle: FontStyle.normal),

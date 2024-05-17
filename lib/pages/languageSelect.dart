@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:medipal/main.dart';
 import 'package:medipal/pages/language_constants.dart';
-import 'package:medipal/constant/images.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class LanguageRegionSelect extends StatefulWidget {
-  const LanguageRegionSelect({Key? key}) : super(key: key);
+class LanguageSelect extends StatefulWidget {
+  const LanguageSelect({super.key});
 
   @override
-  _LanguageRegionSelectState createState() => _LanguageRegionSelectState();
+  LanguageSelectState createState() => LanguageSelectState();
 }
 
 class LanguageProvider extends ChangeNotifier {
@@ -42,7 +40,7 @@ class Language {
   int get hashCode => name.hashCode ^ languageCode.hashCode;
 }
 
-class _LanguageRegionSelectState extends State<LanguageRegionSelect> {
+class LanguageSelectState extends State<LanguageSelect> {
   Language english = Language('English', 'en');
   Language spanish = Language('Español', 'es');
   Language french = Language('Le Français', 'fr');
@@ -50,6 +48,7 @@ class _LanguageRegionSelectState extends State<LanguageRegionSelect> {
   Language arabic = Language('العربية', 'ar');
   Language swahili = Language('kiswahili', 'sw');
   Language zulu = Language('isiZulu', 'zu');
+  Language deutsch = Language('Deutsch', 'de');
 
   List<Language> languages = [];
 
@@ -66,6 +65,7 @@ class _LanguageRegionSelectState extends State<LanguageRegionSelect> {
       arabic,
       swahili,
       zulu,
+      deutsch,
     ];
     dropdownValue = english; // Default language
     _loadLanguage();
@@ -95,7 +95,7 @@ class _LanguageRegionSelectState extends State<LanguageRegionSelect> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(translation(context).languageAndRegion),
+        title: Text(translation(context).language),
       ),
       body: Center(
         child: DropdownButton<Language>(
@@ -110,8 +110,8 @@ class _LanguageRegionSelectState extends State<LanguageRegionSelect> {
           ),
           onChanged: (Language? language) async {
             if (language != null) {
-              Locale _locale = await setLocale(language.languageCode);
-              MyApp.setLocale(context, _locale);
+              Locale locale = await setLocale(language.languageCode);
+              MyApp.setLocale(context, locale);
               _saveLanguage(language);
               setState(() {
                 dropdownValue = language;

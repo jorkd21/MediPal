@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:medipal/constant/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:medipal/constant/images.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class ForgotPassPage extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
@@ -68,11 +69,11 @@ class ForgotPassPage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 17.0),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(41.0, 0.0, 0.0, 0.0),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(41.0, 0.0, 0.0, 0.0),
                     child: Text(
-                      'Forgot Password?',
-                      style: TextStyle(
+                      translation(context).forgotPassword,
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -102,7 +103,7 @@ class ForgotPassPage extends StatelessWidget {
                         child: TextField(
                           controller: _emailController,
                           decoration: InputDecoration(
-                            labelText: 'Enter your email',
+                            labelText: translation(context).enterYourEmail,
                             fillColor: Colors.white,
                             filled: true,
                             border: OutlineInputBorder(
