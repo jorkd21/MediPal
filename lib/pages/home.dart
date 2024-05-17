@@ -8,14 +8,14 @@ import 'package:medipal/objects/patient.dart';
 import 'package:medipal/pages/user_list.dart';
 import 'package:medipal/pages/user_patients.dart';
 
-class HomeTestPage extends StatefulWidget {
-  const HomeTestPage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
   HomePageState createState() => HomePageState();
 }
 
-class HomePageState extends State<HomeTestPage> {
+class HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
   final List<Widget> _pages = [
