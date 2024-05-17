@@ -15,6 +15,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:medipal/pages/patient_form.dart';
 import 'package:medipal/pages/settings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:medipal/pages/languageRegionSelect.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -73,6 +74,7 @@ class _MyAppState extends State<MyApp> {
         '/Settings': (context) => const SettingsPage(),
         '/Home': (context) => const HomePage(),
         '/UserList': (context) => const PractitionerList(),
+        '/LanguageRegionSelect': (context) => const LanguageRegionSelect(),
       },
       locale: _locale,
     );
@@ -118,7 +120,7 @@ class TestingPage extends StatelessWidget {
           ButtonWidget('Settings', '/Settings'),
           ButtonWidget('Home', '/Home'),
           ButtonWidget('UserList', '/UserList'),
-          ButtonWidget('LanguageRegionSelect', '/LanguageRegionSelect'),
+          ButtonWidget('LanguageSelect', '/LanguageSelect'),
         ],
       ),
     );

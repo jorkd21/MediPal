@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medipal/pages/language_constants.dart';
 import 'package:medipal/templates/input_template.dart';
 import 'package:medipal/objects/patient.dart';
 
@@ -26,14 +27,14 @@ class MedicationsFormState extends State<MedicationsForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Current Medications'),
+              Text(translation(context).currentMedications),
               Column(
                 children: [
                   ...List.generate(widget.patient.currMedications.length,
                       (index) {
                     String? medication = widget.patient.currMedications[index];
                     return buildTextFormField(
-                      labelText: 'medication ${index + 1}',
+                      labelText: '${translation(context).currentMedications} ${index + 1}',
                       value: medication,
                       onChanged: (value) {
                         widget.patient.currMedications[index] = value!;
@@ -50,12 +51,12 @@ class MedicationsFormState extends State<MedicationsForm> {
                           widget.patient.currMedications.add('');
                         });
                       },
-                      child: const Text("Add More"),
+                      child: Text(translation(context).addMore),
                     ),
                   ),
                 ],
               ),
-              const Text('Previous Medications'),
+              Text(translation(context).previousMedications),
               Column(
                 children: [
                   ...List.generate(
@@ -82,7 +83,7 @@ class MedicationsFormState extends State<MedicationsForm> {
                           widget.patient.prevMedications.add('');
                         });
                       },
-                      child: const Text("Add More"),
+                      child: Text(translation(context).addMore),
                     ),
                   ),
                 ],
