@@ -165,9 +165,9 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                   widget.patient.dob != null
                       ? 'DOB: ${widget.patient.dob!.year}-${widget.patient.dob!.month}-${widget.patient.dob!.day}'
                       : 'Select DOB',
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
                 ),
               ),
               Row(
