@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/pages/patient_data.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class FamilyForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -90,7 +91,8 @@ class FamilyFormState extends State<FamilyForm> {
       child: ListTile(
         title: Text(
             '${patient.firstName} ${patient.middleName} ${patient.lastName}'),
-        subtitle: Text('DOB: ${patient.dob.toString()}'),
+        subtitle:
+            Text(translation(context).dobLabel + ' ${patient.dob.toString()}'),
         trailing: ElevatedButton(
           onPressed: (_isDeleteMode || _isAddMode)
               ? () {
@@ -125,7 +127,9 @@ class FamilyFormState extends State<FamilyForm> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(_isAddMode ? 'All Patients' : 'Family Information'),
+        title: Text(_isAddMode
+            ? translation(context).allPatients
+            : translation(context).familyInformation),
         actions: [
           // Delete toggle button
           if (!_isAddMode)
@@ -160,8 +164,8 @@ class FamilyFormState extends State<FamilyForm> {
                         _searchQuery = value.toLowerCase();
                       });
                     },
-                    decoration: const InputDecoration(
-                      hintText: 'Search',
+                    decoration: InputDecoration(
+                      hintText: translation(context).search,
                       border: OutlineInputBorder(),
                     ),
                   ),
