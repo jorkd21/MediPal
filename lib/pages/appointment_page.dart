@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:medipal/objects/appointment.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/appointment_date.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class AppointmentPage extends StatefulWidget {
   final String? userUid;
@@ -33,14 +35,15 @@ class AppointmentPageState extends State<AppointmentPage> {
         FirebaseDatabase.instance.ref('users/${widget.userUid}');
     ref.update(p.toJson()).then((_) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Appointment list updated'),
+        SnackBar(
+          content: Text(translation(context).appointmentListUpdated),
         ),
       );
     }).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error updating appointment list: $error'),
+          content: Text(
+              translation(context).errorUpdatingAppointmentList + ': $error'),
         ),
       );
     });
@@ -54,7 +57,7 @@ class AppointmentPageState extends State<AppointmentPage> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return Text(translation(context).errorLabel + ': ${snapshot.error}');
         } else {
           Practitioner practitioner = snapshot.data!;
           if (practitioner.appointments.isEmpty) {
@@ -62,7 +65,7 @@ class AppointmentPageState extends State<AppointmentPage> {
               appBar: AppBar(
                 automaticallyImplyLeading: false,
                 title: Text(
-                  'Appointments',
+                  translation(context).appointments,
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -113,8 +116,8 @@ class AppointmentPageState extends State<AppointmentPage> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                      child: const Text(
-                        'Create Appointment',
+                      child: Text(
+                        translation(context).createAppointment,
                         style: TextStyle(
                           fontSize: 20,
                         ),
@@ -135,7 +138,7 @@ class AppointmentPageState extends State<AppointmentPage> {
             appBar: AppBar(
               automaticallyImplyLeading: false,
               title: Text(
-                'Appointments',
+                translation(context).appointments,
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -188,8 +191,8 @@ class AppointmentPageState extends State<AppointmentPage> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                      child: const Text(
-                        'Create Appointment',
+                      child: Text(
+                        translation(context).createAppointment,
                         style: TextStyle(
                           fontSize: 20,
                         ),
@@ -207,8 +210,8 @@ class AppointmentPageState extends State<AppointmentPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Upcoming Appointments',
+                        Text(
+                          translation(context).upcomingAppointments,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

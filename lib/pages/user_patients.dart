@@ -4,6 +4,8 @@ import 'package:medipal/objects/patient.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/patient_data.dart';
 import 'package:medipal/pages/patient_list.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class PractitionerPatients extends StatefulWidget {
   final String? userUid;
@@ -100,14 +102,15 @@ class PractitionerPatientsState extends State<PractitionerPatients> {
         FirebaseDatabase.instance.ref('users/${widget.userUid!}');
     ref.update(_practitioner.toJson()).then((_) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Patient list updated'),
+        SnackBar(
+          content: Text(translation(context).patientListUpdated),
         ),
       );
     }).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error updating patient list: $error'),
+          content:
+              Text(translation(context).errorUpdatingPatientList + ': $error'),
         ),
       );
     });
@@ -175,7 +178,9 @@ class PractitionerPatientsState extends State<PractitionerPatients> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          _isAddMode ? 'Remaining Patients' : 'My Patient List',
+          _isAddMode
+              ? translation(context).remainingPatients
+              : translation(context).myPatients,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -240,7 +245,7 @@ class PractitionerPatientsState extends State<PractitionerPatients> {
                           decoration: InputDecoration(
                             contentPadding:
                                 const EdgeInsets.fromLTRB(15, 20, 10, 0),
-                            hintText: 'Search by name...',
+                            hintText: translation(context).searchByName,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30.0),
                             ),
@@ -259,8 +264,8 @@ class PractitionerPatientsState extends State<PractitionerPatients> {
                   ),
                 ),
                 onPressed: _updatePatients,
-                child: const Text(
-                  'Update',
+                child: Text(
+                  translation(context).update,
                   style: TextStyle(
                     color: Colors.white,
                   ),

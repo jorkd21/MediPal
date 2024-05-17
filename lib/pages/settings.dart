@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/pages/account_details.dart';
-import 'package:medipal/pages/languageRegionSelect.dart';
+import 'package:medipal/pages/languageSelect.dart';
 import 'package:medipal/pages/language_constants.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -18,7 +18,7 @@ class SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'Settings',
+          translation(context).settings,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -124,7 +124,7 @@ class SettingsPageState extends State<SettingsPage> {
                                                       'assets/arrow.png'),
                                                   title: Text(
                                                     translation(context)
-                                                        .languageAndRegion,
+                                                        .language,
                                                     style: const TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 25.0,
@@ -142,7 +142,7 @@ class SettingsPageState extends State<SettingsPage> {
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            const LanguageRegionSelect(),
+                                                            const LanguageSelect(),
                                                       ),
                                                     );
                                                   },
