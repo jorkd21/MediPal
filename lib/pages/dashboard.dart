@@ -5,6 +5,7 @@ import 'package:medipal/constant/images.dart';
 import 'package:medipal/objects/appointment.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/appointment_page.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class Dashboard extends StatefulWidget {
   final String? userUid;
@@ -52,15 +53,15 @@ class DashboardState extends State<Dashboard> {
                 children: [
                   const SizedBox(height: 4),
                   Text(
-                    'Name: ${appointment.patient}',
+                    "${translation(context).nameLabel}: ${appointment.patient}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "Topic: ${appointment.topic}",
+                    "${translation(context).topic}: ${appointment.topic}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "Time: ${appointment.time}",
+                    "${translation(context).time}: ${appointment.time}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -174,7 +175,7 @@ class DashboardState extends State<Dashboard> {
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 10),
                                 child: Text(
-                                  'Welcome Dr. ${_practitioner.name}',
+                                  '${translation(context).welcome} ${_practitioner.name}',
                                   style: const TextStyle(
                                     fontSize: 30,
                                     fontWeight: FontWeight.bold,
@@ -195,11 +196,11 @@ class DashboardState extends State<Dashboard> {
                               color: Colors.black,
                             ),
                             const SizedBox(width: 7),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 1),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 1),
                               child: Text(
-                                'Upcoming Appointments',
-                                style: TextStyle(
+                                translation(context).upcomingAppointments,
+                                style: const TextStyle(
                                   fontSize: 26,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
@@ -217,7 +218,7 @@ class DashboardState extends State<Dashboard> {
                             height: 400,
                             padding: const EdgeInsets.all(25),
                             decoration: BoxDecoration(
-                              color: Color(0xFFDADFEC),
+                              color: const Color(0xFFDADFEC),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: ListView.builder(

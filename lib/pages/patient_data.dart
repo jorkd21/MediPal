@@ -384,7 +384,6 @@ class GetPatientDataState extends State<DisplayPatient> {
                             ),
                           ],
                         ),
-
                     // Health Conditions
                     const SizedBox(height: 23.01),
                     const Row(

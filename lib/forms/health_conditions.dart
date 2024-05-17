@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medipal/templates/input_template.dart';
 import 'package:medipal/objects/patient.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class HealthConditionsForm extends StatefulWidget {
   final Patient patient;
@@ -26,7 +27,7 @@ class HealthConditionsFormState extends State<HealthConditionsForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Current Illness'),
+              Text(translation(context).currentIllness),
               Column(
                 children: [
                   ...List.generate(
@@ -34,7 +35,8 @@ class HealthConditionsFormState extends State<HealthConditionsForm> {
                     (index) {
                       String? illness = widget.patient.currIllness[index];
                       return buildTextFormField(
-                        labelText: 'illness ${index + 1}',
+                        labelText:
+                            '${translation(context).illness} ${index + 1}',
                         value: illness,
                         onChanged: (value) {
                           widget.patient.currIllness[index] = value!;
@@ -52,12 +54,12 @@ class HealthConditionsFormState extends State<HealthConditionsForm> {
                           widget.patient.currIllness.add('');
                         });
                       },
-                      child: const Text("Add More"),
+                      child: Text(translation(context).addMore),
                     ),
                   ),
                 ],
               ),
-              const Text('Previous Illness'),
+              Text(translation(context).previousIllness),
               Column(
                 children: [
                   ...List.generate(
@@ -65,7 +67,8 @@ class HealthConditionsFormState extends State<HealthConditionsForm> {
                     (index) {
                       String? illness = widget.patient.prevIllness[index];
                       return buildTextFormField(
-                        labelText: 'illness ${index + 1}',
+                        labelText:
+                            '${translation(context).illness} ${index + 1}',
                         value: illness,
                         onChanged: (value) {
                           widget.patient.prevIllness[index] = value!;
@@ -83,12 +86,12 @@ class HealthConditionsFormState extends State<HealthConditionsForm> {
                           widget.patient.prevIllness.add('');
                         });
                       },
-                      child: const Text("Add More"),
+                      child: Text(translation(context).addMore),
                     ),
                   ),
                 ],
               ),
-              const Text('Specific allergies'),
+              Text(translation(context).specificAllergies),
               Column(
                 children: [
                   ...List.generate(
@@ -114,7 +117,7 @@ class HealthConditionsFormState extends State<HealthConditionsForm> {
                           widget.patient.allergies.add('');
                         });
                       },
-                      child: const Text("Add More"),
+                      child: Text(translation(context).addMore),
                     ),
                   ),
                 ],

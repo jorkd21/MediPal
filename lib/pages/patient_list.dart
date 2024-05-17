@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medipal/pages/language_constants.dart';
 import 'package:medipal/pages/patient_data.dart';
 import 'package:medipal/pages/patient_form.dart';
 import 'package:medipal/objects/patient.dart';
@@ -157,7 +158,7 @@ class PatientListState extends State<PatientList> {
                     },
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.fromLTRB(15, 20, 10, 0),
-                      hintText: 'Search by name...',
+                      hintText: translation(context).searchByName,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),
