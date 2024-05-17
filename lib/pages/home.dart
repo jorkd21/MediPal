@@ -8,14 +8,14 @@ import 'package:medipal/objects/patient.dart';
 import 'package:medipal/pages/user_list.dart';
 import 'package:medipal/pages/user_patients.dart';
 
-class HomeTestPage extends StatefulWidget {
-  const HomeTestPage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
   HomePageState createState() => HomePageState();
 }
 
-class HomePageState extends State<HomeTestPage> {
+class HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
   final List<Widget> _pages = [
@@ -24,7 +24,7 @@ class HomePageState extends State<HomeTestPage> {
     PatientForm(patient: Patient()),
     AppointmentPage(userUid: FirebaseAuth.instance.currentUser!.uid),
     const PractitionerList(),
-    SettingsPage(),
+    const SettingsPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -32,7 +32,6 @@ class HomePageState extends State<HomeTestPage> {
       setState(() {
         _selectedIndex = index;
       });
-
       _pageController.jumpToPage(index);
     }
   }

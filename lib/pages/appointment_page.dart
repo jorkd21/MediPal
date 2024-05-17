@@ -16,26 +16,15 @@ class AppointmentPage extends StatefulWidget {
 }
 
 class AppointmentPageState extends State<AppointmentPage> {
-  late Future<Practitioner> _practitionerFuture = fetchPractitionerData();
+  late Future<Practitioner?> _practitionerFuture = _fetchPractitioner();
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Future<Practitioner> fetchPractitionerData() async {
-    DatabaseReference ref = FirebaseDatabase.instance.ref('users');
-    DataSnapshot snapshot = await ref.child(widget.userUid!).get();
-    if (snapshot.exists) {
-      Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
-      return Practitioner.fromMap(value.cast<String, dynamic>());
-    }
-    return Practitioner();
+  Future<Practitioner?> _fetchPractitioner() async {
+    return Practitioner.getPractitioner(widget.userUid!);
   }
 
   void _refreshData() {
     setState(() {
-      _practitionerFuture = fetchPractitionerData(); // Refetch data
+      _practitionerFuture = _fetchPractitioner();
     });
   }
 
@@ -59,11 +48,11 @@ class AppointmentPageState extends State<AppointmentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Practitioner>(
+    return FutureBuilder<Practitioner?>(
       future: _practitionerFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator(); // Show loading indicator while fetching data
+          return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
@@ -111,18 +100,17 @@ class AppointmentPageState extends State<AppointmentPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => AppointmentDate(
+                              builder: (context) => AppointmentSelect(
                                   refreshCallback: _refreshData)),
                         );
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        backgroundColor: const Color(0xFF1F56DE), // Text color
+                        backgroundColor: const Color(0xFF1F56DE),
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 15), // Button padding
+                            horizontal: 20, vertical: 15),
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(20), // Button border radius
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                       child: const Text(
@@ -186,8 +174,9 @@ class AppointmentPageState extends State<AppointmentPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => AppointmentDate(
-                                  refreshCallback: _refreshData)),
+                            builder: (context) => AppointmentSelect(
+                                refreshCallback: _refreshData),
+                          ),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -196,8 +185,7 @@ class AppointmentPageState extends State<AppointmentPage> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 15, horizontal: 20),
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                       child: const Text(

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:medipal/main.dart';
 import 'package:medipal/pages/home.dart';
 import 'package:medipal/pages/signup.dart';
 import 'package:medipal/pages/forgotpasswd.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -28,15 +28,12 @@ class _LoginPageState extends State<LoginPage> {
         email: username,
         password: password,
       );
-
-      // If sign-in is successful, navigate to the home page or show a success message
       setState(() {
         _errorMessage = 'Login successful!';
       });
-      // Navigate to the home page
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomeTestPage()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -66,25 +63,25 @@ class _LoginPageState extends State<LoginPage> {
         body: SingleChildScrollView(
           child: Container(
             height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
                 colors: [
-                  Color(0xFF6D98EB), // Light blue at the bottom
-                  Color(0xFFBAA2DA), // Purple at the top
+                  Color(0xFF6D98EB),
+                  Color(0xFFBAA2DA),
                 ],
               ),
             ),
             child: Padding(
-              padding: EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Container(
+                      SizedBox(
                         height: 100,
                         width: 100,
                         child: Image.asset(
@@ -93,9 +90,9 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 17.0),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(41.0, 0.0, 0.0, 0.0),
+                  const SizedBox(height: 17.0),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(41.0, 0.0, 0.0, 0.0),
                     child: Text(
                       'Welcome',
                       style: TextStyle(
@@ -106,8 +103,8 @@ class _LoginPageState extends State<LoginPage> {
                       textAlign: TextAlign.left,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(41.0, 0.0, 0.0, 0.0),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(41.0, 0.0, 0.0, 0.0),
                     child: Text(
                       'Back',
                       style: TextStyle(
@@ -118,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                       textAlign: TextAlign.left,
                     ),
                   ),
-                  SizedBox(height: 75.0),
+                  const SizedBox(height: 75.0),
                   Align(
                     alignment: Alignment.center,
                     child: FractionallySizedBox(
@@ -132,14 +129,13 @@ class _LoginPageState extends State<LoginPage> {
                               color: Colors.black.withOpacity(0.5),
                               spreadRadius: 2,
                               blurRadius: 5,
-                              offset:
-                                  Offset(0, 3), // changes position of shadow
+                              offset: const Offset(0, 3),
                             ),
                           ],
                         ),
                         child: TextField(
                           controller: _usernameController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: InputBorder.none,
                             labelText: 'Email or phone',
                             labelStyle: TextStyle(
@@ -152,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 19.69),
+                  const SizedBox(height: 19.69),
                   Align(
                     alignment: Alignment.center,
                     child: FractionallySizedBox(
@@ -166,14 +162,13 @@ class _LoginPageState extends State<LoginPage> {
                               color: Colors.black.withOpacity(0.5),
                               spreadRadius: 2,
                               blurRadius: 5,
-                              offset:
-                                  Offset(0, 3), // changes position of shadow
+                              offset: const Offset(0, 3),
                             ),
                           ],
                         ),
                         child: TextField(
                           controller: _passwordController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: InputBorder.none,
                             labelText: 'Password',
                             labelStyle: TextStyle(
@@ -187,10 +182,9 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 12.0),
+                  const SizedBox(height: 12.0),
                   Padding(
-                    padding: EdgeInsets.only(
-                        left: 50.0), // Adjust left padding as needed
+                    padding: const EdgeInsets.only(left: 50.0),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -199,7 +193,7 @@ class _LoginPageState extends State<LoginPage> {
                               builder: (context) => ForgotPassPage()),
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         'Forgot password?',
                         style: TextStyle(
                           fontSize: 15,
@@ -209,18 +203,18 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 56.0),
+                  const SizedBox(height: 56.0),
                   Align(
                     alignment: Alignment.center,
                     child: ElevatedButton(
                       onPressed: _login,
                       style: ButtonStyle(
-                        minimumSize:
-                            MaterialStateProperty.all<Size>(Size(278.0, 44.0)),
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Color(0xFF003CD6)),
+                        minimumSize: MaterialStateProperty.all<Size>(
+                            const Size(278.0, 44.0)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            const Color(0xFF003CD6)),
                       ),
-                      child: Text(
+                      child: const Text(
                         'Login',
                         style: TextStyle(
                             color: Color(0xFFEFEFEF),
@@ -229,12 +223,12 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 13.0),
+                  const SizedBox(height: 13.0),
                   Padding(
                     padding: const EdgeInsets.only(left: 78.0),
                     child: Row(
                       children: [
-                        Text(
+                        const Text(
                           'Don\'t have an account? ',
                           style: TextStyle(
                               color: Color(0xFFEFEFEF),
@@ -242,16 +236,16 @@ class _LoginPageState extends State<LoginPage> {
                               fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(width: 4), // Padding of 4 between widgets
+                        const SizedBox(width: 4),
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SignUpPage()),
+                                  builder: (context) => const SignUpPage()),
                             );
                           },
-                          child: Text(
+                          child: const Text(
                             'Sign Up',
                             style: TextStyle(
                                 color: Color(0xFFEFEFEF),
@@ -263,12 +257,12 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   Align(
                     alignment: Alignment.center,
                     child: Text(
                       _errorMessage,
-                      style: TextStyle(color: Colors.red),
+                      style: const TextStyle(color: Colors.red),
                     ),
                   ),
                 ],

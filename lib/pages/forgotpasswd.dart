@@ -1,16 +1,31 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:medipal/main.dart';
-import 'package:medipal/pages/signup.dart';
-import 'package:medipal/pages/forgotpasswd.dart';
 
 class ForgotPassPage extends StatelessWidget {
-
   final TextEditingController _emailController = TextEditingController();
-  
+
+  ForgotPassPage({super.key});
+
+  void _resetPassword(BuildContext context) {
+    String email = _emailController.text.trim();
+    if (email.isNotEmpty) {
+      FirebaseAuth.instance.sendPasswordResetEmail(email: email).then((_) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Password reset email sent to $email'),
+        ));
+      }).catchError((error) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Failed to send password reset email: $error'),
+        ));
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Please enter your email'),
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -18,42 +33,43 @@ class ForgotPassPage extends StatelessWidget {
         body: Center(
           child: Container(
             height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
                 colors: [
-                  Color(0xFF6D98EB), // Light blue at the bottom
-                  Color(0xFFBAA2DA), // Purple at the top
+                  Color(0xFF6D98EB),
+                  Color(0xFFBAA2DA),
                 ],
               ),
             ),
-          child: Padding(
-            padding: EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.arrow_back, color: Colors.white, size: 40),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    Container(
-                      height: 100,
-                      width: 100,
-                      child: Image.asset(
-                        myImage,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back,
+                            color: Colors.white, size: 40),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 17.0),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(41.0, 0.0, 0.0, 0.0),
+                      SizedBox(
+                        height: 100,
+                        width: 100,
+                        child: Image.asset(
+                          myImage,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 17.0),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(41.0, 0.0, 0.0, 0.0),
                     child: Text(
                       'Forgot Password?',
                       style: TextStyle(
@@ -64,7 +80,7 @@ class ForgotPassPage extends StatelessWidget {
                       textAlign: TextAlign.left,
                     ),
                   ),
-                  SizedBox(height: 25.0),
+                  const SizedBox(height: 25.0),
                   Align(
                     alignment: Alignment.center,
                     child: SizedBox(
@@ -79,44 +95,49 @@ class ForgotPassPage extends StatelessWidget {
                               color: Colors.black.withOpacity(0.5),
                               spreadRadius: 2,
                               blurRadius: 5,
-                              offset: Offset(0, 3), // changes position of shadow
-                              ),
-                            ],
-                          ),
-                      child: TextField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: 'Enter your email',
-                        fillColor: Colors.white,
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: BorderSide.none,
-                          ),
-                        contentPadding: EdgeInsets.all(15.0),
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: TextField(
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                            labelText: 'Enter your email',
+                            fillColor: Colors.white,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: const EdgeInsets.all(15.0),
                           ),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 35),
+                  const SizedBox(height: 35),
                   Align(
-                      alignment: Alignment.center,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          _resetPassword(context);
-                        },
-                        style: ButtonStyle(
-                          minimumSize: MaterialStateProperty.all<Size>(Size(278.0, 44)),
-                          backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF003CD6)),
-                        ),
-                        child: Text(
-                          'Confirm',
-                          style: TextStyle(color: Color(0xFFEFEFEF), fontSize: 20, fontStyle: FontStyle.normal),
-                        ),
+                    alignment: Alignment.center,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _resetPassword(context);
+                      },
+                      style: ButtonStyle(
+                        minimumSize: MaterialStateProperty.all<Size>(
+                            const Size(278.0, 44)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            const Color(0xFF003CD6)),
+                      ),
+                      child: const Text(
+                        'Confirm',
+                        style: TextStyle(
+                            color: Color(0xFFEFEFEF),
+                            fontSize: 20,
+                            fontStyle: FontStyle.normal),
                       ),
                     ),
-                  SizedBox(height: 75),
+                  ),
+                  const SizedBox(height: 75),
                 ],
               ),
             ),
@@ -125,25 +146,4 @@ class ForgotPassPage extends StatelessWidget {
       ),
     );
   }
-
-  void _resetPassword(BuildContext context) {
-    String email = _emailController.text.trim();
-
-    if (email.isNotEmpty) {
-      FirebaseAuth.instance.sendPasswordResetEmail(email: email).then((_) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Password reset email sent to $email'),
-        ));
-      }).catchError((error) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to send password reset email: $error'),
-        ));
-      });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Please enter your email'),
-      ));
-    }
-  }
-
 }

@@ -8,126 +8,99 @@ import 'package:medipal/objects/practitioner.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class AppointmentDate extends StatefulWidget {
-  final Function refreshCallback; // Receive callback function
-  const AppointmentDate({super.key, required this.refreshCallback});
+class AppointmentSelect extends StatefulWidget {
+  final Function refreshCallback;
+  const AppointmentSelect({
+    super.key,
+    required this.refreshCallback,
+  });
 
   @override
-  State<AppointmentDate> createState() => _AppointmentDateState();
+  State<AppointmentSelect> createState() => AppointmentSelectState();
 }
 
-class _AppointmentDateState extends State<AppointmentDate> {
-  late Practitioner _practitioner;
-  late List<Patient> _patients = [];
-  final User? user = FirebaseAuth.instance.currentUser;
+class AppointmentSelectState extends State<AppointmentSelect> {
+  late Practitioner? _practitioner;
+  late List<Patient>? _patients = [];
+  final User? _user = FirebaseAuth.instance.currentUser;
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
-  DateTime today = DateTime.now();
+  DateTime _today = DateTime.now();
   String? _topic;
   String? _patient;
-  var hour = 0;
-  var minute = 0;
+  int _hour = 0;
+  int _minute = 0;
 
   @override
   void initState() {
     super.initState();
-    _fetchPatientData();
-    _getPractitioner();
+    _fetchPatientsData();
+    _fetchPractitioner();
   }
 
-  void _sortLists() {
-    _patients.sort((a, b) {
+  void _fetchPatientsData() async {
+    List<Patient>? pl = await Patient.getAllPatients();
+    pl!.sort((a, b) {
       return a.firstName!.compareTo(b.firstName!);
     });
-    setState(() {});
+    setState(() {
+      _patients = pl;
+    });
   }
 
-  void _fetchPatientData() async {
-    // Initialize database
-    DatabaseReference ref = FirebaseDatabase.instance.ref();
-    // Get snapshot
-    DataSnapshot snapshot = await ref.child('patient').get();
-    if (snapshot.value != null) {
-      Map<dynamic, dynamic>? jsonMap = snapshot.value as Map<dynamic, dynamic>;
-      List<Patient> pl = [];
-      jsonMap.forEach((key, value) {
-        Patient p = Patient.fromMap(value.cast<String, dynamic>());
-        p.id = key;
-        pl.add(p);
-      });
-      setState(() {
-        _patients = pl;
-      });
-      _sortLists();
-    }
+  void _fetchPractitioner() async {
+    Practitioner? p = await Practitioner.getPractitioner(_user!.uid);
+    setState(() {
+      _practitioner = p;
+    });
   }
 
   void _submitAppointment(String patientId) {
     if (_patient == null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Please select a patient'),
       ));
     }
     if (_formkey.currentState!.validate()) {
-      // Calculate the start and end times based on the selected index
       DateTime startTime =
-          DateTime(today.year, today.month, today.day, hour, minute);
+          DateTime(_today.year, _today.month, _today.day, _hour, _minute);
       DateTime endTime =
-          DateTime(today.year, today.month, today.day, hour + 1, minute);
+          DateTime(_today.year, _today.month, _today.day, _hour + 1, _minute);
       setState(() {
-        _practitioner.appointments.add(
+        _practitioner!.appointments.add(
           Appointment(
-            topic: _topic, // You can set the topic as needed
+            topic: _topic,
             patient: patientId,
             time: DateTimeRange(start: startTime, end: endTime),
           ),
         );
       });
-      _submitForm();
-
-      // Show a confirmation message or navigate to another screen if needed
+      // submit form
+      DatabaseReference ref =
+          FirebaseDatabase.instance.ref('users/${_user!.uid}');
+      ref.update(_practitioner!.toJson()).then((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Patient data updated'),
+          ),
+        );
+      }).catchError((error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error updating patient: $error'),
+          ),
+        );
+      });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Appointment added for $patientId at $hour:$minute'),
+        content: Text('Appointment added for $patientId at $_hour:$_minute'),
       ));
-      // Clear the selected index
       setState(() {
         _patient = null;
         _topic = null;
       });
-      widget.refreshCallback(); // Call the refresh callback
-      Navigator.pop(context); // pop back / not working
+      widget.refreshCallback();
+      Navigator.pop(context);
     }
-  }
-
-  void _getPractitioner() async {
-    // initialize database
-    DatabaseReference ref = FirebaseDatabase.instance.ref('users');
-    // get snapshot
-    DataSnapshot snapshot = await ref.child(user!.uid).get();
-    // set state
-    if (snapshot.exists) {
-      Map<dynamic, dynamic>? value = snapshot.value as Map<dynamic, dynamic>;
-      setState(() {
-        _practitioner = Practitioner.fromMap(value.cast<String, dynamic>());
-      });
-    }
-  }
-
-  Future<void> _submitForm() async {
-    DatabaseReference ref = FirebaseDatabase.instance.ref('users/${user!.uid}');
-    ref.update(_practitioner.toJson()).then((_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Patient data updated'),
-        ),
-      );
-    }).catchError((error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error updating patient: $error'),
-        ),
-      );
-    });
   }
 
   @override
@@ -136,7 +109,7 @@ class _AppointmentDateState extends State<AppointmentDate> {
         appBar: AppBar(
           automaticallyImplyLeading: true,
           title: Text(
-            "Date Selected: ${today.toString().split(" ")[0]}",
+            "Date Selected: ${_today.toString().split(" ")[0]}",
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -167,25 +140,25 @@ class _AppointmentDateState extends State<AppointmentDate> {
             child: Column(
           children: [
             TableCalendar(
-              locale: "en_US", //language for the calendar
+              locale: "en_US",
               rowHeight: 48,
               headerStyle: const HeaderStyle(
                 formatButtonVisible: false,
                 titleCentered: true,
               ),
               selectedDayPredicate: (daySelected) =>
-                  isSameDay(daySelected, today),
-              focusedDay: today,
+                  isSameDay(daySelected, _today),
+              focusedDay: _today,
               firstDay: DateTime.utc(2023, 1, 1),
               lastDay: DateTime.utc(2040, 1, 1),
               onDaySelected: (daySelected, focusedDay) {
                 setState(() {
-                  today = daySelected;
+                  _today = daySelected;
                 });
               },
             ),
             Text(
-                "Time Selected: ${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, "0")}",
+                "Time Selected: ${_hour.toString().padLeft(2, '0')}:${_minute.toString().padLeft(2, "0")}",
                 style:
                     const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             const SizedBox(
@@ -195,7 +168,7 @@ class _AppointmentDateState extends State<AppointmentDate> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 100, vertical: 10),
               decoration: BoxDecoration(
-                  color: Color(0xFFDADFEC),
+                  color: const Color(0xFFDADFEC),
                   borderRadius: BorderRadius.circular(10)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -203,14 +176,14 @@ class _AppointmentDateState extends State<AppointmentDate> {
                   NumberPicker(
                     minValue: 0,
                     maxValue: 23,
-                    value: hour,
+                    value: _hour,
                     zeroPad: true,
                     infiniteLoop: true,
                     itemWidth: 60,
                     itemHeight: 40,
                     onChanged: (value) {
                       setState(() {
-                        hour = value;
+                        _hour = value;
                       });
                     },
                     textStyle:
@@ -226,14 +199,14 @@ class _AppointmentDateState extends State<AppointmentDate> {
                   NumberPicker(
                     minValue: 0,
                     maxValue: 59,
-                    value: minute,
+                    value: _minute,
                     zeroPad: true,
                     infiniteLoop: true,
                     itemWidth: 60,
                     itemHeight: 40,
                     onChanged: (value) {
                       setState(() {
-                        minute = value;
+                        _minute = value;
                       });
                     },
                     textStyle:
@@ -258,7 +231,7 @@ class _AppointmentDateState extends State<AppointmentDate> {
                 popupProps: const PopupProps.bottomSheet(
                   showSearchBox: true,
                 ),
-                items: _patients, // Set items to fetched patient data
+                items: _patients!,
                 dropdownDecoratorProps: const DropDownDecoratorProps(
                   dropdownSearchDecoration: InputDecoration(
                     labelText: "Select a Patient",
@@ -279,7 +252,7 @@ class _AppointmentDateState extends State<AppointmentDate> {
               key: _formkey,
               child: TextFormField(
                 decoration:
-                    InputDecoration(labelText: 'Reason for Appointment'),
+                    const InputDecoration(labelText: 'Reason for Appointment'),
                 onChanged: (value) {
                   setState(() {
                     _topic = value;
