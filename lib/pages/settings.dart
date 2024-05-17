@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:medipal/main.dart';
 import 'package:medipal/pages/account_details.dart';
-import 'package:medipal/pages/languageRegionSelect.dart';
 import 'package:medipal/pages/language_constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -12,6 +13,22 @@ class SettingsPage extends StatefulWidget {
 }
 
 class SettingsPageState extends State<SettingsPage> {
+  Language dropdownValue = Language('English', 'en');
+  List<Language> languages = [
+    Language('English', 'en'),
+    Language('Español', 'es'),
+    Language('Le Français', 'fr'),
+    Language('हिन्दी', 'hi'),
+    Language('العربية', 'ar'),
+    Language('kiswahili', 'sw'),
+    Language('isiZulu', 'zu'),
+  ];
+
+  _saveLanguage(Language language) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('language_code', language.languageCode);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,43 +126,72 @@ class SettingsPageState extends State<SettingsPage> {
                                                   ),
                                                 ),
                                               ),
-                                              Container(
-                                                margin:
-                                                    const EdgeInsets.all(5.0),
-                                                decoration: BoxDecoration(
-                                                  color:
-                                                      const Color(0xFF7f97ed),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          35.0),
-                                                ),
-                                                child: ListTile(
-                                                  trailing: Image.asset(
-                                                      'assets/arrow.png'),
-                                                  title: Text(
-                                                    translation(context)
-                                                        .languageAndRegion,
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 25.0,
-                                                    ),
-                                                  ),
-                                                  subtitle: const Text(
-                                                    '',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                  onTap: () {
-                                                    // Navigate to Account settings page
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            const LanguageRegionSelect(),
+                                              ListTile(
+                                                title: Row(
+                                                  children: [
+                                                    Text(
+                                                      translation(context)
+                                                          .language,
+                                                      style: const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white,
                                                       ),
-                                                    );
-                                                  },
+                                                    ),
+                                                    const SizedBox(width: 10),
+                                                    Expanded(
+                                                      child: DropdownButton<
+                                                          Language>(
+                                                        isExpanded: true,
+                                                        value: dropdownValue,
+                                                        icon: const Icon(Icons
+                                                            .arrow_downward),
+                                                        iconSize: 24,
+                                                        elevation: 16,
+                                                        style: const TextStyle(
+                                                            color: Colors
+                                                                .deepPurple),
+                                                        underline: Container(
+                                                          height: 2,
+                                                          color: Colors
+                                                              .deepPurpleAccent,
+                                                        ),
+                                                        onChanged: (Language?
+                                                            language) async {
+                                                          if (language !=
+                                                              null) {
+                                                            Locale locale =
+                                                                await setLocale(
+                                                                    language
+                                                                        .languageCode);
+                                                            MyApp.setLocale(
+                                                                context,
+                                                                locale);
+                                                            _saveLanguage(
+                                                                language);
+                                                            setState(() {
+                                                              dropdownValue =
+                                                                  language;
+                                                            });
+                                                          }
+                                                        },
+                                                        items: languages.map<
+                                                            DropdownMenuItem<
+                                                                Language>>(
+                                                          (Language language) {
+                                                            return DropdownMenuItem<
+                                                                Language>(
+                                                              value: language,
+                                                              child: Text(
+                                                                  language
+                                                                      .name),
+                                                            );
+                                                          },
+                                                        ).toList(),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                               Container(
@@ -246,4 +292,23 @@ class SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
+}
+
+class Language {
+  final String name;
+  final String languageCode;
+
+  Language(this.name, this.languageCode);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Language &&
+        other.name == name &&
+        other.languageCode == languageCode;
+  }
+
+  @override
+  int get hashCode => name.hashCode ^ languageCode.hashCode;
 }

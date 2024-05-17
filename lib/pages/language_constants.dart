@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -15,8 +14,8 @@ const String SWAHILI = 'sw';
 const String ZULU = 'zu';
 
 Future<Locale> setLocale(String languageCode) async {
-  SharedPreferences _prefs = await SharedPreferences.getInstance();
-  await _prefs.setString(LANGUAGE_CODE, languageCode);
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString(LANGUAGE_CODE, languageCode);
   return _locale(languageCode);
 }
 

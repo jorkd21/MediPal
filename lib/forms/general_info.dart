@@ -72,7 +72,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                   Center(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF003CD6),
+                        backgroundColor: const Color(0xFF003CD6),
                       ),
                       onPressed: () async {
                         final image = await ImagePicker()
@@ -145,7 +145,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
               const Text('Date of Birth'),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF003CD6),
+                  backgroundColor: const Color(0xFF003CD6),
                 ),
                 onPressed: () async {
                   final DateTime? pickedDate = await showDatePicker(
@@ -164,7 +164,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                   widget.patient.dob != null
                       ? 'DOB: ${widget.patient.dob!.year}-${widget.patient.dob!.month}-${widget.patient.dob!.day}'
                       : 'Select DOB',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                       ),
                 ),

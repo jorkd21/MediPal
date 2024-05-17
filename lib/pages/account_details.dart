@@ -27,6 +27,7 @@ class AccountInfoPageState extends State<AccountInfoPage> {
   final ImagePicker _picker = ImagePicker();
   User? user = FirebaseAuth.instance.currentUser;
   bool _isEditing = false;
+  bool _isLoading = true;
 
   void _fetchPractitioner() async {
     Practitioner? practitioner =
@@ -37,6 +38,7 @@ class AccountInfoPageState extends State<AccountInfoPage> {
     });
     setState(() {
       _practitioner = practitioner;
+      _isLoading = false;
     });
   }
 
@@ -85,115 +87,125 @@ class AccountInfoPageState extends State<AccountInfoPage> {
         ),
         actions: _buildAppBarActions(),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(50.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Name:',
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-              ),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: '${_practitioner.name}',
-                ),
-                controller: _nameController,
-                enabled: _isEditing,
-                style: const TextStyle(fontSize: 16.0),
-              ),
-              const SizedBox(height: 16.0),
-              const Text(
-                'Email:',
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8.0),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: '${_practitioner.email}',
-                ),
-                controller: _emailController,
-                enabled: _isEditing,
-                style: const TextStyle(fontSize: 16.0),
-              ),
-              const SizedBox(height: 16.0),
-              const Text(
-                'Password:',
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8.0),
-              TextField(
-                decoration: const InputDecoration(
-                  hintText: "Confirm your password",
-                ),
-                controller: _passwordController,
-                enabled: _isEditing,
-                style: const TextStyle(fontSize: 16.0),
-              ),
-              const SizedBox(height: 20.0),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ForgotPassPage()),
-                    );
-                  },
-                  style: ButtonStyle(
-                    minimumSize:
-                        MaterialStateProperty.all<Size>(const Size(278.0, 44)),
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(const Color(0xFF003CD6)),
-                  ),
-                  child: const Text(
-                    'Reset Password',
-                    style: TextStyle(
-                        color: Color(0xFFEFEFEF),
-                        fontSize: 20,
-                        fontStyle: FontStyle.normal),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              const Center(
-                child: Text(
-                  'Profile Photo',
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(height: 10.0),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 105.0),
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(user!.photoURL!),
-                      radius: 50,
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(50.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Name:',
+                      style: TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 80.0),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.edit,
-                        size: 30,
+                    TextField(
+                      decoration: InputDecoration(
+                        hintText: '${_practitioner.name}',
                       ),
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all<EdgeInsets>(
-                            const EdgeInsets.all(0)),
-                        iconColor: MaterialStateColor.resolveWith(
-                            (states) => const Color.fromARGB(255, 41, 49, 70)),
-                      ),
-                      onPressed: _pickImage,
+                      controller: _nameController,
+                      enabled: _isEditing,
+                      style: const TextStyle(fontSize: 16.0),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 16.0),
+                    const Text(
+                      'Email:',
+                      style: TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8.0),
+                    TextField(
+                      decoration: InputDecoration(
+                        hintText: '${_practitioner.email}',
+                      ),
+                      controller: _emailController,
+                      enabled: _isEditing,
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
+                    const SizedBox(height: 16.0),
+                    const Text(
+                      'Password:',
+                      style: TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8.0),
+                    TextField(
+                      decoration: const InputDecoration(
+                        hintText: "Confirm your password",
+                      ),
+                      controller: _passwordController,
+                      enabled: _isEditing,
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
+                    const SizedBox(height: 20.0),
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ForgotPassPage()),
+                          );
+                        },
+                        style: ButtonStyle(
+                          minimumSize: MaterialStateProperty.all<Size>(
+                              const Size(278.0, 44)),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              const Color(0xFF003CD6)),
+                        ),
+                        child: const Text(
+                          'Reset Password',
+                          style: TextStyle(
+                              color: Color(0xFFEFEFEF),
+                              fontSize: 20,
+                              fontStyle: FontStyle.normal),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    const Center(
+                      child: Text(
+                        'Profile Photo',
+                        style: TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(height: 10.0),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 105.0),
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(user!.photoURL!),
+                            radius: 50,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 80.0),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.edit,
+                              size: 30,
+                            ),
+                            style: ButtonStyle(
+                              padding: MaterialStateProperty.all<EdgeInsets>(
+                                  const EdgeInsets.all(0)),
+                              iconColor: MaterialStateColor.resolveWith(
+                                  (states) =>
+                                      const Color.fromARGB(255, 41, 49, 70)),
+                            ),
+                            onPressed: _pickImage,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 
@@ -234,27 +246,25 @@ class AccountInfoPageState extends State<AccountInfoPage> {
   }
 
   void _saveChanges() async {
-    if (_practitioner != null) {
-      // ignore: deprecated_member_use
-      var user = FirebaseAuth.instance.currentUser;
-      AuthCredential credential = EmailAuthProvider.credential(
-          email: FirebaseAuth.instance.currentUser?.email ?? '',
-          password: _passwordController.text);
-      user?.reauthenticateWithCredential(credential).then((_) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Reauthenticated')));
-        _updatePractitionerInfo();
-      }).catchError((error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to reauthenticate: $error')));
-      });
+    // ignore: deprecated_member_use
+    var user = FirebaseAuth.instance.currentUser;
+    AuthCredential credential = EmailAuthProvider.credential(
+        email: FirebaseAuth.instance.currentUser?.email ?? '',
+        password: _passwordController.text);
+    user?.reauthenticateWithCredential(credential).then((_) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Reauthenticated')));
+      _updatePractitionerInfo();
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to reauthenticate: $error')));
+    });
     }
-  }
 
   void _updatePractitionerInfo() {
     //Update the practitioner's info in the database
     _practitioner.name = _nameController.text;
-    FirebaseAuth.instance.currentUser?.updateEmail(_emailController.text);
+    FirebaseAuth.instance.currentUser?.verifyBeforeUpdateEmail(_emailController.text);
     _practitioner.email = _emailController.text;
     final String? newPhotoUrl = _photoController;
     if (newPhotoUrl!.isNotEmpty) {
