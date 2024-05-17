@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medipal/pages/language_constants.dart';
 import 'package:medipal/pages/patient_data.dart';
 import 'package:medipal/pages/patient_form.dart';
 import 'package:medipal/objects/patient.dart';

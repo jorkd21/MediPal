@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:medipal/main.dart';
 import 'package:medipal/pages/language_constants.dart';
-import 'package:medipal/constant/images.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LanguageSelect extends StatefulWidget {
-  const LanguageSelect({Key? key}) : super(key: key);
+  const LanguageSelect({super.key});
 
   @override
-  _LanguageSelectState createState() => _LanguageSelectState();
+  LanguageSelectState createState() => LanguageSelectState();
 }
 
 class LanguageProvider extends ChangeNotifier {
@@ -42,7 +40,7 @@ class Language {
   int get hashCode => name.hashCode ^ languageCode.hashCode;
 }
 
-class _LanguageSelectState extends State<LanguageSelect> {
+class LanguageSelectState extends State<LanguageSelect> {
   Language english = Language('English', 'en');
   Language spanish = Language('Español', 'es');
   Language french = Language('Le Français', 'fr');
@@ -112,8 +110,8 @@ class _LanguageSelectState extends State<LanguageSelect> {
           ),
           onChanged: (Language? language) async {
             if (language != null) {
-              Locale _locale = await setLocale(language.languageCode);
-              MyApp.setLocale(context, _locale);
+              Locale locale = await setLocale(language.languageCode);
+              MyApp.setLocale(context, locale);
               _saveLanguage(language);
               setState(() {
                 dropdownValue = language;

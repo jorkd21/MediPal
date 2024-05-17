@@ -4,7 +4,6 @@ import 'package:medipal/objects/patient.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/patient_data.dart';
 import 'package:medipal/pages/patient_list.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:medipal/pages/language_constants.dart';
 
 class PractitionerPatients extends StatefulWidget {
@@ -110,7 +109,7 @@ class PractitionerPatientsState extends State<PractitionerPatients> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content:
-              Text(translation(context).errorUpdatingPatientList + ': $error'),
+              Text('${translation(context).errorUpdatingPatientList}: $error'),
         ),
       );
     });
@@ -266,7 +265,7 @@ class PractitionerPatientsState extends State<PractitionerPatients> {
                 onPressed: _updatePatients,
                 child: Text(
                   translation(context).update,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                   ),
                 ),

@@ -5,8 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:medipal/pages/language_constants.dart';
 import 'package:medipal/templates/input_template.dart';
 import 'package:medipal/objects/patient.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:medipal/pages/language_constants.dart';
 
 class GeneralInfoForm extends StatefulWidget {
   final Patient patient;
@@ -75,7 +73,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                   Center(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF003CD6),
+                        backgroundColor: const Color(0xFF003CD6),
                       ),
                       onPressed: () async {
                         final image = await ImagePicker()
@@ -148,7 +146,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
               Text(translation(context).dob),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF003CD6),
+                  backgroundColor: const Color(0xFF003CD6),
                 ),
                 onPressed: () async {
                   final DateTime? pickedDate = await showDatePicker(
@@ -167,9 +165,9 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                   widget.patient.dob != null
                       ? 'DOB: ${widget.patient.dob!.year}-${widget.patient.dob!.month}-${widget.patient.dob!.day}'
                       : 'Select DOB',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
               Row(
@@ -246,8 +244,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: buildTextFormField(
-                              labelText: translation(context).phoneNumber +
-                                  ' ${index + 1}',
+                              labelText: '${translation(context).phoneNumber} ${index + 1}',
                               value: contact.phoneNumber?.toString(),
                               onChanged: (value) {
                                 contact.phoneNumber = value;
@@ -287,7 +284,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                           Expanded(
                             child: buildTextFormField(
                               labelText:
-                                  translation(context).name + '${index + 1}',
+                                  '${translation(context).name} ${index + 1}',
                               value: contact.name?.toString(),
                               onChanged: (value) {
                                 contact.name = value;
@@ -310,8 +307,7 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: buildTextFormField(
-                              labelText: translation(context).phoneNumber +
-                                  ' ${index + 1}',
+                              labelText: '${translation(context).phoneNumber} ${index + 1}',
                               value: contact.phoneNumber?.toString(),
                               onChanged: (value) {
                                 contact.phoneNumber = value;

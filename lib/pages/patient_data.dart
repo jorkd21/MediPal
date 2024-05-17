@@ -3,7 +3,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:medipal/objects/patient.dart';
-import 'package:medipal/pages/language_constants.dart';
 
 class DisplayPatient extends StatefulWidget {
   final String patientId;

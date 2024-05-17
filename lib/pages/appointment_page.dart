@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:medipal/objects/appointment.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/appointment_date.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:medipal/pages/language_constants.dart';
 
 class AppointmentPage extends StatefulWidget {
@@ -43,7 +42,7 @@ class AppointmentPageState extends State<AppointmentPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-              translation(context).errorUpdatingAppointmentList + ': $error'),
+              '${translation(context).errorUpdatingAppointmentList}: $error'),
         ),
       );
     });
@@ -57,7 +56,7 @@ class AppointmentPageState extends State<AppointmentPage> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          return Text(translation(context).errorLabel + ': ${snapshot.error}');
+          return Text('${translation(context).errorLabel}: ${snapshot.error}');
         } else {
           Practitioner practitioner = snapshot.data!;
           if (practitioner.appointments.isEmpty) {
@@ -118,7 +117,7 @@ class AppointmentPageState extends State<AppointmentPage> {
                       ),
                       child: Text(
                         translation(context).createAppointment,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 20,
                         ),
                       ),
@@ -193,7 +192,7 @@ class AppointmentPageState extends State<AppointmentPage> {
                       ),
                       child: Text(
                         translation(context).createAppointment,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 20,
                         ),
                       ),
@@ -212,7 +211,7 @@ class AppointmentPageState extends State<AppointmentPage> {
                       children: [
                         Text(
                           translation(context).upcomingAppointments,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Colors.blue,

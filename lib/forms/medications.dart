@@ -34,8 +34,7 @@ class MedicationsFormState extends State<MedicationsForm> {
                       (index) {
                     String? medication = widget.patient.currMedications[index];
                     return buildTextFormField(
-                      labelText: translation(context).currentMedications +
-                          ' ${index + 1}',
+                      labelText: '${translation(context).currentMedications} ${index + 1}',
                       value: medication,
                       onChanged: (value) {
                         widget.patient.currMedications[index] = value!;
