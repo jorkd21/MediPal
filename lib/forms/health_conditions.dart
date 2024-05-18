@@ -99,7 +99,8 @@ class HealthConditionsFormState extends State<HealthConditionsForm> {
                     (index) {
                       String? illness = widget.patient.allergies[index];
                       return buildTextFormField(
-                        labelText: 'allergy ${index + 1}',
+                        labelText:
+                            translation(context).allergy + ' ${index + 1}',
                         value: illness,
                         onChanged: (value) {
                           widget.patient.allergies[index] = value!;

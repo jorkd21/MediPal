@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:medipal/objects/patient.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class DisplayPatient extends StatefulWidget {
   final String patientId;
@@ -104,7 +105,7 @@ class GetPatientDataState extends State<DisplayPatient> {
                           Padding(
                             padding: const EdgeInsets.all(10.25),
                             child: Text(
-                              'Patient Record',
+                              translation(context).patientRecord,
                               style: TextStyle(
                                 fontSize: 26,
                                 fontWeight: FontWeight.bold,
@@ -188,12 +189,12 @@ class GetPatientDataState extends State<DisplayPatient> {
                 child: Column(
                   children: [
                     // General info
-                    const Row(
+                    Row(
                       children: [
                         Padding(
                           padding: EdgeInsets.only(top: 21.82, left: 27),
                           child: Text(
-                            'General info',
+                            translation(context).generalInformation,
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,
@@ -211,14 +212,15 @@ class GetPatientDataState extends State<DisplayPatient> {
                                 const EdgeInsets.only(top: 18.92, left: 30),
                             child: Text(
                               i == 0
-                                  ? 'Date of birth'
+                                  ? translation(context).dateOfBirth
                                   : i == 1
-                                      ? 'Location'
+                                      ? translation(context).location
                                       : i == 2
-                                          ? 'Id'
+                                          ? translation(context).id
                                           : i == 3
-                                              ? 'Blood type'
-                                              : 'Marital status',
+                                              ? translation(context).bloodType
+                                              : translation(context)
+                                                  .maritalStatus,
                               style: const TextStyle(
                                 color: Color(0xFF7B7B7B),
                                 fontWeight: FontWeight.normal,
@@ -239,7 +241,7 @@ class GetPatientDataState extends State<DisplayPatient> {
                                             ? ''
                                             : i == 3
                                                 ? '${_patient.bloodGroup}${_patient.rhFactor}'
-                                                : 'Married',
+                                                : translation(context).married,
                                 textAlign: TextAlign.right,
                                 style: const TextStyle(
                                   color: Colors.black,
@@ -253,12 +255,12 @@ class GetPatientDataState extends State<DisplayPatient> {
                       ),
                     const SizedBox(height: 23.01),
                     // Contact Display Section
-                    const Row(
+                    Row(
                       children: [
                         Padding(
                           padding: EdgeInsets.only(top: 21.82, left: 27),
                           child: Text(
-                            'Contact Information',
+                            translation(context).contactInformation,
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,
@@ -274,10 +276,11 @@ class GetPatientDataState extends State<DisplayPatient> {
                         Row(
                           children: [
                             if (i == 0)
-                              const Padding(
+                              Padding(
                                 padding: EdgeInsets.only(top: 18.92, left: 30),
                                 child: Text(
-                                  'Phone', // You can customize this text if needed
+                                  translation(context)
+                                      .phone, // You can customize this text if needed
                                   style: TextStyle(
                                     color: Color(0xFF7B7B7B),
                                     fontWeight: FontWeight.normal,
@@ -319,12 +322,12 @@ class GetPatientDataState extends State<DisplayPatient> {
                           ],
                         ),
                     // Emergancy Contact Information
-                    const Row(
+                    Row(
                       children: [
                         Padding(
                           padding: EdgeInsets.only(top: 21.82, left: 27),
                           child: Text(
-                            'Emergancy Contact Information',
+                            translation(context).emergencyContactInformation,
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,
@@ -386,12 +389,12 @@ class GetPatientDataState extends State<DisplayPatient> {
                         ),
                     // Health Conditions
                     const SizedBox(height: 23.01),
-                    const Row(
+                    Row(
                       children: [
                         Padding(
                           padding: EdgeInsets.only(top: 21.82, left: 27),
                           child: Text(
-                            'Health Conditions',
+                            translation(context).healthConditions,
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,
@@ -406,10 +409,11 @@ class GetPatientDataState extends State<DisplayPatient> {
                       Row(
                         children: [
                           if (i == 0)
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.only(top: 18.92, left: 30),
                               child: Text(
-                                'Current Illness', // You can customize this text if needed
+                                translation(context)
+                                    .currentIllness, // You can customize this text if needed
                                 style: TextStyle(
                                   color: Color(0xFF7B7B7B),
                                   fontWeight: FontWeight.normal,
@@ -440,10 +444,11 @@ class GetPatientDataState extends State<DisplayPatient> {
                       Row(
                         children: [
                           if (i == 0)
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.only(top: 18.92, left: 30),
                               child: Text(
-                                'Previous Illness', // You can customize this text if needed
+                                translation(context)
+                                    .previousIllness, // You can customize this text if needed
                                 style: TextStyle(
                                   color: Color(0xFF7B7B7B),
                                   fontWeight: FontWeight.normal,
@@ -473,10 +478,11 @@ class GetPatientDataState extends State<DisplayPatient> {
                       Row(
                         children: [
                           if (i == 0)
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.only(top: 18.92, left: 30),
                               child: Text(
-                                'Allergies', // You can customize this text if needed
+                                translation(context)
+                                    .allergies, // You can customize this text if needed
                                 style: TextStyle(
                                   color: Color(0xFF7B7B7B),
                                   fontWeight: FontWeight.normal,
@@ -503,12 +509,12 @@ class GetPatientDataState extends State<DisplayPatient> {
                       ),
                     const SizedBox(height: 23.01),
                     // Medications
-                    const Row(
+                    Row(
                       children: [
                         Padding(
                           padding: EdgeInsets.only(top: 21.82, left: 27),
                           child: Text(
-                            'Medications',
+                            translation(context).medications,
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,
@@ -523,10 +529,11 @@ class GetPatientDataState extends State<DisplayPatient> {
                       Row(
                         children: [
                           if (i == 0)
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.only(top: 18.92, left: 30),
                               child: Text(
-                                'Current Medications', // You can customize this text if needed
+                                translation(context)
+                                    .currentMedications, // You can customize this text if needed
                                 style: TextStyle(
                                   color: Color(0xFF7B7B7B),
                                   fontWeight: FontWeight.normal,
@@ -556,10 +563,11 @@ class GetPatientDataState extends State<DisplayPatient> {
                       Row(
                         children: [
                           if (i == 0)
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.only(top: 18.92, left: 30),
                               child: Text(
-                                'Previous Medications', // You can customize this text if needed
+                                translation(context)
+                                    .previousMedications, // You can customize this text if needed
                                 style: TextStyle(
                                   color: Color(0xFF7B7B7B),
                                   fontWeight: FontWeight.normal,

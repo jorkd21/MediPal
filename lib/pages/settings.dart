@@ -256,7 +256,7 @@ class SettingsPageState extends State<SettingsPage> {
                                             ),
                                           ),
                                           child: Text(
-                                            //'Logout',
+                                            //Logout
                                             translation(context).logout,
                                             textAlign: TextAlign.center,
                                             style: const TextStyle(
@@ -264,13 +264,11 @@ class SettingsPageState extends State<SettingsPage> {
                                               fontSize: 30.0,
                                             ),
                                           ),
-                                          onPressed: () {
-                                            () async {
-                                              await FirebaseAuth.instance
-                                                  .signOut();
-                                              Navigator.pushNamed(
-                                                  context, '/Login');
-                                            };
+                                          onPressed: () async {
+                                            await FirebaseAuth.instance
+                                                .signOut();
+                                            Navigator.pushNamed(
+                                                context, '/Login');
                                           },
                                         ),
                                       ],

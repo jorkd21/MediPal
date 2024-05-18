@@ -5,6 +5,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:medipal/objects/appointment.dart';
 import 'package:medipal/objects/patient.dart';
 import 'package:medipal/objects/practitioner.dart';
+import 'package:medipal/pages/language_constants.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -57,8 +58,8 @@ class AppointmentSelectState extends State<AppointmentSelect> {
 
   void _submitAppointment(String patientId) {
     if (_patient == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Please select a patient'),
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(translation(context).pleaseSelectAPatient),
       ));
     }
     if (_formkey.currentState!.validate()) {
@@ -80,19 +81,23 @@ class AppointmentSelectState extends State<AppointmentSelect> {
           FirebaseDatabase.instance.ref('users/${_user!.uid}');
       ref.update(_practitioner!.toJson()).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Patient data updated'),
+          SnackBar(
+            content: Text(translation(context).patientDataUpdated),
           ),
         );
       }).catchError((error) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error updating patient: $error'),
+            content:
+                Text(translation(context).errorUpdatingPatient + ': $error'),
           ),
         );
       });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Appointment added for $patientId at $_hour:$_minute'),
+        content: Text(translation(context).appointmentAddedFor +
+            ' $patientId ' +
+            translation(context).at +
+            ' $_hour:$_minute'),
       ));
       setState(() {
         _patient = null;
@@ -109,7 +114,8 @@ class AppointmentSelectState extends State<AppointmentSelect> {
         appBar: AppBar(
           automaticallyImplyLeading: true,
           title: Text(
-            "Date Selected: ${_today.toString().split(" ")[0]}",
+            translation(context).dateSelected +
+                " ${_today.toString().split(" ")[0]}",
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -158,7 +164,8 @@ class AppointmentSelectState extends State<AppointmentSelect> {
               },
             ),
             Text(
-                "Time Selected: ${_hour.toString().padLeft(2, '0')}:${_minute.toString().padLeft(2, "0")}",
+                translation(context).timeSelected +
+                    ": ${_hour.toString().padLeft(2, '0')}:${_minute.toString().padLeft(2, "0")}",
                 style:
                     const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             const SizedBox(
@@ -232,9 +239,9 @@ class AppointmentSelectState extends State<AppointmentSelect> {
                   showSearchBox: true,
                 ),
                 items: _patients!,
-                dropdownDecoratorProps: const DropDownDecoratorProps(
+                dropdownDecoratorProps: DropDownDecoratorProps(
                   dropdownSearchDecoration: InputDecoration(
-                    labelText: "Select a Patient",
+                    labelText: translation(context).selectAPatient,
                   ),
                 ),
                 onChanged: (Patient? newValue) {
@@ -251,8 +258,8 @@ class AppointmentSelectState extends State<AppointmentSelect> {
             Form(
               key: _formkey,
               child: TextFormField(
-                decoration:
-                    const InputDecoration(labelText: 'Reason for Appointment'),
+                decoration: InputDecoration(
+                    labelText: translation(context).reasonForAppointment),
                 onChanged: (value) {
                   setState(() {
                     _topic = value;
@@ -260,7 +267,7 @@ class AppointmentSelectState extends State<AppointmentSelect> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Required';
+                    return translation(context).required;
                   }
                   return null;
                 },
@@ -281,8 +288,8 @@ class AppointmentSelectState extends State<AppointmentSelect> {
                             Color(0xFF1F56DE) //button color
                             ),
                       ),
-                      child: const Text(
-                        'Cancel',
+                      child: Text(
+                        translation(context).cancel,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
@@ -298,8 +305,8 @@ class AppointmentSelectState extends State<AppointmentSelect> {
                             Color(0xFF1F56DE) //button color
                             ),
                       ),
-                      child: const Text(
-                        'Submit',
+                      child: Text(
+                        translation(context).submit,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,

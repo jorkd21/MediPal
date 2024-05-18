@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:medipal/constant/images.dart';
@@ -13,16 +15,17 @@ class ForgotPassPage extends StatelessWidget {
     if (email.isNotEmpty) {
       FirebaseAuth.instance.sendPasswordResetEmail(email: email).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Password reset email sent to $email'),
+          content:
+              Text(translation(context).passwordResetEmailSent + ' $email'),
         ));
       }).catchError((error) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to send password reset email: $error'),
+          content: Text(translation(context).failedToSendPass + ': $error'),
         ));
       });
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Please enter your email'),
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(translation(context).pleaseEnterEmail),
       ));
     }
   }
@@ -129,8 +132,8 @@ class ForgotPassPage extends StatelessWidget {
                         backgroundColor: MaterialStateProperty.all<Color>(
                             const Color(0xFF003CD6)),
                       ),
-                      child: const Text(
-                        'Confirm',
+                      child: Text(
+                        translation(context).confirm,
                         style: TextStyle(
                             color: Color(0xFFEFEFEF),
                             fontSize: 20,

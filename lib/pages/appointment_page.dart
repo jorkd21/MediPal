@@ -124,8 +124,8 @@ class AppointmentPageState extends State<AppointmentPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Center(
-                    child: Text('No appointments found.'),
+                  Center(
+                    child: Text(translation(context).noAppointmentsFound),
                   ),
                 ],
               ),
