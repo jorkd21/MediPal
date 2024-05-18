@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medipal/objects/practitioner.dart';
 import 'package:medipal/pages/dashboard.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class PractitionerList extends StatefulWidget {
   const PractitionerList({super.key});
@@ -77,7 +78,7 @@ class PractitionerListState extends State<PractitionerList> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'Practitioner List',
+          translation(context).practitionerList,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -117,7 +118,7 @@ class PractitionerListState extends State<PractitionerList> {
                   },
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.fromLTRB(15, 20, 10, 0),
-                    hintText: 'Search by name...',
+                    hintText: translation(context).searchByName,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
