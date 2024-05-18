@@ -4,7 +4,7 @@ import 'package:medipal/chat/chat_page.dart';
 import 'package:medipal/constant/images.dart';
 import 'package:medipal/objects/appointment.dart';
 import 'package:medipal/objects/practitioner.dart';
-import 'package:medipal/pages/appointment_page.dart';
+import 'package:medipal/pages/appointment_date.dart';
 import 'package:medipal/pages/language_constants.dart';
 
 class Dashboard extends StatefulWidget {
@@ -19,7 +19,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class DashboardState extends State<Dashboard> {
-  late Practitioner _practitioner;
+  late Practitioner? _practitioner;
   bool _isLoading = true;
 
   @override
@@ -122,12 +122,12 @@ class DashboardState extends State<Dashboard> {
                         Row(
                           mainAxisAlignment:
                               FirebaseAuth.instance.currentUser!.uid !=
-                                      _practitioner.id
+                                      _practitioner!.id
                                   ? MainAxisAlignment.spaceBetween
                                   : MainAxisAlignment.end,
                           children: [
                             if (FirebaseAuth.instance.currentUser!.uid !=
-                                _practitioner.id)
+                                _practitioner!.id)
                               IconButton(
                                 icon: const Icon(Icons.arrow_back,
                                     color: Colors.black, size: 40),
@@ -175,7 +175,7 @@ class DashboardState extends State<Dashboard> {
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 10),
                                 child: Text(
-                                  '${translation(context).welcome} ${_practitioner.name}',
+                                  '${translation(context).welcome} ${_practitioner!.name}',
                                   style: const TextStyle(
                                     fontSize: 30,
                                     fontWeight: FontWeight.bold,
@@ -222,10 +222,10 @@ class DashboardState extends State<Dashboard> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: ListView.builder(
-                              itemCount: _practitioner.appointments.length,
+                              itemCount: _practitioner!.appointments.length,
                               itemBuilder: (context, index) {
                                 return _buildAppointmentInfo(
-                                    (_practitioner.appointments)[index]);
+                                    (_practitioner!.appointments)[index]);
                               },
                             ),
                           ),
@@ -247,8 +247,8 @@ class DashboardState extends State<Dashboard> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ChatPage(
-                            receiverUid: _practitioner.id!,
-                            receiverName: _practitioner.name!,
+                            receiverUid: _practitioner!.id!,
+                            receiverName: _practitioner!.name!,
                           ),
                         ),
                       );
@@ -262,17 +262,16 @@ class DashboardState extends State<Dashboard> {
                 : FloatingActionButton(
                     onPressed: () {
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AppointmentPage(
-                            userUid: _practitioner.id!,
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AppointmentSelect(
+                                refreshCallback: _fetchPractitioner),
                           ),
-                        ),
-                      );
+                        );
                     },
                     backgroundColor: const Color(0xFF003CD6),
                     child: const Icon(
-                      Icons.people,
+                      Icons.add,
                       color: Colors.white,
                     ),
                   ),
