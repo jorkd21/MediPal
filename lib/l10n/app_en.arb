@@ -151,5 +151,6 @@
   "fileDeletedSuccessfully": "File deleted successfully",
   "errorDeletingFiles": "Error deleting files",
   "fileName": "File Name",
-  "addFiles": "Add Files"
+  "addFiles": "Add Files",
+  "confirmYourPassword": "Confirm Your Password"
 }

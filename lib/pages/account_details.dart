@@ -6,6 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:medipal/pages/forgotpasswd.dart';
+import 'package:medipal/pages/language_constants.dart';
 
 class AccountInfoPage extends StatefulWidget {
   final String? userUid;
@@ -59,7 +60,7 @@ class AccountInfoPageState extends State<AccountInfoPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Account Information',
+          translation(context).accountInformation,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -97,8 +98,8 @@ class AccountInfoPageState extends State<AccountInfoPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Name:',
+                    Text(
+                      translation(context).nameLabel,
                       style: TextStyle(
                           fontSize: 18.0, fontWeight: FontWeight.bold),
                     ),
@@ -111,8 +112,8 @@ class AccountInfoPageState extends State<AccountInfoPage> {
                       style: const TextStyle(fontSize: 16.0),
                     ),
                     const SizedBox(height: 16.0),
-                    const Text(
-                      'Email:',
+                    Text(
+                      translation(context).email + ':',
                       style: TextStyle(
                           fontSize: 18.0, fontWeight: FontWeight.bold),
                     ),
@@ -126,15 +127,16 @@ class AccountInfoPageState extends State<AccountInfoPage> {
                       style: const TextStyle(fontSize: 16.0),
                     ),
                     const SizedBox(height: 16.0),
-                    const Text(
-                      'Password:',
+                    Text(
+                      translation(context).password + ':',
                       style: TextStyle(
                           fontSize: 18.0, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8.0),
                     TextField(
-                      decoration: const InputDecoration(
-                        hintText: "Confirm your password",
+                      decoration: InputDecoration(
+                        hintText: translation(context)
+                            .confirmYourPassword, //Line to be translated
                       ),
                       controller: _passwordController,
                       enabled: _isEditing,
@@ -156,8 +158,8 @@ class AccountInfoPageState extends State<AccountInfoPage> {
                           backgroundColor: MaterialStateProperty.all<Color>(
                               const Color(0xFF003CD6)),
                         ),
-                        child: const Text(
-                          'Reset Password',
+                        child: Text(
+                          translation(context).resetPassword,
                           style: TextStyle(
                               color: Color(0xFFEFEFEF),
                               fontSize: 20,
@@ -166,9 +168,9 @@ class AccountInfoPageState extends State<AccountInfoPage> {
                       ),
                     ),
                     const SizedBox(height: 16.0),
-                    const Center(
+                    Center(
                       child: Text(
-                        'Profile Photo',
+                        translation(context).profilePhoto,
                         style: TextStyle(
                             fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
@@ -240,7 +242,7 @@ class AccountInfoPageState extends State<AccountInfoPage> {
       final downloadUrl = await snapshot.ref.getDownloadURL();
       return downloadUrl;
     } catch (error) {
-      print('Error uploading image: $error');
+      print(translation(context).errorUploadingImage + ': $error');
       return null;
     }
   }
@@ -252,19 +254,21 @@ class AccountInfoPageState extends State<AccountInfoPage> {
         email: FirebaseAuth.instance.currentUser?.email ?? '',
         password: _passwordController.text);
     user?.reauthenticateWithCredential(credential).then((_) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Reauthenticated')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(translation(context).reauthenticated)));
       _updatePractitionerInfo();
     }).catchError((error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to reauthenticate: $error')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content:
+              Text(translation(context).failedToReauthenticate + ': $error')));
     });
-    }
+  }
 
   void _updatePractitionerInfo() {
     //Update the practitioner's info in the database
     _practitioner.name = _nameController.text;
-    FirebaseAuth.instance.currentUser?.verifyBeforeUpdateEmail(_emailController.text);
+    FirebaseAuth.instance.currentUser
+        ?.verifyBeforeUpdateEmail(_emailController.text);
     _practitioner.email = _emailController.text;
     final String? newPhotoUrl = _photoController;
     if (newPhotoUrl!.isNotEmpty) {
@@ -276,11 +280,12 @@ class AccountInfoPageState extends State<AccountInfoPage> {
       setState(() {
         _isEditing = false;
       });
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Changes saved')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(translation(context).changesSaved)));
     }).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to save changes to database: $error')));
+          content: Text(translation(context).failedToSaveChangesToDatabase +
+              ': $error')));
     });
   }
 

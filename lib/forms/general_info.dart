@@ -88,8 +88,8 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                           });
                         }
                       },
-                      child: const Text(
-                        'Select ID Image',
+                      child: Text(
+                        translation(context).selectIDImage,
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -163,11 +163,12 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                 },
                 child: Text(
                   widget.patient.dob != null
-                      ? 'DOB: ${widget.patient.dob!.year}-${widget.patient.dob!.month}-${widget.patient.dob!.day}'
-                      : 'Select DOB',
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
+                      ? translation(context).dobLabel +
+                          ': ${widget.patient.dob!.year}-${widget.patient.dob!.month}-${widget.patient.dob!.day}'
+                      : translation(context).selectDOB,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
               Row(
@@ -244,7 +245,8 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: buildTextFormField(
-                              labelText: '${translation(context).phoneNumber} ${index + 1}',
+                              labelText:
+                                  '${translation(context).phoneNumber} ${index + 1}',
                               value: contact.phoneNumber?.toString(),
                               onChanged: (value) {
                                 contact.phoneNumber = value;
@@ -307,7 +309,8 @@ class GeneralInfoFormState extends State<GeneralInfoForm> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: buildTextFormField(
-                              labelText: '${translation(context).phoneNumber} ${index + 1}',
+                              labelText:
+                                  '${translation(context).phoneNumber} ${index + 1}',
                               value: contact.phoneNumber?.toString(),
                               onChanged: (value) {
                                 contact.phoneNumber = value;

@@ -151,5 +151,6 @@
   "fileDeletedSuccessfully": "Datei erfolgreich gelöscht",
   "errorDeletingFiles": "Fehler beim Löschen der Dateien",
   "fileName": "Dateiname",
-  "addFiles": "Dateien hinzufügen"
+  "addFiles": "Dateien hinzufügen",
+  "confirmYourPassword": "Bestätigen Sie Ihr Passwort"
 }

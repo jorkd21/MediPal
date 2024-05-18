@@ -151,5 +151,6 @@
   "fileDeletedSuccessfully": "फ़ाइल सफलतापूर्वक हटा दी गई",
   "errorDeletingFiles": "फ़ाइलों को हटाने में त्रुटि",
   "fileName": "फ़ाइल का नाम",
-  "addFiles": "फ़ाइलें जोड़ें"
+  "addFiles": "फ़ाइलें जोड़ें",
+  "confirmYourPassword": "तुम्हारा पासवर्ड पुष्टि करें"
 }

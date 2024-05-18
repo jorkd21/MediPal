@@ -151,5 +151,6 @@
   "fileDeletedSuccessfully": "Ifayela litholakala okusungulwa",
   "errorDeletingFiles": "Isiphithiphithi ngesisekelo sokususa amafayela",
   "fileName": "Igama le-File",
-  "addFiles": "Engeza Imifayela"
+  "addFiles": "Engeza Imifayela",
+  "confirmYourPassword": "Khonfime ikhodi yakho"
 }
